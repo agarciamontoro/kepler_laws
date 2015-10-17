@@ -17,8 +17,8 @@ from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
 import LeapDriver
 
-camara_angulo_x = 10.0
-camara_angulo_y = 10.0
+camara_angulo_x = 25.0
+camara_angulo_y = 25.0
 
 ventana_pos_x  = 50
 ventana_pos_y  = 50
@@ -122,14 +122,14 @@ def dibujarRejilla():
 
 
 def dibujarObjetos():
-    redraw, hands = LeapDriver.getHands()
+    redraw, hands = LeapListener.getHands()
     colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
 
-    for i in xrange(2):
+    for i,hand in enumerate(hands):
         if redraw[i]:
-            for finger in hands[i]:
-                #color[i] = 0.0
-                dibujarEsfera(colors[i], 10, [finger[0], finger[1], finger[2]])
+            dibujarEsfera(colors[i], 30, hand.palm_position)
+            for finger in hand.fingers:
+                dibujarEsfera(colors[i], 10, finger.tip_position)
 
 # Función de dibujado
 def dibujar():
@@ -229,7 +229,10 @@ def moverRaton(x,y):
         # Redibujar
         glutPostRedisplay();
 
-def initGUI(argumentos):
+def initGUI(argumentos, listener):
+    global LeapListener
+    LeapListener = listener
+
     glutInit(argumentos)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
 

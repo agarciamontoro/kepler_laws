@@ -19,7 +19,7 @@ def main(argumentos):
     controller.add_listener(listener)
 
     #Inicializa el programa
-    GUI.initGUI(argumentos)
+    GUI.initGUI(argumentos, listener)
 
 
 if __name__ == '__main__':
