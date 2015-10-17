@@ -4,7 +4,7 @@ import numpy
 import Leap, sys
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
-new_frame = False
+new_frame = [False, False] #Guarda si hay un nuevo frame para la mano izqda. y la dcha.
 
 def fingerPos(hand, handType):
 	fingers = hand.fingers
@@ -54,7 +54,7 @@ class SampleListener(Leap.Listener):
 	def on_frame(self, controller):
 		# Obtiene el frame mas reciente y proporciona información básica
 		frame = controller.frame()
-		new_frame = False
+		new_frame = [False, False]
 
 		num_finger = 0
 
@@ -62,18 +62,11 @@ class SampleListener(Leap.Listener):
 		frame.id, frame.timestamp, len(frame.hands), len(frame.fingers), len(frame.tools), len(frame.gestures()))
 
 		if not frame.hands.is_empty:
-			# Primera mano (izquierda)
-			if frame.hands[0].is_left:
-				lHand = frame.hands[0]
-				rHand = frame.hands[1]
-			else:
-				lHand = frame.hands[1]
-				rHand = frame.hands[0]
+			for i in xrange(2):
+				if frame.hands[i].is_valid:
+					new_frame[i] = True
+					fingerPos(frame.hands[i], i)
 
-		#Calculamos las posiciones de los dedos de ambas manos
-		fingerPos(lHand, 0)
-		fingerPos(rHand, 1)
-		new_frame = True
 		global new_frame
 		global matrix1
 

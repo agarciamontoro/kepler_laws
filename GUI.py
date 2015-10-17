@@ -37,7 +37,7 @@ def dibujarEsfera(radio, coords):
 
     glTranslatef(coords[0],coords[1],coords[2])
 
-    glutSolidSphere(radio,5,5)
+    glutSolidSphere(radio,3,3)
 
     glPopMatrix()
 
@@ -96,9 +96,9 @@ def dibujarEjes():
 def dibujarObjetos():
     redraw, hands = LeapDriver.getHands()
 
-    if redraw:
-        for hand in hands:
-            for finger in hand:
+    for i in xrange(2):
+        if redraw[i]:
+            for finger in hands[i]:
                 dibujarEsfera(10, [finger[0], finger[1], finger[2]])
 
 # Función de dibujado
