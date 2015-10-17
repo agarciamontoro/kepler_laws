@@ -17,6 +17,8 @@ import numpy
 import Leap, sys
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
+import dibujado
+
 matrix1 = [[0 for i in xrange(5)] for i in xrange(1)]
 # matrix2 = [[0 for i in xrange(5)] for i in xrange(3)] no se usa en todo el código
 
@@ -163,28 +165,31 @@ def draw():                                            # ondraw es llamado todo 
 # inicialización
 def main():
 	# Crea el sample listener y el controller
-    listener = SampleListener()
-    controller = Leap.Controller()
+	listener = SampleListener()
+	controller = Leap.Controller()
 
 
-    # Have the sample listener receive events from the controller
-    controller.add_listener(listener)
-    glutInit()                                             # inicializar glut
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
-    glutInitWindowSize(width, height)                      # define el tamaño de la ventana
-    glutInitWindowPosition(0, 0)                           # define la posición de la ventana
-    window = glutCreateWindow("FingerTracking")            # crea la ventana con su título
-    glutDisplayFunc(draw)                                  # set draw function callback
-    glutIdleFunc(draw)                                     # dibuja todo el rato
-    glutMainLoop()                                         # activa todo
+	# Have the sample listener receive events from the controller
+	controller.add_listener(listener)
+	'''
+	glutInit()                                             # inicializar glut
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
+	glutInitWindowSize(width, height)                      # define el tamaño de la ventana
+	glutInitWindowPosition(0, 0)                           # define la posición de la ventana
+	window = glutCreateWindow("FingerTracking")            # crea la ventana con su título
+	glutDisplayFunc(draw)                                  # set draw function callback
+	glutIdleFunc(draw)                                     # dibuja todo el rato
+	glutMainLoop()                                         # activa todo
+	'''
+	dibujado.InicializarDibujado(sys.argv)
 
+	# Mantiene el proceso en ejecución hasta que pulsamos Enter
+	print "Press Enter to quit..."
 
-    # Mantiene el proceso en ejecución hasta que pulsamos Enter
-    print "Press Enter to quit..."
-    sys.stdin.readline()
+	sys.stdin.readline()
 
-    # Elimina el sample listener cuando se acaba
-    controller.remove_listener(listener)
+	# Elimina el sample listener cuando se acaba
+	controller.remove_listener(listener)
 
 if __name__ == "__main__":
         main()
