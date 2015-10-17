@@ -31,13 +31,14 @@ frustum_ancho = 0.5 * frustum_dis_del
 
 frustum_factor_escala = .005
 
-def dibujarEsfera(radio, coords):
+def dibujarEsfera(color, radio, coords):
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()
 
+    glColor3f(color[0], color[1], color[2])
     glTranslatef(coords[0],coords[1],coords[2])
 
-    glutSolidSphere(radio,3,3)
+    glutSolidSphere(radio,10,10)
 
     glPopMatrix()
 
@@ -68,7 +69,7 @@ def fijarCamara():
 
 def dibujarEjes():
 
-    long_ejes = 30.0
+    long_ejes = 1000.0
 
     # establecer modo de dibujo a lineas (podría estar en puntos)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -93,22 +94,53 @@ def dibujarEjes():
 
     glEnd()
 
+def dibujarRejilla():
+    long_grid = 1000.0
+    gap = 50.0
+
+    num_lines = int( (long_grid*2)/gap )
+
+    # establecer modo de dibujo a lineas (podría estar en puntos)
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    # Ancho de línea
+    glLineWidth( 0.2 );
+
+    # dibujar las líneas
+    glBegin(GL_LINES)
+    # Color negro
+    glColor3f( 0.2, 0.2, 0.2 )
+
+    for i in xrange(num_lines):
+        if i != num_lines/2:
+            glVertex3f( -long_grid, 0.0, gap*(i-num_lines/2) )
+            glVertex3f( +long_grid, 0.0, gap*(i-num_lines/2) )
+
+            glVertex3f( gap*(i-num_lines/2), 0.0, -long_grid )
+            glVertex3f( gap*(i-num_lines/2), 0.0, +long_grid )
+
+    glEnd()
+
+
 def dibujarObjetos():
     redraw, hands = LeapDriver.getHands()
+    colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
 
     for i in xrange(2):
         if redraw[i]:
             for finger in hands[i]:
-                dibujarEsfera(10, [finger[0], finger[1], finger[2]])
+                #color[i] = 0.0
+                dibujarEsfera(colors[i], 10, [finger[0], finger[1], finger[2]])
 
 # Función de dibujado
 def dibujar():
+    glClearColor(0.0, 0.0, 0.0, 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     fijarViewportProyeccion()
     fijarCamara()
 
     dibujarEjes()
+    dibujarRejilla()
     dibujarObjetos()
 
     glutSwapBuffers()
