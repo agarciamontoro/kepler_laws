@@ -1,4 +1,4 @@
-
+# coding=UTF-8
 
 '''
 def DrawGLScene():
@@ -17,20 +17,22 @@ import numpy
 import Leap, sys
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
-matrix1 = [[0 for x in xrange(6)] for x in xrange(1)] 
-matrix2 = [[0 for x in xrange(5)] for x in xrange(3)] 
+matrix1 = [[0 for i in xrange(5)] for i in xrange(1)]
+# matrix2 = [[0 for i in xrange(5)] for i in xrange(3)] no se usa en todo el código
+
 matrix1[0][0] = 0
 matrix1[0][1] = 0
 matrix1[0][2] = 0
 matrix1[0][3] = 0
 matrix1[0][4] = 0
-matrix1[0][5] = 0
+#matrix1[0][5] = 0
+
 num_finger = 0
-a=0
-b=0
-c=0
-window = 0                                             # glut window number
-width, height = 640, 480                               # window size
+x=0
+y=0
+z=0
+window = 0                                             # Numero de ventana glut
+width, height = 800, 600                               # Tamaño de ventana
 
 class SampleListener(Leap.Listener):
     def on_init(self, controller):
@@ -39,48 +41,50 @@ class SampleListener(Leap.Listener):
     def on_connect(self, controller):
         print "Connected"
 
-        # Enable gestures
+        # Activar gestos
         controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE);
         controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
         controller.enable_gesture(Leap.Gesture.TYPE_SCREEN_TAP);
         controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
 
     def on_disconnect(self, controller):
-        # Note: not dispatched when running in a debugger.
+        # Nota: no se mostrará cuando se arranque en un debugger.
         print "Disconnected"
 
     def on_exit(self, controller):
         print "Exited"
 
     def on_frame(self, controller):
-        # Get the most recent frame and report some basic information
+        # Obtiene el frame mas reciente y proporciona información básica
         frame = controller.frame()
-        matrix1 = [[0 for x in xrange(6)] for x in xrange(1)] 
+        matrix1 = [[0 for i in xrange(5)] for i in xrange(1)]
         num_finger = 0
 
         print "Frame id: %d, timestamp: %d, hands: %d, fingers: %d, tools: %d, gestures: %d" % (
               frame.id, frame.timestamp, len(frame.hands), len(frame.fingers), len(frame.tools), len(frame.gestures()))
 
         if not frame.hands.is_empty:
-            # Get the first hand
+        	# Primera mano
             hand = frame.hands[0]
 
-            # Check if the hand has any fingers
+            # Comprueba si la mano tiene algún dedo
             fingers = hand.fingers
             if not fingers.is_empty:
-                # Calculate the hand's average finger tip position
+                # Calcula la posición media de los dedos de la mano
                 matrix1[0][0] = Leap.Vector()
                 matrix1[0][1] = Leap.Vector()
                 matrix1[0][2] = Leap.Vector()
                 matrix1[0][3] = Leap.Vector()
                 matrix1[0][4] = Leap.Vector()
-                matrix1[0][5] = Leap.Vector()
+                #matrix1[0][5] = Leap.Vector()
+
                 for finger in fingers:
                     #print "finger is", finger
                     #print "num_finger bef:", num_finger
                     matrix1[0][num_finger] = finger.tip_position
                     num_finger += 1
                     print "num_finger", num_finger
+
                 avg_pos = num_finger
                 print "Hand has %d fingers" %(len(fingers))
                 print "finger tip position1 is: ", matrix1[0][0]
@@ -89,23 +93,20 @@ class SampleListener(Leap.Listener):
                 print "finger tip position4 is: ", matrix1[0][3]
                 print "finger tip position5 is: ", matrix1[0][4]
                 '''
-                global a
-                global b
-                global c
+                global x
+                global y
+                global z
                 '''
                 global matrix1
                 '''
-                a = matrix1[0][0][0]+150
-                b = matrix1[0][0][1]
-                c = matrix1[0][0][2]
-                print "x of finger 1 is :", a
-                print "y of finger 1 is :", b
-                print "z of finger 1 is :", c
+                x = matrix1[0][0][0]+150
+                y = matrix1[0][0][1]
+                z = matrix1[0][0][2]
+                print "x of finger 1 is :", x
+                print "y of finger 1 is :", y
+                print "z of finger 1 is :", z
                	'''
-
                 num_finger = 0
-
-           
 
     def state_string(self, state):
         if state == Leap.Gesture.STATE_START:
@@ -120,12 +121,7 @@ class SampleListener(Leap.Listener):
         if state == Leap.Gesture.STATE_INVALID:
             return "STATE_INVALID"
 
-
-
-
-
 def refresh2d(width, height):
-
     glViewport(0, 0, width, height)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -133,62 +129,62 @@ def refresh2d(width, height):
     glMatrixMode (GL_MODELVIEW)
     glLoadIdentity()
 
-def draw():                                            # ondraw is called all the time
+def draw():                                            # ondraw es llamado todo el tiempo
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen
-    glLoadIdentity()                                   # reset position
-    refresh2d(width, height) 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # limpia la ventana
+    glLoadIdentity()                                   # reinicia la posición
+    refresh2d(width, height)
     #print "coordinatezz: ", a
     # "Deal with itzz:",b
-    
-    for num in xrange(4):
-    	glColor3f(1.0, 1.0, 1.0)                           # set color to blue 
+
+    for num in xrange(5):
+    	glColor3f(1.0, 0.0, 1.0)                           # set color to blue
     	glBegin(GL_LINE_LOOP)
     	circleSections=100
         print "finger:", num
     	print "test: ", matrix1[0][num]
     	try:
-    		a = matrix1[0][num][0]+250
-    		b = matrix1[0][num][1]
-    		c = matrix1[0][num][2]+50
+    		x = matrix1[0][num][0]+400
+    		y = matrix1[0][num][1]-10
+    		z = matrix1[0][num][2]+50
     	except:
-    		a=0
-    		b=0
-    		c=0
+    		x=0
+    		y=0
+    		z=0
 
-    	for x in xrange(circleSections):
-    		angle = 2 * numpy.pi * x / circleSections
-    		glVertex2f(a+numpy.cos(angle)*(c/float(10)), b+numpy.sin(angle)*(c/float(10)))
+    	for i in xrange(circleSections):
+    		angle = 2 * numpy.pi * i / circleSections
+    		glVertex2f(x+numpy.cos(angle)*(z/float(10)), y+numpy.sin(angle)*(z/float(10)))
     	glEnd()
-       
+
     # ToDo draw rectangle
     glutSwapBuffers()                                  # important fordouble buffering
 
-# initialization
+# inicialización
 def main():
-	# Create a sample listener and controller
+	# Crea el sample listener y el controller
     listener = SampleListener()
     controller = Leap.Controller()
 
 
     # Have the sample listener receive events from the controller
     controller.add_listener(listener)
-    glutInit()                                             # initialize glut
+    glutInit()                                             # inicializar glut
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
-    glutInitWindowSize(width, height)                      # set window size
-    glutInitWindowPosition(0, 0)                           # set window position
-    window = glutCreateWindow("FingerTracking")              # create window with title
+    glutInitWindowSize(width, height)                      # define el tamaño de la ventana
+    glutInitWindowPosition(0, 0)                           # define la posición de la ventana
+    window = glutCreateWindow("FingerTracking")            # crea la ventana con su título
     glutDisplayFunc(draw)                                  # set draw function callback
-    glutIdleFunc(draw)                                     # draw all the time
-    glutMainLoop()                                         # start everything
+    glutIdleFunc(draw)                                     # dibuja todo el rato
+    glutMainLoop()                                         # activa todo
 
 
-    # Keep this process running until Enter is pressed
+    # Mantiene el proceso en ejecución hasta que pulsamos Enter
     print "Press Enter to quit..."
     sys.stdin.readline()
 
-    # Remove the sample listener when done
+    # Elimina el sample listener cuando se acaba
     controller.remove_listener(listener)
 
 if __name__ == "__main__":
-        main() 
+        main()
