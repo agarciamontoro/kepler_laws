@@ -7,7 +7,7 @@ from __future__ import print_function
 
 import Leap, sys
 
-import LEAP_fingers_opengl as leapDriver
+import LeapDriver
 import GUI
 
 def main(argumentos):

@@ -15,7 +15,7 @@ import sys, time
 from OpenGL.constants import GLfloat
 from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
-import LEAP_fingers_opengl as leapDriver
+import LeapDriver
 
 camara_angulo_x = 10.0
 camara_angulo_y = 10.0
@@ -94,10 +94,11 @@ def dibujarEjes():
     glEnd()
 
 def dibujarObjetos():
-    hand = leapDriver.getFingers()
+    hands = leapDriver.getHands()
 
-    for finger in hand:
-        dibujarEsfera(10, [finger[0], finger[1], finger[2]])
+    for hand in hands:
+        for finger in fingers:
+            dibujarEsfera(10, [finger[0], finger[1], finger[2]])
 
 # Función de dibujado
 def dibujar():
