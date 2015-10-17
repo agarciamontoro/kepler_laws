@@ -3,8 +3,6 @@
 
 #Origen : https://github.com/analca3/TriedroFrenet_Evoluta
 
-# Curvas y Triedro de Frenet
-
 from __future__ import print_function
 
 import OpenGL
@@ -16,40 +14,22 @@ import sys, time
 
 from OpenGL.constants import GLfloat
 from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
-vec4 = GLfloat_4
 
-hand = []
+import LEAP_fingers_opengl as leapDriver
 
-tStart = t0 = time.time()
-frames = 0
-vertices = []
-tangentes = []
-normales = []
-binormales = []
-evoluta = []
-camara_angulo_x = 0.0
-camara_angulo_y = 0.0
+camara_angulo_x = 10.0
+camara_angulo_y = 10.0
 
 ventana_pos_x  = 50
 ventana_pos_y  = 50
 ventana_tam_x  = 1024
 ventana_tam_y  = 800
 
-frustum_factor_escala = 1.0
 frustum_dis_del = 0.1
 frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
 
-frustum_factor_escala = 1.0
-
-vertice_actual = 0
-direccion = 1
-velocidad = 0
-vertice_animado = 0
-velocidad_maxima = 0
-
-show_frames = False
-dibujoEvoluta = False
+frustum_factor_escala = .005
 
 def dibujarEsfera(radio, coords):
     glMatrixMode(GL_MODELVIEW)
@@ -86,18 +66,6 @@ def fijarCamara():
     glRotatef(camara_angulo_x,1,0,0)
     glRotatef(camara_angulo_y,0,1,0)
 
-
-def framerate():
-    global t0, frames
-    t = time.time()
-    frames += 1
-    if t - t0 >= 5.0:
-        seconds = t - t0
-        fps = frames/seconds
-        print ("%.0f frames in %3.1f seconds = %6.3f FPS" % (frames,seconds,fps))
-        t0 = t
-        frames = 0
-
 def dibujarEjes():
 
     long_ejes = 30.0
@@ -126,71 +94,22 @@ def dibujarEjes():
     glEnd()
 
 def dibujarObjetos():
-    dibujarEsfera(1, [1,2,3])
+    hand = leapDriver.getFingers()
 
-def ayuda():
-    glMatrixMode(GL_PROJECTION)
-    glPushMatrix()
-    glLoadIdentity()
-    gluOrtho2D(0.0, ventana_tam_x, 0.0, ventana_tam_y)
-    glMatrixMode(GL_MODELVIEW)
-    glPushMatrix()
-    glLoadIdentity()
-    glColor3f(1.0, 0.0, 0.0)
-
-    strings_ayuda = ["N y M controlan la animación","E dibuja la evoluta"]
-
-    num_lineas = 0
-    for s in strings_ayuda:
-        glWindowPos2i(10, ventana_tam_y - 15*(num_lineas + 1))
-        for c in s:
-            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ord(c));
-        num_lineas += 1
-
-    glMatrixMode(GL_MODELVIEW)
-    glPopMatrix()
-    glMatrixMode(GL_PROJECTION)
-    glPopMatrix()
-
-
+    for finger in hand:
+        dibujarEsfera(10, [finger[0], finger[1], finger[2]])
 
 # Función de dibujado
 def dibujar():
-    rotationRate = (time.time() - tStart) * 1.05
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     fijarViewportProyeccion()
     fijarCamara()
 
     dibujarEjes()
-
     dibujarObjetos()
 
-    ayuda()
-
     glutSwapBuffers()
-
-    if show_frames:
-        framerate()
-
-# Función de animación del triedro de Frenet
-def animar():
-    global velocidad, direccion, vertice_animado, vertice_actual
-
-    vertice_animado += velocidad*direccion
-
-    if vertice_animado < 0 or vertice_animado > len(vertices):
-        direccion *= -1
-
-
-    vertice_actual = int(vertice_animado)
-    if vertice_actual < 0:
-        vertice_actual = 0
-    elif vertice_actual >= len(vertices):
-        vertice_actual = len(vertices) - 1
-
-    glutPostRedisplay()
-
 
 # Teclas normales: para cambiar escala y velocidad
 def teclaNormal(k, x, y):
@@ -200,16 +119,6 @@ def teclaNormal(k, x, y):
         frustum_factor_escala *= 1.05
     elif k == '-':
         frustum_factor_escala /= 1.05
-    elif k == b'e':
-        dibujoEvoluta = not dibujoEvoluta
-    elif k == b'n':
-        velocidad -= 0.1
-        if velocidad < 0:
-            velocidad = 0
-    elif k == b'm':
-        velocidad += 0.1
-        if velocidad > velocidad_maxima:
-            velocidad = velocidad_maxima
     elif k == b'r':
         camara_angulo_x = camara_angulo_y = 0.0
     elif k == b'q' or k == b'Q' or ord(k) == 27: # Escape
@@ -287,32 +196,22 @@ def moverRaton(x,y):
         glutPostRedisplay();
 
 
-def inicializar(argumentos):
-    glEnable(GL_NORMALIZE)
-    glEnable(GL_MULTISAMPLE_ARB);
-    glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
-    glColor3f(0.0,0.0,0.0)
-
-    global hand
-
-    hand = [[5-i for i in xrange(5)] for i in xrange(3)]
-
-
 def visible(vis):
-    if vis == GLUT_VISIBLE:
-        glutIdleFunc(animar)
-    else:
-        glutIdleFunc(None)
+    glutIdleFunc(None)
 
 
-def InicializarDibujado(argumentos):
+def initGUI(argumentos):
     glutInit(argumentos)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
 
     glutInitWindowPosition(0, 0)
     glutInitWindowSize(ventana_tam_x, ventana_tam_y)
-    glutCreateWindow("Curvas, triedro de Frenet y evoluta")
-    inicializar(argumentos)
+    glutCreateWindow("Leap Motion project")
+
+    glEnable(GL_NORMALIZE)
+    glEnable(GL_MULTISAMPLE_ARB);
+    glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
+    glColor3f(0.0,0.0,0.0)
 
     glutDisplayFunc(dibujar)
     glutReshapeFunc(cambioTamanio)
@@ -321,17 +220,5 @@ def InicializarDibujado(argumentos):
     glutMouseFunc(pulsarRaton)
     glutMotionFunc(moverRaton)
     glutVisibilityFunc(visible)
-    '''
-    if "-info" in sys.argv:
-        print("GL_RENDERER   = ", glGetString(GL_RENDERER))
-        print("GL_VERSION    = ", glGetString(GL_VERSION))
-        print("GL_VENDOR     = ", glGetString(GL_VENDOR))
-        print("GL_EXTENSIONS = ", glGetString(GL_EXTENSIONS))
-    '''
-    if "-framerate" in sys.argv:
-        show_frames = True
 
     glutMainLoop()
-
-if __name__ == '__main__':
-    main(sys.argv)
