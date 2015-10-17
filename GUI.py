@@ -94,11 +94,12 @@ def dibujarEjes():
     glEnd()
 
 def dibujarObjetos():
-    hands = LeapDriver.getHands()
+    redraw, hands = LeapDriver.getHands()
 
-    for hand in hands:
-        for finger in hand:
-            dibujarEsfera(10, [finger[0], finger[1], finger[2]])
+    if redraw:
+        for hand in hands:
+            for finger in hand:
+                dibujarEsfera(10, [finger[0], finger[1], finger[2]])
 
 # Función de dibujado
 def dibujar():

@@ -4,6 +4,8 @@ import numpy
 import Leap, sys
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
+new_frame = False
+
 def fingerPos(hand, handType):
 	fingers = hand.fingers
 	num_finger = 0
@@ -52,6 +54,7 @@ class SampleListener(Leap.Listener):
 	def on_frame(self, controller):
 		# Obtiene el frame mas reciente y proporciona información básica
 		frame = controller.frame()
+		new_frame = False
 
 		num_finger = 0
 
@@ -70,6 +73,8 @@ class SampleListener(Leap.Listener):
 		#Calculamos las posiciones de los dedos de ambas manos
 		fingerPos(lHand, 0)
 		fingerPos(rHand, 1)
+		new_frame = True
+		global new_frame
 		global matrix1
 
 	def state_string(self, state):
@@ -142,7 +147,7 @@ def draw():                                            # ondraw es llamado todo 
 	glutSwapBuffers()                                  # important fordouble buffering
 
 def getHands():
-	return matrix1
+	return new_frame, matrix1
 
 # inicialización
 def main():
