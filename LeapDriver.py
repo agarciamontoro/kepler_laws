@@ -17,22 +17,40 @@ import numpy
 import Leap, sys
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
-matrix1 = [[0 for i in xrange(5)] for i in xrange(1)]
-# matrix2 = [[0 for i in xrange(5)] for i in xrange(3)] no se usa en todo el código
-
-matrix1[0][0] = 0
-matrix1[0][1] = 0
-matrix1[0][2] = 0
-matrix1[0][3] = 0
-matrix1[0][4] = 0
-#matrix1[0][5] = 0
-
-num_finger = 0
 x=0
 y=0
 z=0
 window = 0                                             # Numero de ventana glut
 width, height = 800, 600                               # Tamaño de ventana
+
+def fingerPos(hand, handType):
+	#print "\n\n\n\n\n\n\n\n\nCACAAAAAAA!!!!!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	fingers = hand.fingers
+	num_finger = 0
+	# Comprueba si la mano tiene algún dedo
+	if not fingers.is_empty:
+		# Calcula la posición media de los dedos de la mano
+		matrix1[handType][0] = Leap.Vector()
+		matrix1[handType][1] = Leap.Vector()
+		matrix1[handType][2] = Leap.Vector()
+		matrix1[handType][3] = Leap.Vector()
+		matrix1[handType][4] = Leap.Vector()
+
+		for finger in fingers:
+			matrix1[handType][num_finger] = finger.tip_position
+			num_finger += 1
+			print "num_finger", num_finger
+
+		avg_pos = num_finger
+		print "Hand has %d fingers" %(len(fingers))
+		print "finger tip position1 is: ", matrix1[handType][0]
+		print "finger tip position2 is: ", matrix1[handType][1]
+		print "finger tip position3 is: ", matrix1[handType][2]
+		print "finger tip position4 is: ", matrix1[handType][3]
+		print "finger tip position5 is: ", matrix1[handType][4]
+
+		num_finger = 0
+	global matrix1
 
 class SampleListener(Leap.Listener):
     def on_init(self, controller):
@@ -55,58 +73,40 @@ class SampleListener(Leap.Listener):
         print "Exited"
 
     def on_frame(self, controller):
-        # Obtiene el frame mas reciente y proporciona información básica
-        frame = controller.frame()
-        matrix1 = [[0 for i in xrange(5)] for i in xrange(1)]
-        num_finger = 0
+		# Obtiene el frame mas reciente y proporciona información básica
+		frame = controller.frame()
+		matrix1 = [[0 for i in xrange(5)] for i in xrange(2)]
 
-        print "Frame id: %d, timestamp: %d, hands: %d, fingers: %d, tools: %d, gestures: %d" % (
+		matrix1[0][0] = 0
+		matrix1[0][1] = 0
+		matrix1[0][2] = 0
+		matrix1[0][3] = 0
+		matrix1[0][4] = 0
+
+		matrix1[1][0] = 0
+		matrix1[1][1] = 0
+		matrix1[1][2] = 0
+		matrix1[1][3] = 0
+		matrix1[1][4] = 0
+
+		num_finger = 0
+
+		print "Frame id: %d, timestamp: %d, hands: %d, fingers: %d, tools: %d, gestures: %d" % (
               frame.id, frame.timestamp, len(frame.hands), len(frame.fingers), len(frame.tools), len(frame.gestures()))
 
-        if not frame.hands.is_empty:
-        	# Primera mano
-            hand = frame.hands[0]
+		if not frame.hands.is_empty:
+			# Primera mano (izquierda)
+			if frame.hands[0].is_left:
+				lHand = frame.hands[0]
+				rHand = frame.hands[1]
+			else:
+				lHand = frame.hands[1]
+				rHand = frame.hands[0]
 
-            # Comprueba si la mano tiene algún dedo
-            fingers = hand.fingers
-            if not fingers.is_empty:
-                # Calcula la posición media de los dedos de la mano
-                matrix1[0][0] = Leap.Vector()
-                matrix1[0][1] = Leap.Vector()
-                matrix1[0][2] = Leap.Vector()
-                matrix1[0][3] = Leap.Vector()
-                matrix1[0][4] = Leap.Vector()
-                #matrix1[0][5] = Leap.Vector()
-
-                for finger in fingers:
-                    #print "finger is", finger
-                    #print "num_finger bef:", num_finger
-                    matrix1[0][num_finger] = finger.tip_position
-                    num_finger += 1
-                    print "num_finger", num_finger
-
-                avg_pos = num_finger
-                print "Hand has %d fingers" %(len(fingers))
-                print "finger tip position1 is: ", matrix1[0][0]
-                print "finger tip position2 is: ", matrix1[0][1]
-                print "finger tip position3 is: ", matrix1[0][2]
-                print "finger tip position4 is: ", matrix1[0][3]
-                print "finger tip position5 is: ", matrix1[0][4]
-                '''
-                global x
-                global y
-                global z
-                '''
-                global matrix1
-                '''
-                x = matrix1[0][0][0]+150
-                y = matrix1[0][0][1]
-                z = matrix1[0][0][2]
-                print "x of finger 1 is :", x
-                print "y of finger 1 is :", y
-                print "z of finger 1 is :", z
-               	'''
-                num_finger = 0
+			#Calculamos las posiciones de los dedos de ambas manos
+			fingerPos(lHand, 0)
+			fingerPos(rHand, 1)
+			global matrix1
 
     def state_string(self, state):
         if state == Leap.Gesture.STATE_START:
@@ -130,35 +130,52 @@ def refresh2d(width, height):
     glLoadIdentity()
 
 def draw():                                            # ondraw es llamado todo el tiempo
+	global matrix1
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # limpia la ventana
+	glLoadIdentity()                                   # reinicia la posición
+	refresh2d(width, height)
+	#print "coordinatezz: ", a
+	# "Deal with itzz:",b
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # limpia la ventana
-    glLoadIdentity()                                   # reinicia la posición
-    refresh2d(width, height)
-    #print "coordinatezz: ", a
-    # "Deal with itzz:",b
+	for num in xrange(5):
+		print "finger:", num
+		#print "test: ", matrix1[0][num]
+		try:
+			lx = matrix1[0][num][0]+width/2
+			ly = matrix1[0][num][1]-10
+			lz = matrix1[0][num][2]+50
+		except:
+			lx=0
+			ly=0
+			lz=0
 
-    for num in xrange(5):
-    	glColor3f(1.0, 0.0, 1.0)                           # set color to blue
-    	glBegin(GL_LINE_LOOP)
-    	circleSections=100
-        print "finger:", num
-    	print "test: ", matrix1[0][num]
-    	try:
-    		x = matrix1[0][num][0]+400
-    		y = matrix1[0][num][1]-10
-    		z = matrix1[0][num][2]+50
-    	except:
-    		x=0
-    		y=0
-    		z=0
+		try:
+			rx = matrix1[1][num][0]+width/2
+			ry = matrix1[1][num][1]-10
+			rz = matrix1[1][num][2]+50
+		except:
+			rx=0
+			ry=0
+			rz=0
 
-    	for i in xrange(circleSections):
-    		angle = 2 * numpy.pi * i / circleSections
-    		glVertex2f(x+numpy.cos(angle)*(z/float(10)), y+numpy.sin(angle)*(z/float(10)))
-    	glEnd()
+		glColor3f(1.0, 0.0, 1.0)                           # set color to pink
+		circleSections=100
+		glBegin(GL_LINE_LOOP)
+		for i in xrange(circleSections):
+			angle = 2 * numpy.pi * i / circleSections
+			glVertex2f(lx+numpy.cos(angle)*(lz/float(10)), ly+numpy.sin(angle)*(lz/float(10)))
+		glEnd()
 
-    # ToDo draw rectangle
-    glutSwapBuffers()                                  # important fordouble buffering
+		glColor3f(1.0, 1.0, 0.0)                           # set color to blue
+		glBegin(GL_LINE_LOOP)
+		for i in xrange(circleSections):
+			angle = 2 * numpy.pi * i / circleSections
+			glVertex2f(rx+numpy.cos(angle)*(rz/float(10)), ry+numpy.sin(angle)*(rz/float(10)))
+		glEnd()
+
+
+	# ToDo draw rectangle
+	glutSwapBuffers()                                  # important fordouble buffering
 
 # inicialización
 def main():
