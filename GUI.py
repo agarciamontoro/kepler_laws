@@ -37,7 +37,7 @@ def dibujarEsfera(radio, coords):
 
     glTranslatef(coords[0],coords[1],coords[2])
 
-    glutSolidSphere(radio,20,20)
+    glutSolidSphere(radio,5,5)
 
     glPopMatrix()
 
@@ -94,10 +94,10 @@ def dibujarEjes():
     glEnd()
 
 def dibujarObjetos():
-    hands = leapDriver.getHands()
+    hands = LeapDriver.getHands()
 
     for hand in hands:
-        for finger in fingers:
+        for finger in hand:
             dibujarEsfera(10, [finger[0], finger[1], finger[2]])
 
 # Función de dibujado
@@ -196,11 +196,6 @@ def moverRaton(x,y):
         # Redibujar
         glutPostRedisplay();
 
-
-def visible(vis):
-    glutIdleFunc(None)
-
-
 def initGUI(argumentos):
     glutInit(argumentos)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
@@ -215,11 +210,11 @@ def initGUI(argumentos):
     glColor3f(0.0,0.0,0.0)
 
     glutDisplayFunc(dibujar)
+    glutIdleFunc(dibujar)
     glutReshapeFunc(cambioTamanio)
     glutKeyboardFunc(teclaNormal)
     glutSpecialFunc(teclaEspecial)
     glutMouseFunc(pulsarRaton)
     glutMotionFunc(moverRaton)
-    glutVisibilityFunc(visible)
 
     glutMainLoop()

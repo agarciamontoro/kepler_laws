@@ -12,7 +12,7 @@ import GUI
 
 def main(argumentos):
     # Crea el sample listener y el controller
-    listener = leapDriver.SampleListener()
+    listener = LeapDriver.SampleListener()
     controller = Leap.Controller()
 
     # Have the sample listener receive events from the controller

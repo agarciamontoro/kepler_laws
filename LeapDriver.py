@@ -1,37 +1,15 @@
 # coding=UTF-8
 
-'''
-def DrawGLScene():
-	glBegin(GL_LINE_LOOP)
-	circleSections=100
-        for x in xrange(circleSections):
-            angle = 2 * numpy.pi * x / circleSections
-            glVertex2f(100+numpy.cos(angle)*100,100+numpy.sin(angle)*100)
-        glEnd()
-'''
-
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
 import numpy
 import Leap, sys
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
-window = 0                                             # Numero de ventana glut
-width, height = 800, 600                               # Tamaño de ventana
-
 def fingerPos(hand, handType):
-	#print "\n\n\n\n\n\n\n\n\nCACAAAAAAA!!!!!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 	fingers = hand.fingers
 	num_finger = 0
 	# Comprueba si la mano tiene algún dedo
 	if not fingers.is_empty:
 		# Calcula la posición media de los dedos de la mano
-		matrix1[handType][0] = Leap.Vector()
-		matrix1[handType][1] = Leap.Vector()
-		matrix1[handType][2] = Leap.Vector()
-		matrix1[handType][3] = Leap.Vector()
-		matrix1[handType][4] = Leap.Vector()
 
 		for finger in fingers:
 			matrix1[handType][num_finger] = finger.tip_position
@@ -50,46 +28,35 @@ def fingerPos(hand, handType):
 	global matrix1
 
 class SampleListener(Leap.Listener):
-    def on_init(self, controller):
-        print "Initialized"
+	def on_init(self, controller):
+		matrix1 = [[Leap.Vector() for i in xrange(5)] for i in xrange(2)]
+		global matrix1
+		print "Initialized"
 
-    def on_connect(self, controller):
-        print "Connected"
+	def on_connect(self, controller):
+		print "Connected"
 
-        # Activar gestos
-        controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE);
-        controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
-        controller.enable_gesture(Leap.Gesture.TYPE_SCREEN_TAP);
-        controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
+		# Activar gestos
+		controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE);
+		controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
+		controller.enable_gesture(Leap.Gesture.TYPE_SCREEN_TAP);
+		controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
 
-    def on_disconnect(self, controller):
-        # Nota: no se mostrará cuando se arranque en un debugger.
-        print "Disconnected"
+	def on_disconnect(self, controller):
+		# Nota: no se mostrará cuando se arranque en un debugger.
+		print "Disconnected"
 
-    def on_exit(self, controller):
-        print "Exited"
+	def on_exit(self, controller):
+		print "Exited"
 
-    def on_frame(self, controller):
+	def on_frame(self, controller):
 		# Obtiene el frame mas reciente y proporciona información básica
 		frame = controller.frame()
-		matrix1 = [[0 for i in xrange(5)] for i in xrange(2)]
-
-		matrix1[0][0] = 0
-		matrix1[0][1] = 0
-		matrix1[0][2] = 0
-		matrix1[0][3] = 0
-		matrix1[0][4] = 0
-
-		matrix1[1][0] = 0
-		matrix1[1][1] = 0
-		matrix1[1][2] = 0
-		matrix1[1][3] = 0
-		matrix1[1][4] = 0
 
 		num_finger = 0
 
 		print "Frame id: %d, timestamp: %d, hands: %d, fingers: %d, tools: %d, gestures: %d" % (
-              frame.id, frame.timestamp, len(frame.hands), len(frame.fingers), len(frame.tools), len(frame.gestures()))
+		frame.id, frame.timestamp, len(frame.hands), len(frame.fingers), len(frame.tools), len(frame.gestures()))
 
 		if not frame.hands.is_empty:
 			# Primera mano (izquierda)
@@ -100,23 +67,23 @@ class SampleListener(Leap.Listener):
 				lHand = frame.hands[1]
 				rHand = frame.hands[0]
 
-			#Calculamos las posiciones de los dedos de ambas manos
-			fingerPos(lHand, 0)
-			fingerPos(rHand, 1)
-			global matrix1
+		#Calculamos las posiciones de los dedos de ambas manos
+		fingerPos(lHand, 0)
+		fingerPos(rHand, 1)
+		global matrix1
 
-    def state_string(self, state):
-        if state == Leap.Gesture.STATE_START:
-            return "STATE_START"
+	def state_string(self, state):
+		if state == Leap.Gesture.STATE_START:
+			return "STATE_START"
 
-        if state == Leap.Gesture.STATE_UPDATE:
-            return "STATE_UPDATE"
+		if state == Leap.Gesture.STATE_UPDATE:
+			return "STATE_UPDATE"
 
-        if state == Leap.Gesture.STATE_STOP:
-            return "STATE_STOP"
+		if state == Leap.Gesture.STATE_STOP:
+			return "STATE_STOP"
 
-        if state == Leap.Gesture.STATE_INVALID:
-            return "STATE_INVALID"
+		if state == Leap.Gesture.STATE_INVALID:
+			return "STATE_INVALID"
 
 def refresh2d(width, height):
     glViewport(0, 0, width, height)
@@ -136,7 +103,7 @@ def draw():                                            # ondraw es llamado todo 
 
 	for num in xrange(5):
 		print "finger:", num
-		#print "test: ", matrix1[0][num]
+
 		try:
 			lx = matrix1[0][num][0]+width/2
 			ly = matrix1[0][num][1]-10
@@ -174,6 +141,9 @@ def draw():                                            # ondraw es llamado todo 
 	# ToDo draw rectangle
 	glutSwapBuffers()                                  # important fordouble buffering
 
+def getHands():
+	return matrix1
+
 # inicialización
 def main():
 	# Crea el sample listener y el controller
@@ -192,7 +162,7 @@ def main():
 	glutDisplayFunc(draw)                                  # set draw function callback
 	glutIdleFunc(draw)                                     # dibuja todo el rato
 	glutMainLoop()                                         # activa todo
-	
+
 	#dibujado.InicializarDibujado(sys.argv)
 
 	# Mantiene el proceso en ejecución hasta que pulsamos Enter
