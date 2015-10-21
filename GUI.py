@@ -30,6 +30,8 @@ frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
 
 frustum_factor_escala = .005
+SLICES = 10
+STACKS = 10
 
 def dibujarEsfera(color, radio, coords):
     glMatrixMode(GL_MODELVIEW)
@@ -38,9 +40,26 @@ def dibujarEsfera(color, radio, coords):
     glColor3f(color[0], color[1], color[2])
     glTranslatef(coords[0],coords[1],coords[2])
 
-    glutSolidSphere(radio,10,10)
+    glutSolidSphere(radio,SLICES,STACKS)
 
     glPopMatrix()
+
+def dibujarFalange(color, bone):
+    if bone.is_valid:
+        glMatrixMode(GL_MODELVIEW)
+        glPushMatrix()
+
+        rotation = bone.direction
+        coords = bone.middle
+
+        glColor3f(color[0], color[1], color[2])
+        glRotatef(rotation[0], rotation[1], rotation[2])
+        glTranslatef(coords[0],coords[1],coords[2])
+
+        quadratic = gluNewQuadric()
+        gluCylinder(quadratic, bone.width, bone.width, bone.length, SLICES, STACKS)
+
+        glPopMatrix()
 
 def fijarProyeccion():
     ratioYX = float(ventana_tam_y) / float(ventana_tam_x)
@@ -120,7 +139,6 @@ def dibujarRejilla():
 
     glEnd()
 
-
 def dibujarObjetos():
     redraw, hands = LeapListener.getHands()
     colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
@@ -129,6 +147,8 @@ def dibujarObjetos():
         if redraw[i]:
             dibujarEsfera(colors[i], 30, hand.palm_position)
             for finger in hand.fingers:
+                #for j in xrange(4):
+                #    dibujarFalange(colors[i], finger.bone(j+1))
                 dibujarEsfera(colors[i], 10, finger.tip_position)
 
 # Función de dibujado

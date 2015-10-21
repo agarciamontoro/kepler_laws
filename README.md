@@ -16,4 +16,4 @@ Para poder usar esta aplicación antes debemos tener varios paquetes preinstalad
 
 En nuestro caso, no hemos tenido que instalar ningun paquete con **Pip** el gestor de paquetes de *Python*, debido a que el gestor de paquetes que usa nuestra distribución de *Linux*, tenía todos los paquetes necesarios.
 
-Puede que en otras distribuciones de *Linux* tenga que instalar paquetes mediante **Pip**. El nombre de éstos es bastante análogo al usado
+Puede que en otras distribuciones de *Linux* tenga que instalar paquetes mediante **Pip**. El nombre de éstos es bastante análogo al usado.
