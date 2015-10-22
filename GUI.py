@@ -45,8 +45,9 @@ def obtainAngle(pos):
     print(angles)
     '''
     r = 1
-    tita = math.atan(pos[0]/pos[2])
-    phi = math.acos(pos[1]/r)
+    tita = 360*math.atan(pos[0]/pos[2])/(2.0*math.pi)
+    phi = 360*math.acos(pos[1]/r)/(2.0*math.pi)
+    print(tita,phi)
 
     return [tita, phi]
 
@@ -68,7 +69,7 @@ def dibujarFalange(color, bone):
         glPushMatrix()
 
         rotation = obtainAngle(bone.direction)
-        coords = bone.center
+        coords = bone.next_joint
 
         glColor3f(color[0], color[1], color[2])
         glTranslatef(coords[0],coords[1],coords[2])
@@ -79,10 +80,11 @@ def dibujarFalange(color, bone):
         glRotatef(rotation[2], 0.0, 0.0, 1.0)
         '''
 
-        glRotatef(rotation[0], 0.0, 0.0, 1.0)
-        glRotatef(rotation[1], 0.0, 1.0, 0.0)
+        glRotatef(rotation[0], 0.0, 1.0, 0.0)
+        glRotatef(rotation[1], 0.0, 0.0, 1.0)
 
         gluCylinder(quadric, bone.width/2, bone.width/2, bone.length, Slices, Stacks)
+
 
         glPopMatrix()
 
