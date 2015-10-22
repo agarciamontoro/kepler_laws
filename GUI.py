@@ -39,11 +39,6 @@ quadric = None
 
 # Obtiene el angulo que tiene pos respecto los diferentes ejes
 def obtainAngle(pos):
-    '''
-    den = math.sqrt(pos[0]**2 + pos[1]**2 + pos[2]**2)
-    angles = [360*math.acos(pos[j]/den)/(2.0*math.pi) for j in xrange(3)]
-    print(angles)
-    '''
     r = 1
     tita = 360*math.atan(pos[0]/pos[2])/(2.0*math.pi)
     phi = 360*math.acos(pos[1]/r)/(2.0*math.pi)
@@ -52,6 +47,7 @@ def obtainAngle(pos):
     return [tita, phi]
 
 # A partir del color deseado, el radio de la esfera y su posición
+'''
 def dibujarEsfera(color, radio, coords):
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()
@@ -62,6 +58,7 @@ def dibujarEsfera(color, radio, coords):
     glutSolidSphere(radio,Slices,Stacks)
 
     glPopMatrix()
+'''
 
 def dibujarFalange(color, bone):
     if bone.is_valid:
@@ -74,17 +71,11 @@ def dibujarFalange(color, bone):
         glColor3f(color[0], color[1], color[2])
         glTranslatef(coords[0],coords[1],coords[2])
 
-        '''
-        glRotatef(rotation[0], 1.0, 0.0, 0.0)
-        glRotatef(rotation[1], 0.0, 1.0, 0.0)
-        glRotatef(rotation[2], 0.0, 0.0, 1.0)
-        '''
-
         glRotatef(rotation[0], 0.0, 1.0, 0.0)
         glRotatef(rotation[1], 0.0, 0.0, 1.0)
 
-        gluCylinder(quadric, bone.width/2, bone.width/2, bone.length, Slices, Stacks)
-
+        gluCylinder(quadric, bone.width/5, bone.width/5, bone.length, Slices, Stacks)
+        glutSolidSphere(bone.width/4,Slices,Stacks)
 
         glPopMatrix()
 
@@ -176,7 +167,7 @@ def dibujarObjetos():
             for finger in hand.fingers:
                 for j in xrange(5):
                     dibujarFalange(colors[i], finger.bone(j+1))
-                dibujarEsfera(colors[i], 10, finger.tip_position)
+                #dibujarEsfera(colors[i], 10, finger.tip_position)
 
 # Función de dibujado
 def dibujar():
