@@ -8,9 +8,11 @@ from __future__ import print_function
 import OpenGL
 OpenGL.ERROR_ON_COPY = True
 from OpenGL.GL import *
-from OpenGL.GLU import gluOrtho2D
+from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import sys, time
+
+import math
 
 from OpenGL.constants import GLfloat
 from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
@@ -30,9 +32,25 @@ frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
 
 frustum_factor_escala = .005
-SLICES = 10
-STACKS = 10
+Slices = 10
+Stacks = 10
 
+quadric = None
+
+# Obtiene el angulo que tiene pos respecto los diferentes ejes
+def obtainAngle(pos):
+    '''
+    den = math.sqrt(pos[0]**2 + pos[1]**2 + pos[2]**2)
+    angles = [360*math.acos(pos[j]/den)/(2.0*math.pi) for j in xrange(3)]
+    print(angles)
+    '''
+    r = 1
+    tita = math.atan(pos[0]/pos[2])
+    phi = math.acos(pos[1]/r)
+
+    return [tita, phi]
+
+# A partir del color deseado, el radio de la esfera y su posición
 def dibujarEsfera(color, radio, coords):
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()
@@ -40,7 +58,7 @@ def dibujarEsfera(color, radio, coords):
     glColor3f(color[0], color[1], color[2])
     glTranslatef(coords[0],coords[1],coords[2])
 
-    glutSolidSphere(radio,SLICES,STACKS)
+    glutSolidSphere(radio,Slices,Stacks)
 
     glPopMatrix()
 
@@ -49,15 +67,22 @@ def dibujarFalange(color, bone):
         glMatrixMode(GL_MODELVIEW)
         glPushMatrix()
 
-        rotation = bone.direction
-        coords = bone.middle
+        rotation = obtainAngle(bone.direction)
+        coords = bone.center
 
         glColor3f(color[0], color[1], color[2])
-        glRotatef(rotation[0], rotation[1], rotation[2])
         glTranslatef(coords[0],coords[1],coords[2])
 
-        quadratic = gluNewQuadric()
-        gluCylinder(quadratic, bone.width, bone.width, bone.length, SLICES, STACKS)
+        '''
+        glRotatef(rotation[0], 1.0, 0.0, 0.0)
+        glRotatef(rotation[1], 0.0, 1.0, 0.0)
+        glRotatef(rotation[2], 0.0, 0.0, 1.0)
+        '''
+
+        glRotatef(rotation[0], 0.0, 0.0, 1.0)
+        glRotatef(rotation[1], 0.0, 1.0, 0.0)
+
+        gluCylinder(quadric, bone.width/2, bone.width/2, bone.length, Slices, Stacks)
 
         glPopMatrix()
 
@@ -147,8 +172,8 @@ def dibujarObjetos():
         if redraw[i]:
             dibujarEsfera(colors[i], 30, hand.palm_position)
             for finger in hand.fingers:
-                #for j in xrange(4):
-                #    dibujarFalange(colors[i], finger.bone(j+1))
+                for j in xrange(5):
+                    dibujarFalange(colors[i], finger.bone(j+1))
                 dibujarEsfera(colors[i], 10, finger.tip_position)
 
 # Función de dibujado
@@ -250,7 +275,7 @@ def moverRaton(x,y):
         glutPostRedisplay();
 
 def initGUI(argumentos, listener):
-    global LeapListener
+    global LeapListener, quadric
     LeapListener = listener
 
     glutInit(argumentos)
@@ -272,5 +297,7 @@ def initGUI(argumentos, listener):
     glutSpecialFunc(teclaEspecial)
     glutMouseFunc(pulsarRaton)
     glutMotionFunc(moverRaton)
+
+    quadric = gluNewQuadric()
 
     glutMainLoop()
