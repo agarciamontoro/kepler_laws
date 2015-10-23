@@ -36,8 +36,7 @@ Slices = 10
 Stacks = 10
 
 # A partir del color deseado, el radio de la esfera y su posición
-
-def dibujarEsfera(color, radio, coords):
+def drawSphere(color, radio, coords):
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()
 
@@ -49,7 +48,7 @@ def dibujarEsfera(color, radio, coords):
     glPopMatrix()
 
 
-def dibujarFalanges(color, finger):
+def drawFingerBones(color, finger):
     if finger.is_valid:
         glColor3f(color[0], color[1], color[2])
         for i in range(1,3):
@@ -61,9 +60,9 @@ def dibujarFalanges(color, finger):
             glVertex3f(bone_base[0],bone_base[1],bone_base[2])
             glEnd()
 
-            dibujarEsfera(color,finger.bone(i).width/4,bone_tip)
+            drawSphere(color,finger.bone(i).width/4,bone_tip)
 
-        dibujarEsfera(color,finger.bone(3).width/4,finger.bone(3).next_joint)
+        drawSphere(color,finger.bone(3).width/4,finger.bone(3).next_joint)
 
 def fijarProyeccion():
     ratioYX = float(ventana_tam_y) / float(ventana_tam_x)
@@ -89,7 +88,7 @@ def fijarCamara():
     glRotatef(camara_angulo_x,1,0,0)
     glRotatef(camara_angulo_y,0,1,0)
 
-def dibujarEjes():
+def drawAxes():
 
     long_ejes = 1000.0
 
@@ -116,7 +115,7 @@ def dibujarEjes():
 
     glEnd()
 
-def dibujarRejilla():
+def drawGrid():
     long_grid = 1000.0
     gap = 50.0
 
@@ -145,45 +144,46 @@ def dibujarRejilla():
 def distance(pos1,pos2):
     return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
-def dibujarObjetos():
+def drawObjects():
     redraw, hands = LeapListener.getHands()
+    sphere_pos = [0.0,100.0,-50.0]
+    sphere_radius = 30
 
     if redraw[0] or redraw[1]:
         colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
-        sphere_pos = [0.0,100.0,-50.0]
-        sphere_radius = 30
 
         touch = [False,False]
 
         for i,hand in enumerate(hands):
             if redraw[i]:
-                #dibujarEsfera(colors[i], 30, hand.palm_position)
+                #drawSphere(colors[i], 30, hand.palm_position)
                 for finger in hand.fingers:
                     if distance(finger.tip_position, sphere_pos) < sphere_radius*1.5:
                         touch[i] = True
                         color = colors[i]
 
-                    dibujarFalanges(colors[i],finger)
+                    drawFingerBones(colors[i],finger)
 
         if touch[0] and touch[1]:
             color = [0.7, 0.5, 0.5]
         elif not touch[0] and not touch[1]:
             color = [1.0,1.0,1.0]
 
-        dibujarEsfera(color, 30, sphere_pos)
-
+        drawSphere(color, sphere_radius, sphere_pos)
+    else:
+        drawSphere([1.0,1.0,1.0], sphere_radius, sphere_pos)
 
 # Función de dibujado
-def dibujar():
+def draw():
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     fijarViewportProyeccion()
     fijarCamara()
 
-    dibujarEjes()
-    dibujarRejilla()
-    dibujarObjetos()
+    drawAxes()
+    drawGrid()
+    drawObjects()
 
     glutSwapBuffers()
 
@@ -202,7 +202,6 @@ def teclaNormal(k, x, y):
     else:
         return
     glutPostRedisplay()
-
 
 # Teclas especiales: para cambiar la cámara
 def teclaEspecial(k, x, y):
@@ -286,8 +285,8 @@ def initGUI(argumentos, listener):
     glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
     glColor3f(0.0,0.0,0.0)
 
-    glutDisplayFunc(dibujar)
-    glutIdleFunc(dibujar)
+    glutDisplayFunc(draw)
+    glutIdleFunc(draw)
     glutReshapeFunc(cambioTamanio)
     glutKeyboardFunc(teclaNormal)
     glutSpecialFunc(teclaEspecial)
