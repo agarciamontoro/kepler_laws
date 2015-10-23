@@ -35,17 +35,6 @@ frustum_factor_escala = .005
 Slices = 10
 Stacks = 10
 
-quadric = None
-
-# Obtiene el angulo que tiene pos respecto los diferentes ejes
-def obtainAngle(pos):
-    r = 1
-    tita = 360*math.atan(pos[0]/pos[2])/(2.0*math.pi)
-    phi = 360*math.acos(pos[1]/r)/(2.0*math.pi)
-    print(tita,phi)
-
-    return [tita, phi]
-
 # A partir del color deseado, el radio de la esfera y su posición
 
 def dibujarEsfera(color, radio, coords):
@@ -87,7 +76,6 @@ def fijarProyeccion():
     glTranslatef( 0.0,0.0,-0.5*(frustum_dis_del+frustum_dis_tra))
 
     glScalef( frustum_factor_escala, frustum_factor_escala,  frustum_factor_escala )
-
 
 def fijarViewportProyeccion():
     glViewport( 0, 0, ventana_tam_x, ventana_tam_y )
@@ -211,7 +199,6 @@ def teclaEspecial(k, x, y):
         return
     glutPostRedisplay()
 
-
 # Nuevo tamaño de ventana
 def cambioTamanio(width, height):
     global ventana_tam_x,ventana_tam_y
@@ -285,7 +272,4 @@ def initGUI(argumentos, listener):
     glutSpecialFunc(teclaEspecial)
     glutMouseFunc(pulsarRaton)
     glutMotionFunc(moverRaton)
-
-    quadric = gluNewQuadric()
-
     glutMainLoop()
