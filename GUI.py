@@ -146,29 +146,31 @@ def distance(pos1,pos2):
     return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
 def dibujarObjetos():
-    redraw, hands = LeapListener.getHands()
-    colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
-    sphere_pos = [0.0,100.0,-50.0]
-    sphere_radius = 30
+    connected, redraw, hands = LeapListener.getHands()
 
-    touch = [False,False]
+    if connected:
+        colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
+        sphere_pos = [0.0,100.0,-50.0]
+        sphere_radius = 30
 
-    for i,hand in enumerate(hands):
-        if redraw[i]:
-            #dibujarEsfera(colors[i], 30, hand.palm_position)
-            for finger in hand.fingers:
-                if distance(finger.tip_position, sphere_pos) < sphere_radius*1.5:
-                    touch[i] = True
-                    color = colors[i]
+        touch = [False,False]
 
-                dibujarFalanges(colors[i],finger)
+        for i,hand in enumerate(hands):
+            if redraw[i]:
+                #dibujarEsfera(colors[i], 30, hand.palm_position)
+                for finger in hand.fingers:
+                    if distance(finger.tip_position, sphere_pos) < sphere_radius*1.5:
+                        touch[i] = True
+                        color = colors[i]
 
-    if touch[0] and touch[1]:
-        color = [0.7, 0.5, 0.5]
-    elif not touch[0] and not touch[1]:
-        color = [1.0,1.0,1.0]
+                    dibujarFalanges(colors[i],finger)
 
-    dibujarEsfera(color, 30, sphere_pos)
+        if touch[0] and touch[1]:
+            color = [0.7, 0.5, 0.5]
+        elif not touch[0] and not touch[1]:
+            color = [1.0,1.0,1.0]
+
+        dibujarEsfera(color, 30, sphere_pos)
 
 
 # Función de dibujado
