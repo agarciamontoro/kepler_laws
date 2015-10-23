@@ -149,24 +149,26 @@ def dibujarObjetos():
     redraw, hands = LeapListener.getHands()
     colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
     sphere_pos = [0.0,100.0,-50.0]
+    sphere_radius = 30
 
     touch = [False,False]
 
     for i,hand in enumerate(hands):
-        index = hand.fingers[1] #1 = TYPE_INDEX
-        if distance(index.tip_position, sphere_pos) < 30*1.2:
-            touch[i] = True
-            color = colors[i]
-
         if redraw[i]:
             #dibujarEsfera(colors[i], 30, hand.palm_position)
             for finger in hand.fingers:
+                if distance(finger.tip_position, sphere_pos) < sphere_radius*1.5:
+                    touch[i] = True
+                    color = colors[i]
+
                 dibujarFalanges(colors[i],finger)
 
-    if touch[0] or touch[1]:
-        dibujarEsfera(color, 30, sphere_pos)
-    else:
-        dibujarEsfera([1.0,1.0,1.0], 30, sphere_pos)
+    if touch[0] and touch[1]:
+        color = [0.7, 0.5, 0.5]
+    elif not touch[0] and not touch[1]:
+        color = [1.0,1.0,1.0]
+
+    dibujarEsfera(color, 30, sphere_pos)
 
 
 # Función de dibujado
