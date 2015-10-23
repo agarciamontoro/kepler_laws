@@ -47,7 +47,7 @@ def obtainAngle(pos):
     return [tita, phi]
 
 # A partir del color deseado, el radio de la esfera y su posición
-'''
+
 def dibujarEsfera(color, radio, coords):
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()
@@ -58,26 +58,23 @@ def dibujarEsfera(color, radio, coords):
     glutSolidSphere(radio,Slices,Stacks)
 
     glPopMatrix()
-'''
 
-def dibujarFalange(color, bone):
-    if bone.is_valid:
-        glMatrixMode(GL_MODELVIEW)
-        glPushMatrix()
 
-        rotation = obtainAngle(bone.direction)
-        coords = bone.next_joint
-
+def dibujarFalanges(color, finger):
+    if finger.is_valid:
         glColor3f(color[0], color[1], color[2])
-        glTranslatef(coords[0],coords[1],coords[2])
+        for i in range(1,3):
+            bone_tip = finger.bone(i).next_joint
+            bone_base= finger.bone(i+1).next_joint
 
-        glRotatef(rotation[0], 0.0, 1.0, 0.0)
-        glRotatef(rotation[1], 0.0, 0.0, 1.0)
+            glBegin(GL_LINES)
+            glVertex3f(bone_tip[0],bone_tip[1],bone_tip[2])
+            glVertex3f(bone_base[0],bone_base[1],bone_base[2])
+            glEnd()
 
-        gluCylinder(quadric, bone.width/5, bone.width/5, bone.length, Slices, Stacks)
-        glutSolidSphere(bone.width/4,Slices,Stacks)
+            dibujarEsfera(color,finger.bone(i).width/4,bone_tip)
 
-        glPopMatrix()
+        dibujarEsfera(color,finger.bone(3).width/4,finger.bone(3).next_joint)
 
 def fijarProyeccion():
     ratioYX = float(ventana_tam_y) / float(ventana_tam_x)
@@ -163,11 +160,9 @@ def dibujarObjetos():
 
     for i,hand in enumerate(hands):
         if redraw[i]:
-            dibujarEsfera(colors[i], 30, hand.palm_position)
+            #dibujarEsfera(colors[i], 30, hand.palm_position)
             for finger in hand.fingers:
-                for j in xrange(5):
-                    dibujarFalange(colors[i], finger.bone(j+1))
-                #dibujarEsfera(colors[i], 10, finger.tip_position)
+                dibujarFalanges(colors[i],finger)
 
 # Función de dibujado
 def dibujar():
