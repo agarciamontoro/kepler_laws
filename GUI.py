@@ -142,15 +142,32 @@ def dibujarRejilla():
 
     glEnd()
 
+def distance(pos1,pos2):
+    return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
+
 def dibujarObjetos():
     redraw, hands = LeapListener.getHands()
     colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
+    sphere_pos = [0.0,100.0,-50.0]
+
+    touch = [False,False]
 
     for i,hand in enumerate(hands):
+        index = hand.fingers[1] #1 = TYPE_INDEX
+        if distance(index.tip_position, sphere_pos) < 30*1.2:
+            touch[i] = True
+            color = colors[i]
+
         if redraw[i]:
             #dibujarEsfera(colors[i], 30, hand.palm_position)
             for finger in hand.fingers:
                 dibujarFalanges(colors[i],finger)
+
+    if touch[0] or touch[1]:
+        dibujarEsfera(color, 30, sphere_pos)
+    else:
+        dibujarEsfera([1.0,1.0,1.0], 30, sphere_pos)
+
 
 # Función de dibujado
 def dibujar():
