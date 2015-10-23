@@ -146,9 +146,9 @@ def distance(pos1,pos2):
     return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
 def dibujarObjetos():
-    connected, redraw, hands = LeapListener.getHands()
+    redraw, hands = LeapListener.getHands()
 
-    if connected:
+    if redraw[0] or redraw[1]:
         colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
         sphere_pos = [0.0,100.0,-50.0]
         sphere_radius = 30

@@ -6,7 +6,6 @@ import Leap, sys
 class SampleListener(Leap.Listener):
 	def on_init(self, controller):
 		self.new_frame = [False, False]
-		self.connected = False
 		self.hands = None
 		print "Initialized"
 
@@ -27,7 +26,7 @@ class SampleListener(Leap.Listener):
 		print "Exited"
 
 	def getHands(self):
-		return self.connected, self.new_frame, self.hands
+		return self.new_frame, self.hands
 
 	def on_frame(self, controller):
 		# Obtiene el frame mas reciente y proporciona información básica
@@ -35,7 +34,6 @@ class SampleListener(Leap.Listener):
 		self.new_frame = [False, False]
 
 		if not frame.hands.is_empty:
-			self.connected = True
 			self.hands = frame.hands
 			self.new_frame = [frame.hands[0].is_valid, frame.hands[1].is_valid]
 
