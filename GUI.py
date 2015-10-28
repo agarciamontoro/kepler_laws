@@ -19,8 +19,8 @@ from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
 import LeapDriver
 
-camara_angulo_x = 25.0
-camara_angulo_y = 25.0
+camara_angulo_x = 50.0
+camara_angulo_y = 0.0
 
 ventana_pos_x  = 50
 ventana_pos_y  = 50
@@ -38,6 +38,7 @@ Stacks = 10
 # A partir del color deseado, el radio de la esfera y su posición
 def drawSphere(color, radio, coords):
     glMatrixMode(GL_MODELVIEW)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     glPushMatrix()
 
     glColor3f(color[0], color[1], color[2])
@@ -46,7 +47,7 @@ def drawSphere(color, radio, coords):
     glutSolidSphere(radio,Slices,Stacks)
 
     glPopMatrix()
-
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
 def drawFingerBones(color, finger):
     if finger.is_valid:
@@ -147,10 +148,10 @@ def distance(pos1,pos2):
 def drawObjects():
     redraw, hands = LeapListener.getHands()
     sphere_pos = [0.0,100.0,-50.0]
-    sphere_radius = 30
+    sphere_radius = 50
 
     if redraw[0] or redraw[1]:
-        colors = [ [1.0,0.0,1.0], [1.0,1.0,0.0] ]
+        colors = [ [1.0,0.0,0.0], [1.0,1.0,0.0] ]
 
         touch = [False,False]
 
@@ -165,9 +166,13 @@ def drawObjects():
                     drawFingerBones(colors[i],finger)
 
         if touch[0] and touch[1]:
-            color = [0.7, 0.5, 0.5]
+            color = [1.0, 0.5, 0.0]
         elif not touch[0] and not touch[1]:
             color = [1.0,1.0,1.0]
+        elif touch[0] and not touch[1]:
+            color = colors[1]
+        elif not touch[0] and touch[1]:
+            color = colors[0]
 
         drawSphere(color, sphere_radius, sphere_pos)
     else:
@@ -282,6 +287,7 @@ def initGUI(argumentos, listener):
 
     glEnable(GL_NORMALIZE)
     glEnable(GL_MULTISAMPLE_ARB);
+    glEnable(GL_DEPTH_TEST);
     glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
     glColor3f(0.0,0.0,0.0)
 
