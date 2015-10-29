@@ -3,7 +3,7 @@
 import numpy
 import Leap, sys
 
-tutorial_steps = 3
+tutorial_steps = 4
 current_step = 0
 
 class SampleListener(Leap.Listener):

@@ -52,7 +52,7 @@ steel_gray   = [0.25, 0.25, 0.25]
 grid_gray    = [0.2, 0.2, 0.2]
 
 # Tutorial images
-tutorial_images = ['Screenshots/FirstScreen.png','Screenshots/SecondScreen.png','Screenshots/ThirdScreen.png']
+tutorial_images = ['Screenshots/01.png','Screenshots/02.png','Screenshots/03.png','Screenshots/04.png']
 WIDTH = 1024
 HEIGHT = 739
 screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
