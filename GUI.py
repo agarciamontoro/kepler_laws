@@ -292,16 +292,16 @@ def mouseClick(button,state,x,y):
             origin = [-1,-1]
         else:
             origin = [x,y]
-    elif button == 3: # Rueda arriba aumenta el zoom
+    elif button == 3: # Wheel up increases zoom
         frustum_scalar_factor *= 1.05;
         redisp = True
-    elif button == 4: # Rueda abajo disminuye el zoom
+    elif button == 4: # Wheel down decreases zoom
         frustum_scalar_factor /= 1.05;
         redisp = True
-    elif button == 5: # Llevar la rueda a la izquierda gira la cámara a la izquierda
+    elif button == 5: # Move the wheel to the left to turn the camera to the left
         y_angle_camera -= da
         redisp = True
-    elif button == 6: # Llevar la rueda a la derecha gira la cámara a la derecha
+    elif button == 6: # Move the wheel to the right to turn the camera to the right
         y_angle_camera += da
         redisp = True
 
@@ -319,7 +319,7 @@ def moveMouse(x,y):
         origin[0] = x;
         origin[1] = y;
 
-        # Redibujar
+        # Redisplay
         glutPostRedisplay();
 
 def initGUI(argumentos, listener):

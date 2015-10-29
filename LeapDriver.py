@@ -12,14 +12,14 @@ class SampleListener(Leap.Listener):
 	def on_connect(self, controller):
 		print "Connected"
 
-		# Activar gestos
+		# Activate gestures
 		controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE);
 		controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
 		controller.enable_gesture(Leap.Gesture.TYPE_SCREEN_TAP);
 		controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
 
 	def on_disconnect(self, controller):
-		# Nota: no se mostrará cuando se arranque en un debugger.
+		# Note: not shown when it starts in a debugger
 		print "Disconnected"
 
 	def on_exit(self, controller):
@@ -29,7 +29,7 @@ class SampleListener(Leap.Listener):
 		return self.new_frame, self.hands
 
 	def on_frame(self, controller):
-		# Obtiene el frame mas reciente y proporciona información básica
+		# Obtain the most recent frame and provides basic information
 		frame = controller.frame()
 		self.new_frame = [False, False]
 
