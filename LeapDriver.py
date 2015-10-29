@@ -54,7 +54,6 @@ class SampleListener(Leap.Listener):
 					if tap.state is Leap.Gesture.STATE_STOP:
 						# Screen tap gesture finished!
 						current_step += 1
-						print(current_step)
 
 		if not frame.hands.is_empty:
 			self.hands = frame.hands
