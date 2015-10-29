@@ -65,4 +65,4 @@ Now, try to touch the ball, it will change its colour :)
 
 ![Interacción](Screenshots/ThirdScreen.png)
 
-Now, touch it with The other hand. Or even with both of them!
+Now, touch it with the other hand. Or even with both of them!

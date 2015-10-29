@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding=UTF-8
 
-#Origen : https://github.com/analca3/TriedroFrenet_Evoluta
-
 from __future__ import print_function
 
 import Leap, sys
@@ -11,17 +9,22 @@ import LeapDriver
 import GUI
 
 def main(argumentos):
-    # Crea el sample listener y el controller
+    # Create sample listener and controller
     listener = LeapDriver.SampleListener()
     controller = Leap.Controller()
 
     # Have the sample listener receive events from the controller
     controller.add_listener(listener)
 
-    while not controller.is_connected:
-        print("Por favor, conecte el Leap Motion.")
+    if not controller.is_connected:
+        print("Please, connect the Leap Motion device and start its daemon.")
 
-    #Inicializa el programa
+    while not controller.is_connected:
+        pass
+
+    print("Thank you!")
+
+    # Initialize program
     GUI.initGUI(argumentos, listener)
 
 
