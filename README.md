@@ -66,3 +66,7 @@ Now, try to touch the ball, it will change its colour :)
 ![Interacción](Screenshots/ThirdScreen.png)
 
 Now, touch it with the other hand. Or even with both of them!
+
+## References
+* **GUI.py**: the basic OpenGL functions -init, camera, projection and view settings- in this file are adapted from this [@analca3](https://github.com/analca3)'s repository: [Triodo de Frenet](https://github.com/analca3/TriedroFrenet_Evoluta).
+* **LeapDriver.py**: the basic structure of this file is taken from the [Hello World tutorial](https://developer.leapmotion.com/documentation/python/devguide/Sample_Tutorial.html).
