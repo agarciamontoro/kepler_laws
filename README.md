@@ -15,6 +15,7 @@ The project is coded in Python, using the Leap Motion driver and the OpenGL libr
 2. **Leap-Motion-Driver**
 3. **Leap-Motion-SDK**
 4. **Python2-OpenGL**
+5. **Python2-pygame**
 
 The most common distributions have all the library packages needed, but maybe the Leap Motion driver and SDK are not in the repositories. However, it is easy to download them from the [Download](https://developer.leapmotion.com/downloads) section of Leap Motion web page.
 
@@ -26,7 +27,7 @@ If the Python OpenGL library is not in your distribution repository, use the pac
 ### Arch Linux example
 Arch Linux has all required packages in the official -and AUR- repositories. To install Python and OpenGL, execute the following order:
 ```
-$> pacman -S python2 python2-opengl
+$> pacman -S python2 python2-opengl python2-pygame
 ```
 
 [leap-motion-driver](https://aur.archlinux.org/packages/leap-motion-driver) and [leap-motion-sdk](https://aur.archlinux.org/packages/leap-motion-sdk) packages are not in the official repository but in the Arch User Repository. To install them, just build the packages manually or use a package manager like `pacaur`:
