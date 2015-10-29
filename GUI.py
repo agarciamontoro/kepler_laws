@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=UTF-8
 
-#Origen : https://github.com/analca3/TriedroFrenet_Evoluta
+#origin : https://github.com/analca3/TriedroFrenet_Evoluta
 
 from __future__ import print_function
 
@@ -19,22 +19,25 @@ from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
 import LeapDriver
 
-camara_angulo_x = 50.0
-camara_angulo_y = 0.0
+# Camera angle
+x_angle_camera = 50.0
+y_angle_camera = 0.0
 
-ventana_pos_x  = 50
-ventana_pos_y  = 50
-ventana_tam_x  = 1024
-ventana_tam_y  = 800
+# Window attributes
+x_window_pos  = 50
+y_window_pos  = 50
+x_window_size = 1024
+y_window_size = 800
 
+# Frustum attributes
 frustum_dis_del = 0.1
 frustum_dis_tra = 10.0
-frustum_ancho = 0.5 * frustum_dis_del
+frustum_width = 0.5 * frustum_dis_del
+frustum_scalar_factor = .005
 
-frustum_factor_escala = .005
+# Glut attributes
 Slices = 10
 Stacks = 10
-
 quadric = None
 
 # Used Colors
@@ -48,18 +51,19 @@ grid_gray    = [0.2, 0.2, 0.2]
 
 # To the color desired, the radius of the sphere and his position
 def drawSphere(color, radio, coords):
-    # 
+    # Initialize the MODELVIEW Matrix
     glMatrixMode(GL_MODELVIEW)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     glPushMatrix()
 
+    # Draw the sphere
     glColor3f(color[0], color[1], color[2])
     glTranslatef(coords[0], coords[1], coords[2])
 
     glutSolidSphere(radio,Slices,Stacks)
 
     glPopMatrix()
-    # Now we draw the sphere shadow
+    # Draw the sphere shadow
     glPushMatrix()
 
     glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
@@ -71,96 +75,102 @@ def drawSphere(color, radio, coords):
     glPopMatrix()
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
+# Draw fingers
 def drawFingerBones(color, finger):
+    # First check if the fingers data are valid
     if finger.is_valid:
         glColor3f(color[0], color[1], color[2])
+        # For each finger junctions and bones
         for i in range(1,3):
             bone_tip = finger.bone(i).next_joint
             bone_base= finger.bone(i+1).next_joint
 
-            # Un
+            # Phalanx
             glBegin(GL_LINES)
             glVertex3f(bone_tip[0],bone_tip[1],bone_tip[2])
             glVertex3f(bone_base[0],bone_base[1],bone_base[2])
             glEnd()
 
+            # Phalanx shadow
             glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
             glBegin(GL_LINES)
             glVertex3f(bone_tip[0],0,bone_tip[2])
             glVertex3f(bone_base[0],0,bone_base[2])
             glEnd()
 
+            # Draw distal, intermediate phalanges
             drawSphere(color,finger.bone(i).width/4,bone_tip)
-
+        # Draw knuckles
         drawSphere(color,finger.bone(3).width/4,finger.bone(3).next_joint)
 
-def fijarProyeccion():
-    ratioYX = float(ventana_tam_y) / float(ventana_tam_x)
+# Fix the projection
+def fixProjection():
+    ratioYX = float(y_window_size) / float(x_window_size)
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
 
-    glFrustum(-frustum_ancho, +frustum_ancho, -frustum_ancho*ratioYX, +frustum_ancho*ratioYX, +frustum_dis_del, +frustum_dis_tra)
+    glFrustum(-frustum_width, +frustum_width, -frustum_width*ratioYX, +frustum_width*ratioYX, +frustum_dis_del, +frustum_dis_tra)
 
     glTranslatef( 0.0,0.0,-0.5*(frustum_dis_del+frustum_dis_tra))
 
-    glScalef( frustum_factor_escala, frustum_factor_escala,  frustum_factor_escala )
+    glScalef( frustum_scalar_factor, frustum_scalar_factor, frustum_scalar_factor )
 
-def fijarViewportProyeccion():
-    glViewport( 0, 0, ventana_tam_x, ventana_tam_y )
-    fijarProyeccion()
+def fixViewportProjection():
+    glViewport( 0, 0, x_window_size, y_window_size )
+    fixProjection()
 
-def fijarCamara():
-
+def fixCamera():
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
-    glRotatef(camara_angulo_x,1,0,0)
-    glRotatef(camara_angulo_y,0,1,0)
+    glRotatef(x_angle_camera,1,0,0)
+    glRotatef(y_angle_camera,0,1,0)
 
+# Draw axes
 def drawAxes():
+    axisLong = 1000.0
 
-    long_ejes = 1000.0
-
-    # establecer modo de dibujo a lineas (podría estar en puntos)
+    # Establish draw mode to line
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-    # Ancho de línea
+    # Line width
     glLineWidth( 1.5 );
-    # dibujar tres segmentos
+    # Draw three segment
     glBegin(GL_LINES)
 
-    # eje X, color rojo
+    # Axis X, color red
     glColor3f( 1.0, 0.0, 0.0 )
-    glVertex3f( -long_ejes, 0.0, 0.0 )
-    glVertex3f( +long_ejes, 0.0, 0.0 )
-    # eje Y, color verde
+    glVertex3f( -axisLong, 0.0, 0.0 )
+    glVertex3f( +axisLong, 0.0, 0.0 )
+    # Axis Y, color green
     glColor3f( 0.0, 1.0, 0.0 )
-    glVertex3f( 0.0, -long_ejes, 0.0 )
-    glVertex3f( 0.0, +long_ejes, 0.0 )
-    # eje Z, color azul
+    glVertex3f( 0.0, -axisLong, 0.0 )
+    glVertex3f( 0.0, +axisLong, 0.0 )
+    # Axis Z, color blue
     glColor3f( 0.0, 0.0, 1.0 )
-    glVertex3f( 0.0, 0.0, -long_ejes )
-    glVertex3f( 0.0, 0.0, +long_ejes )
+    glVertex3f( 0.0, 0.0, -axisLong )
+    glVertex3f( 0.0, 0.0, +axisLong )
 
     glEnd()
 
+# Draw grid
 def drawGrid():
+    # Grid long
     long_grid = 1000.0
     gap = 15.0
-
     num_lines = int( (long_grid*2)/gap )
 
-    # establecer modo de dibujo a lineas (podría estar en puntos)
+    # Establish draw mode to lines
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    # Ancho de línea
+    # Line width
     glLineWidth( 0.2 );
 
-    # dibujar las líneas
+    # Draw lines
     glBegin(GL_LINES)
-    # Color negro
     glColor3f(grid_gray[0], grid_gray[1], grid_gray[2])
 
+    # Draw all the lines
     for i in xrange(num_lines):
         if i != num_lines/2:
             glVertex3f( -long_grid, 0.0, gap*(i-num_lines/2) )
@@ -171,22 +181,27 @@ def drawGrid():
 
     glEnd()
 
+# Distance
 def distance(pos1,pos2):
     return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
+# Draw all the objects of the scene
 def drawObjects():
     redraw, hands = LeapListener.getHands()
+
+    # Sphere attributes
     sphere_pos = [0.0,100.0,-50.0]
     sphere_radius = 50
 
     if redraw[0] or redraw[1]:
-        colors = [ steel_red, steel_yellow ]
-
+        colors = [steel_red, steel_yellow]
         touch = [False,False]
 
+        # For each hand, draw all its elements
         for i,hand in enumerate(hands):
             if redraw[i]:
                 #drawSphere(colors[i], 30, hand.palm_position)
+                # For each finger draw all its elements
                 for finger in hand.fingers:
                     if distance(finger.tip_position, sphere_pos) < sphere_radius*1.5:
                         touch[i] = True
@@ -194,6 +209,7 @@ def drawObjects():
 
                     drawFingerBones(colors[i],finger)
 
+        # Control logic for the interaction with the sphere
         if touch[0] and touch[1]:
             color = [(colors[0][j] + colors[1][j])/2 for j in range(3)]
         elif not touch[0] and not touch[1]:
@@ -207,98 +223,101 @@ def drawObjects():
     else:
         drawSphere(steel_white, sphere_radius, sphere_pos)
 
-# Función de dibujado
+# Draw function
 def draw():
     glClearColor(steel_blue[0], steel_blue[1], steel_blue[2], 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-    fijarViewportProyeccion()
-    fijarCamara()
+    fixViewportProjection()
+    fixCamera()
 
-    # drawAxes()
+    #drawAxes()
     drawGrid()
     drawObjects()
 
     glutSwapBuffers()
 
-# Teclas normales: para cambiar escala y velocidad
-def teclaNormal(k, x, y):
-    global frustum_factor_escala, vertice_actual, velocidad, camara_angulo_x, camara_angulo_y, dibujoEvoluta
+
+# Normal keys: for change scala and speed
+def normalKey(k, x, y):
+    global frustum_scalar_factor, currentVertex, speed, x_angle_camera, y_angle_camera
 
     if k == '+':
-        frustum_factor_escala *= 1.05
+        frustum_scalar_factor *= 1.05
     elif k == '-':
-        frustum_factor_escala /= 1.05
+        frustum_scalar_factor /= 1.05
     elif k == b'r':
-        camara_angulo_x = camara_angulo_y = 0.0
+        x_angle_camera = y_angle_camera = 0.0
     elif k == b'q' or k == b'Q' or ord(k) == 27: # Escape
         sys.exit(0)
     else:
         return
     glutPostRedisplay()
 
-# Teclas especiales: para cambiar la cámara
-def teclaEspecial(k, x, y):
-    global camara_angulo_x, camara_angulo_y
+# Specials keys: for change the camera
+def specialKey(k, x, y):
+    global x_angle_camera, y_angle_camera
 
     if k == GLUT_KEY_UP:
-        camara_angulo_x += 5.0
+        x_angle_camera += 5.0
     elif k == GLUT_KEY_DOWN:
-        camara_angulo_x -= 5.0
+        x_angle_camera -= 5.0
     elif k == GLUT_KEY_LEFT:
-        camara_angulo_y += 5.0
+        y_angle_camera += 5.0
     elif k == GLUT_KEY_RIGHT:
-        camara_angulo_y -= 5.0
+        y_angle_camera -= 5.0
     else:
         return
     glutPostRedisplay()
 
-# Nuevo tamaño de ventana
-def cambioTamanio(width, height):
-    global ventana_tam_x,ventana_tam_y
+# New size of window
+def sizeChange(width, height):
+    global x_window_size,y_window_size
 
-    ventana_tam_x = width
-    ventana_tam_y = height
+    x_window_size = width
+    y_window_size = height
 
-    fijarViewportProyeccion()
+    fixViewportProjection()
     glutPostRedisplay()
 
-origen = [-1,-1]
-def pulsarRaton(boton,estado,x,y):
+origin = [-1,-1]
+# Mouse click event handler
+def mouseClick(button,state,x,y):
     da = 5.0
     redisp = False
-    global frustum_factor_escala,origen,camara_angulo_x,camara_angulo_y
+    global frustum_scalar_factor,origin,x_angle_camera,y_angle_camera
 
-    if boton == GLUT_LEFT_BUTTON:
-        if estado == GLUT_UP:
-            origen = [-1,-1]
+    if button == GLUT_LEFT_BUTTON:
+        if state == GLUT_UP:
+            origin = [-1,-1]
         else:
-            origen = [x,y]
-    elif boton == 3: # Rueda arriba aumenta el zoom
-        frustum_factor_escala *= 1.05;
+            origin = [x,y]
+    elif button == 3: # Rueda arriba aumenta el zoom
+        frustum_scalar_factor *= 1.05;
         redisp = True
-    elif boton == 4: # Rueda abajo disminuye el zoom
-        frustum_factor_escala /= 1.05;
+    elif button == 4: # Rueda abajo disminuye el zoom
+        frustum_scalar_factor /= 1.05;
         redisp = True
-    elif boton == 5: # Llevar la rueda a la izquierda gira la cámara a la izquierda
-        camara_angulo_y -= da
+    elif button == 5: # Llevar la rueda a la izquierda gira la cámara a la izquierda
+        y_angle_camera -= da
         redisp = True
-    elif boton == 6: # Llevar la rueda a la derecha gira la cámara a la derecha
-        camara_angulo_y += da
+    elif button == 6: # Llevar la rueda a la derecha gira la cámara a la derecha
+        y_angle_camera += da
         redisp = True
 
     if redisp:
         glutPostRedisplay();
 
-def moverRaton(x,y):
-    global camara_angulo_x,camara_angulo_y, origen
+# Move mouse event handler
+def moveMouse(x,y):
+    global x_angle_camera,y_angle_camera, origin
 
-    if origen[0] >= 0 and origen[1] >= 0:
-        camara_angulo_x += (y - origen[1])*0.25;
-        camara_angulo_y += (x - origen[0])*0.25;
+    if origin[0] >= 0 and origin[1] >= 0:
+        x_angle_camera += (y - origin[1])*0.25;
+        y_angle_camera += (x - origin[0])*0.25;
 
-        origen[0] = x;
-        origen[1] = y;
+        origin[0] = x;
+        origin[1] = y;
 
         # Redibujar
         glutPostRedisplay();
@@ -311,7 +330,7 @@ def initGUI(argumentos, listener):
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
 
     glutInitWindowPosition(0, 0)
-    glutInitWindowSize(ventana_tam_x, ventana_tam_y)
+    glutInitWindowSize(x_window_size, y_window_size)
     glutCreateWindow("Leap Motion project")
 
     glEnable(GL_NORMALIZE)
@@ -322,10 +341,10 @@ def initGUI(argumentos, listener):
 
     glutDisplayFunc(draw)
     glutIdleFunc(draw)
-    glutReshapeFunc(cambioTamanio)
-    glutKeyboardFunc(teclaNormal)
-    glutSpecialFunc(teclaEspecial)
-    glutMouseFunc(pulsarRaton)
-    glutMotionFunc(moverRaton)
+    glutReshapeFunc(sizeChange)
+    glutKeyboardFunc(normalKey)
+    glutSpecialFunc(specialKey)
+    glutMouseFunc(mouseClick)
+    glutMotionFunc(moveMouse)
     quadric = gluNewQuadric()
     glutMainLoop()
