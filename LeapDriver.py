@@ -3,7 +3,7 @@
 import numpy
 import Leap, sys
 
-tutorial_steps = 2
+tutorial_steps = 3
 current_step = 0
 
 class SampleListener(Leap.Listener):
@@ -45,7 +45,7 @@ class SampleListener(Leap.Listener):
 
 		global current_step
 
-		# If the tutorial is not finished, try to detect swipe gesture
+		# If the tutorial is not finished, try to detect key tap gesture
 		if current_step < tutorial_steps:
 			for gesture in frame.gestures():
 				if gesture.type == Leap.Gesture.TYPE_KEY_TAP:

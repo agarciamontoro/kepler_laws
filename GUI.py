@@ -52,9 +52,9 @@ steel_gray   = [0.25, 0.25, 0.25]
 grid_gray    = [0.2, 0.2, 0.2]
 
 # Tutorial images
-tutorial_images = ['Screenshots/FirstScreen.png','Screenshots/SecondScreen.png']
-WIDTH = 1062
-HEIGHT = 798
+tutorial_images = ['Screenshots/FirstScreen.png','Screenshots/SecondScreen.png','Screenshots/ThirdScreen.png']
+WIDTH = 1024
+HEIGHT = 739
 screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
 
 # To the color desired, the radius of the sphere and his position
