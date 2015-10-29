@@ -233,7 +233,9 @@ def draw():
 
     #drawAxes()
     drawGrid()
-    drawObjects()
+
+    if LeapListener.tutorialFinished():
+        drawObjects()
 
     glutSwapBuffers()
 

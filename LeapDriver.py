@@ -3,6 +3,9 @@
 import numpy
 import Leap, sys
 
+tutorial_steps = 5
+current_step = 0
+
 class SampleListener(Leap.Listener):
 	def on_init(self, controller):
 		self.new_frame = [False, False]
@@ -13,9 +16,6 @@ class SampleListener(Leap.Listener):
 		print "Connected"
 
 		# Activate gestures
-		controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE);
-		controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
-		controller.enable_gesture(Leap.Gesture.TYPE_SCREEN_TAP);
 		controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
 
 	def on_disconnect(self, controller):
@@ -28,10 +28,23 @@ class SampleListener(Leap.Listener):
 	def getHands(self):
 		return self.new_frame, self.hands
 
+	def tutorialFinished(self):
+		return current_step >= tutorial_steps
+
 	def on_frame(self, controller):
 		# Obtain the most recent frame and provides basic information
 		frame = controller.frame()
 		self.new_frame = [False, False]
+
+		global current_step
+
+		# If the tutorial is not finished, try to detect swipe gesture
+		if current_step < tutorial_steps:
+			for gesture in frame.gestures():
+				if gesture.type == Leap.Gesture.TYPE_SWIPE:
+					# Swipe gesture detected!
+					current_step += 1
+					print(current_step)
 
 		if not frame.hands.is_empty:
 			self.hands = frame.hands

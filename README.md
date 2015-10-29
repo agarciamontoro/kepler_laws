@@ -26,13 +26,13 @@ If the Python OpenGL library is not in your distribution repository, use the pac
 ### Arch Linux example
 Arch Linux has all required packages in the official -and AUR- repositories. To install Python and OpenGL, execute the following order:
 ```
-pacman -S python2 python2-opengl
+$> pacman -S python2 python2-opengl
 ```
 
 [leap-motion-driver](https://aur.archlinux.org/packages/leap-motion-driver) and [leap-motion-sdk](https://aur.archlinux.org/packages/leap-motion-sdk) packages are not in the official repository but in the Arch User Repository. To install them, just build the packages manually or use a package manager like `pacaur`:
 
 ```
-pacaur -S leap-motion-driver leap-motion-sdk
+$> pacaur -S leap-motion-driver leap-motion-sdk
 ```
 
 Caution! leap-motion-sdk throws an error if the pkg-build is not edited. You have to add `${pkgdir}` in the following lines
