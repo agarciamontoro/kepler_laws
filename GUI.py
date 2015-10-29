@@ -241,6 +241,10 @@ def load_image(filename, scale = 1):
     image = image.convert()
     return image
 
+def showTutorialImage(num_image):
+    actual_image = load_image(tutorial_images[num_image])
+    screen.blit(actual_image, (0,0))
+    pygame.display.flip()
 
 # Draw function
 def draw():
@@ -256,9 +260,7 @@ def draw():
 
     if not LeapListener.tutorialFinished():
         num_image = LeapListener.tutorialState()
-        actual_image = load_image(tutorial_images[num_image])
-        screen.blit(actual_image, (0,0))
-        pygame.display.flip()
+        showTutorialImage(num_image)
     else:
         pygame.display.quit()
         drawObjects()

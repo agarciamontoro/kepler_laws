@@ -16,7 +16,11 @@ class SampleListener(Leap.Listener):
 		print "Connected"
 
 		# Activate gestures
-		controller.enable_gesture(Leap.Gesture.TYPE_SCREEN_TAP);
+		controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP)
+		controller.config.set("Gesture.KeyTap.MinDownVelocity", 40.0)
+		controller.config.set("Gesture.KeyTap.HistorySeconds", .2)
+		controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
+		controller.config.save()
 
 	def on_disconnect(self, controller):
 		# Note: not shown when it starts in a debugger
@@ -44,10 +48,13 @@ class SampleListener(Leap.Listener):
 		# If the tutorial is not finished, try to detect swipe gesture
 		if current_step < tutorial_steps:
 			for gesture in frame.gestures():
-				if gesture.type == Leap.Gesture.TYPE_SCREEN_TAP:
-					# Swipe gesture detected!
-					current_step += 1
-					print(current_step)
+				if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
+					# Screen tap gesture detected!
+					tap = Leap.KeyTapGesture(gesture)
+					if tap.state is Leap.Gesture.STATE_STOP:
+						# Screen tap gesture finished!
+						current_step += 1
+						print(current_step)
 
 		if not frame.hands.is_empty:
 			self.hands = frame.hands
