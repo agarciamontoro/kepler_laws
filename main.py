@@ -18,6 +18,9 @@ def main(argumentos):
     # Have the sample listener receive events from the controller
     controller.add_listener(listener)
 
+    while not controller.is_connected:
+        print("Por favor, conecte el Leap Motion.")
+
     #Inicializa el programa
     GUI.initGUI(argumentos, listener)
 
