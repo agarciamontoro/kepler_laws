@@ -14,6 +14,8 @@ import sys, time
 
 import math
 
+import pygame
+
 from OpenGL.constants import GLfloat
 from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
@@ -48,6 +50,12 @@ steel_orange = [1.0, 0.3411764705882353, 0.13725490196078433]
 steel_white  = [1.0, 1.0, 1.0]
 steel_gray   = [0.25, 0.25, 0.25]
 grid_gray    = [0.2, 0.2, 0.2]
+
+# Tutorial images
+tutorial_images = ['Screenshots/FirstScreen.png','Screenshots/SecondScreen.png']
+WIDTH = 1062
+HEIGHT = 798
+screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
 
 # To the color desired, the radius of the sphere and his position
 def drawSphere(color, radio, coords):
@@ -223,8 +231,20 @@ def drawObjects():
     else:
         drawSphere(steel_white, sphere_radius, sphere_pos)
 
+def load_image(filename, scale = 1):
+    try: image = pygame.image.load(filename)
+    except pygame.error as message:
+        raise SystemExit(message)
+    image = image.convert()
+
+    image = pygame.transform.scale(image, (WIDTH / scale, HEIGHT / scale))
+    image = image.convert()
+    return image
+
+
 # Draw function
 def draw():
+    global tutorial_images, screen
     glClearColor(steel_blue[0], steel_blue[1], steel_blue[2], 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -234,11 +254,18 @@ def draw():
     #drawAxes()
     drawGrid()
 
-    if LeapListener.tutorialFinished():
+    if not LeapListener.tutorialFinished():
+        pass
+        '''
+        num_image = LeapListener.tutorialState()
+        actual_image = load_image(tutorial_images[num_image])
+        screen.blit(actual_image, (0,0))
+        pygame.display.flip()
+        '''
+    else:
         drawObjects()
 
     glutSwapBuffers()
-
 
 # Normal keys: for change scala and speed
 def normalKey(k, x, y):
@@ -325,7 +352,7 @@ def moveMouse(x,y):
         glutPostRedisplay();
 
 def initGUI(argumentos, listener):
-    global LeapListener, quadric
+    global LeapListener, quadric, screen
     LeapListener = listener
 
     glutInit(argumentos)
@@ -340,6 +367,8 @@ def initGUI(argumentos, listener):
     glEnable(GL_DEPTH_TEST);
     glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
     glColor3f(0.0,0.0,0.0)
+
+    pygame.display.set_caption("Leap Motion tutorial")
 
     glutDisplayFunc(draw)
     glutIdleFunc(draw)
