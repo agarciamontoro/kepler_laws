@@ -35,16 +35,38 @@ frustum_factor_escala = .005
 Slices = 10
 Stacks = 10
 
-# A partir del color deseado, el radio de la esfera y su posición
+quadric = None
+
+# Used Colors
+steel_blue   = [0.27450980392156865,0.5098039215686274,0.7058823529411765]
+steel_red    = [1.0,0.3215686274509804,0.3215686274509804]
+steel_yellow = [1.0, 0.7568627450980392, 0.027450980392156862]
+steel_orange = [1.0, 0.3411764705882353, 0.13725490196078433]
+steel_white  = [1.0, 1.0, 1.0]
+steel_gray   = [0.25, 0.25, 0.25]
+grid_gray    = [0.2, 0.2, 0.2]
+
+# To the color desired, the radius of the sphere and his position
 def drawSphere(color, radio, coords):
+    # 
     glMatrixMode(GL_MODELVIEW)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     glPushMatrix()
 
     glColor3f(color[0], color[1], color[2])
-    glTranslatef(coords[0],coords[1],coords[2])
+    glTranslatef(coords[0], coords[1], coords[2])
 
     glutSolidSphere(radio,Slices,Stacks)
+
+    glPopMatrix()
+    # Now we draw the sphere shadow
+    glPushMatrix()
+
+    glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
+    glTranslatef(coords[0], 0, coords[2])
+    glRotatef(90, 1.0, 0.0, 0.0)
+
+    gluDisk(quadric, 0.0, radio*(1+coords[1]/380), Slices, 1)
 
     glPopMatrix()
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
@@ -56,9 +78,16 @@ def drawFingerBones(color, finger):
             bone_tip = finger.bone(i).next_joint
             bone_base= finger.bone(i+1).next_joint
 
+            # Un
             glBegin(GL_LINES)
             glVertex3f(bone_tip[0],bone_tip[1],bone_tip[2])
             glVertex3f(bone_base[0],bone_base[1],bone_base[2])
+            glEnd()
+
+            glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
+            glBegin(GL_LINES)
+            glVertex3f(bone_tip[0],0,bone_tip[2])
+            glVertex3f(bone_base[0],0,bone_base[2])
             glEnd()
 
             drawSphere(color,finger.bone(i).width/4,bone_tip)
@@ -118,7 +147,7 @@ def drawAxes():
 
 def drawGrid():
     long_grid = 1000.0
-    gap = 50.0
+    gap = 15.0
 
     num_lines = int( (long_grid*2)/gap )
 
@@ -130,7 +159,7 @@ def drawGrid():
     # dibujar las líneas
     glBegin(GL_LINES)
     # Color negro
-    glColor3f( 0.2, 0.2, 0.2 )
+    glColor3f(grid_gray[0], grid_gray[1], grid_gray[2])
 
     for i in xrange(num_lines):
         if i != num_lines/2:
@@ -151,7 +180,7 @@ def drawObjects():
     sphere_radius = 50
 
     if redraw[0] or redraw[1]:
-        colors = [ [1.0,0.0,0.0], [1.0,1.0,0.0] ]
+        colors = [ steel_red, steel_yellow ]
 
         touch = [False,False]
 
@@ -166,9 +195,9 @@ def drawObjects():
                     drawFingerBones(colors[i],finger)
 
         if touch[0] and touch[1]:
-            color = [1.0, 0.5, 0.0]
+            color = [(colors[0][j] + colors[1][j])/2 for j in range(3)]
         elif not touch[0] and not touch[1]:
-            color = [1.0,1.0,1.0]
+            color = steel_white
         elif touch[0] and not touch[1]:
             color = colors[1]
         elif not touch[0] and touch[1]:
@@ -176,17 +205,17 @@ def drawObjects():
 
         drawSphere(color, sphere_radius, sphere_pos)
     else:
-        drawSphere([1.0,1.0,1.0], sphere_radius, sphere_pos)
+        drawSphere(steel_white, sphere_radius, sphere_pos)
 
 # Función de dibujado
 def draw():
-    glClearColor(0.0, 0.0, 0.0, 1.0)
+    glClearColor(steel_blue[0], steel_blue[1], steel_blue[2], 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     fijarViewportProyeccion()
     fijarCamara()
 
-    drawAxes()
+    # drawAxes()
     drawGrid()
     drawObjects()
 
@@ -298,4 +327,5 @@ def initGUI(argumentos, listener):
     glutSpecialFunc(teclaEspecial)
     glutMouseFunc(pulsarRaton)
     glutMotionFunc(moverRaton)
+    quadric = gluNewQuadric()
     glutMainLoop()
