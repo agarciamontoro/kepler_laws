@@ -87,13 +87,13 @@ def drawSphere(color, radio, coords):
 def drawFingerBones(color, finger):
     # First check if the fingers data are valid
     if finger.is_valid:
-        glColor3f(color[0], color[1], color[2])
         # For each finger junctions and bones
         for i in range(1,3):
             bone_tip = finger.bone(i).next_joint
             bone_base= finger.bone(i+1).next_joint
 
             # Phalanx
+            glColor3f(color[0], color[1], color[2])
             glBegin(GL_LINES)
             glVertex3f(bone_tip[0],bone_tip[1],bone_tip[2])
             glVertex3f(bone_base[0],bone_base[1],bone_base[2])
