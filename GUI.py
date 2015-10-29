@@ -255,14 +255,12 @@ def draw():
     drawGrid()
 
     if not LeapListener.tutorialFinished():
-        pass
-        '''
         num_image = LeapListener.tutorialState()
         actual_image = load_image(tutorial_images[num_image])
         screen.blit(actual_image, (0,0))
         pygame.display.flip()
-        '''
     else:
+        pygame.display.quit()
         drawObjects()
 
     glutSwapBuffers()
