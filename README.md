@@ -54,19 +54,19 @@ Connect the Leap Motion, start the daemon -with `sudo leapd`-, and execute the f
 $> python2 main.py
 ```
 
-You will see a scene like the following one:
+You will see a tutorial like the following:
 
-![Primera escena](Screenshots/FirstScreen.png)
+![Primera escena](Screenshots/01.png)
 
-What if you place your hands above the Leap Motion device? Try it!
+Follow the tutorial step by step and you will get to the real program!s
 
-![Reconocimiento de manos](Screenshots/SecondScreen.png)
+![02](Screenshots/02.png)
 
-Now, try to touch the ball, it will change its colour :)
+![03](Screenshots/03.png)
 
-![Interacción](Screenshots/ThirdScreen.png)
+![04](Screenshots/04.png)
 
-Now, touch it with the other hand. Or even with both of them!
+When you finish the tutorial, you can start playing with the ball and with its colors. Try to touch it with one hand, the other, or even both of them!
 
 ## First assignment
 ### Problem considered
