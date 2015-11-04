@@ -3,6 +3,9 @@
 import numpy
 import Leap, sys
 
+from Leap import Finger
+import math
+
 tutorial_steps = 4
 current_step = 0
 
@@ -58,6 +61,7 @@ class SampleListener(Leap.Listener):
 		if not frame.hands.is_empty:
 			self.hands = frame.hands
 			self.new_frame = [frame.hands[0].is_valid, frame.hands[1].is_valid]
+			fingerCount(frame.hands[0])
 
 	def state_string(self, state):
 		if state == Leap.Gesture.STATE_START:
