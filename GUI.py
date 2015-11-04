@@ -71,9 +71,9 @@ def drawSphere(color, radio, coords):
     glutSolidSphere(radio,Slices,Stacks)
 
     glPopMatrix()
-    # Draw the sphere shadow
     glPushMatrix()
 
+    # Draw the sphere shadow
     glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
     glTranslatef(coords[0], 0, coords[2])
     glRotatef(90, 1.0, 0.0, 0.0)
@@ -110,6 +110,18 @@ def drawFingerBones(color, finger):
             drawSphere(color,finger.bone(i).width/4,bone_tip)
         # Draw knuckles
         drawSphere(color,finger.bone(3).width/4,finger.bone(3).next_joint)
+
+def drawHand(color, hands):
+    for i,hand in enumerate(hands):
+        if redraw[i]:
+            #drawSphere(colors[i], 30, hand.palm_position)
+            # For each finger draw all its elements
+            for finger in hand.fingers:
+                if distance(finger.tip_position, sphere_pos) < sphere_radius*1.5:
+                    touch[i] = True
+                    color = colors[i]
+
+                drawFingerBones(colors[i],finger)
 
 # Fix the projection
 def fixProjection():
