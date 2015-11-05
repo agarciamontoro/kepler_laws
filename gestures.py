@@ -8,7 +8,7 @@ def distance(pos1,pos2,weight=[1.0,1.0,1.0]):
     return math.sqrt(sum([weight[i]*(pos2[i]-pos1[i])**2 for i in range(3)]))
 
 # Returns whether a hand is doing an OK gesture
-def isGestureOK(hand, tolerance = 10):
+def isGestureOK(hand, tolerance = 30):
     gesture = False
     if hand.is_valid:
         index = hand.fingers.finger_type(Finger.TYPE_INDEX)[0]
