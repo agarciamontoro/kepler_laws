@@ -3,7 +3,7 @@
 
 #origin : https://github.com/analca3/TriedroFrenet_Evoluta
 
-from __future__ import print_function
+from __future__ import print_functioni
 
 import OpenGL
 OpenGL.ERROR_ON_COPY = True
@@ -21,67 +21,53 @@ from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
 import LeapDriver
 
-# Camera angle
-x_angle_camera = 50.0
-y_angle_camera = 0.0
+class GUI:
+    # Camera angle
+    x_angle_camera = 50.0
+    y_angle_camera = 0.0
 
-# Window attributes
-x_window_pos  = 50
-y_window_pos  = 50
-x_window_size = 1024
-y_window_size = 800
+    # Window attributes
+    x_window_pos  = 50
+    y_window_pos  = 50
+    x_window_size = 1024
+    y_window_size = 800
 
-# Frustum attributes
-frustum_dis_del = 0.1
-frustum_dis_tra = 10.0
-frustum_width = 0.5 * frustum_dis_del
-frustum_scalar_factor = .005
+    # Frustum attributes
+    frustum_dis_del = 0.1
+    frustum_dis_tra = 10.0
+    frustum_width = 0.5 * frustum_dis_del
+    frustum_scalar_factor = .005
 
-# Glut attributes
-Slices = 10
-Stacks = 10
-quadric = None
 
-# Used Colors
-steel_blue   = [0.27,0.5,0.7]
-steel_red    = [1.0,0.32,0.32]
-steel_yellow = [1.0, 0.75, 0.03]
-steel_orange = [1.0, 0.34, 0.14]
-steel_white  = [1.0, 1.0, 1.0]
-steel_gray   = [0.25, 0.25, 0.25]
-grid_gray    = [0.2, 0.2, 0.2]
 
-# Tutorial images
-tutorial_images = ['Screenshots/01.png','Screenshots/02.png','Screenshots/03.png','Screenshots/04.png']
-WIDTH = 1024
-HEIGHT = 739
-screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
+    # Objects to draw
+    Objects = []
 
-# To the color desired, the radius of the sphere and his position
-def drawSphere(color, radio, coords):
-    # Initialize the MODELVIEW Matrix
-    glMatrixMode(GL_MODELVIEW)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-    glPushMatrix()
+    # To the color desired, the radius of the sphere and his position
+    def drawSphere(color, radio, coords):
+        # Initialize the MODELVIEW Matrix
+        glMatrixMode(GL_MODELVIEW)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+        glPushMatrix()
 
-    # Draw the sphere
-    glColor3f(color[0], color[1], color[2])
-    glTranslatef(coords[0], coords[1], coords[2])
+        # Draw the sphere
+        glColor3f(color[0], color[1], color[2])
+        glTranslatef(coords[0], coords[1], coords[2])
 
-    glutSolidSphere(radio,Slices,Stacks)
+        glutSolidSphere(radio,Slices,Stacks)
 
-    glPopMatrix()
-    glPushMatrix()
+        glPopMatrix()
+        glPushMatrix()
 
-    # Draw the sphere shadow
-    glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
-    glTranslatef(coords[0], 0, coords[2])
-    glRotatef(90, 1.0, 0.0, 0.0)
+        # Draw the sphere shadow
+        glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
+        glTranslatef(coords[0], 0, coords[2])
+        glRotatef(90, 1.0, 0.0, 0.0)
 
-    gluDisk(quadric, 0.0, radio*(1+coords[1]/380), Slices, 1)
+        gluDisk(quadric, 0.0, radio*(1+coords[1]/380), Slices, 1)
 
-    glPopMatrix()
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+        glPopMatrix()
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
 # Draw fingers
 def drawFingerBones(color, finger):
