@@ -3,6 +3,8 @@
 
 #origin : https://github.com/analca3/TriedroFrenet_Evoluta
 
+import math
+
 steel_gray   = [0.25, 0.25, 0.25]
 
 class Ball:
@@ -11,13 +13,11 @@ class Ball:
     coord = [0.0,100.0,-50.0]
     Slices = 10
     Stacks = 10
-    quadric = None
 
     def __init__(self, color, radius, coord):
         self.color = color
         self.radius = radius
         self.coord = coord
-        self.quadric = gluNewQuadric()
 
     def draw(self):
         # Initialize the MODELVIEW Matrix
@@ -32,14 +32,18 @@ class Ball:
         glutSolidSphere(self.radius,self.Slices,self.Stacks)
 
         glPopMatrix()
-        glPushMatrix()
 
         # Draw the sphere shadow
-        glColor3f(*steel_gray)
-        glTranslatef(self.coords[0], 0, self.coords[2])
-        glRotatef(90, 1.0, 0.0, 0.0)
+        shadow_radius = radius*(1+coords[1]/380)
+        glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
 
-        gluDisk(self.quadric, 0.0, self.radius*(1+self.coords[1]/380), self.Slices, 1)
+        glBegin(GL_POLYGON)
+        for i in range(Slices):
+            angle = i*2*math.pi/Slices
+            x = shadow_radius * math.cos(angle) + coords[0]
+            z = shadow_radius * math.sin(angle) + coords[2]
 
-        glPopMatrix()
+            glVertex3f(x,0.0,z)
+        glEnd()
+
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
