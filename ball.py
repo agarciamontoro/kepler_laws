@@ -37,6 +37,7 @@ class Ball:
 
         glutSolidSphere(self.radius,self.Slices,self.Stacks)
 
+        # Revert the matrix stack to its previous state
         glPopMatrix()
 
         # Draw the sphere shadow
@@ -51,5 +52,3 @@ class Ball:
 
             glVertex3f(x,0.0,z)
         glEnd()
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
