@@ -3,6 +3,12 @@
 
 #origin : https://github.com/analca3/TriedroFrenet_Evoluta
 
+import OpenGL
+OpenGL.ERROR_ON_COPY = True
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+
 import math
 
 steel_gray   = [0.25, 0.25, 0.25]
@@ -27,21 +33,21 @@ class Ball:
 
         # Draw the sphere
         glColor3f(*self.color)
-        glTranslatef(*self.coords)
+        glTranslatef(*self.coord)
 
         glutSolidSphere(self.radius,self.Slices,self.Stacks)
 
         glPopMatrix()
 
         # Draw the sphere shadow
-        shadow_radius = radius*(1+coords[1]/380)
-        glColor3f(steel_gray[0], steel_gray[1], steel_gray[2])
+        shadow_radius = self.radius*(1+self.coord[1]/380)
+        glColor3f(*steel_gray)
 
         glBegin(GL_POLYGON)
-        for i in range(Slices):
-            angle = i*2*math.pi/Slices
-            x = shadow_radius * math.cos(angle) + coords[0]
-            z = shadow_radius * math.sin(angle) + coords[2]
+        for i in range(self.Slices):
+            angle = i*2*math.pi/self.Slices
+            x = shadow_radius * math.cos(angle) + self.coord[0]
+            z = shadow_radius * math.sin(angle) + self.coord[2]
 
             glVertex3f(x,0.0,z)
         glEnd()
