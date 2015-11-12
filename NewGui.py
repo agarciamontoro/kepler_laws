@@ -10,15 +10,12 @@ OpenGL.ERROR_ON_COPY = True
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-import sys, time
-
-import math
-import threading
-
 from OpenGL.constants import GLfloat
 from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
-import LeapDriver
+import sys, time, math, threading
+
+import LeapDriver, game
 
 from constants import *
 
@@ -46,7 +43,6 @@ class GUI:
 
     def __init__(self, objects):
         self.objects = objects
-        #self.initGUI(sys.argv)
 
     # Fix the projection
     def fixProjection(self):
@@ -140,6 +136,8 @@ class GUI:
 
         #drawAxes()
         self.drawGrid()
+
+        self.objects = game.processFrame()
 
         # Draw all scene elements
         for element in self.objects:

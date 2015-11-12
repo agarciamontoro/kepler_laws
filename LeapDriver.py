@@ -1,6 +1,5 @@
 # coding=UTF-8
 
-import numpy
 import Leap, sys
 
 from Leap import Finger
@@ -44,8 +43,6 @@ class SampleListener(Leap.Listener):
 		if not frame.hands.is_empty:
 			self.hands = frame.hands
 			self.new_frame = [frame.hands[0].is_valid, frame.hands[1].is_valid]
-
-		game.processFrame(*self.getHands())
 		'''
 		# Obtain the most recent frame and provides basic information
 		frame = controller.frame()

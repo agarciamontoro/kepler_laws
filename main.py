@@ -2,16 +2,13 @@
 # coding=UTF-8
 
 from __future__ import print_function
+import threading
 
 import Leap, sys
 
-import LeapDriver
+import LeapDriver, game
 import NewGui as GUI
 from constants import *
-import ball
-import game
-
-import threading
 
 def main(arguments):
     # Create sample listener and controller
@@ -24,18 +21,23 @@ def main(arguments):
     if not controller.is_connected:
         print("Please, connect the Leap Motion device and start its daemon.")
 
+    # Wait until Leap Device is connected
     while not controller.is_connected:
         pass
 
     print("Thank you, enjoy!")
 
+    # Construct GUI object
     scene = GUI.GUI([])
 
+    # Start OpenGL main loop in a different thread
     GUIthread = threading.Thread(target=scene.initGUI, args=(), kwargs={})
     GUIthread.start()
 
-    game.initGame(scene)
+    # Start the game
+    game.initGame(listener)
 
+    # Wait to the GUI object to be finished
     GUIthread.join()
 
 
