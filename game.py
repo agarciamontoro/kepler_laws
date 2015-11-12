@@ -32,5 +32,7 @@ def processFrame():
     if new_frame[0]:
         draw_hand.setHand(hands[0])
         objects.append(draw_hand)
-
+    if new_frame[1]:
+        draw_hand.setHand(hands[1])
+        objects.append(draw_hand)
     return objects
