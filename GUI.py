@@ -383,7 +383,7 @@ def initGUI(argumentos, listener):
     pygame.display.set_caption("Leap Motion tutorial")
 
     glutDisplayFunc(draw)
-    glutIdleFunc(draw)
+    #glutIdleFunc(draw)
     glutReshapeFunc(sizeChange)
     glutKeyboardFunc(normalKey)
     glutSpecialFunc(specialKey)

@@ -11,19 +11,19 @@ from OpenGL.GLUT import *
 
 import math
 
-steel_gray   = [0.25, 0.25, 0.25]
+from constants import *
 
 class Ball:
     color = [1.0, 1.0, 1.0]
     radius = 50
     coord = [0.0,100.0,-50.0]
-    Slices = 10
-    Stacks = 10
+    Slices = SLICES
+    Stacks = STACKS
 
     def __init__(self, color, radius, coord):
         self.color = color
         self.radius = radius
-        self.coord = coord
+        self.coord = [coord[i] for i in range(3)]
 
     def draw(self):
         # Initialize the MODELVIEW Matrix

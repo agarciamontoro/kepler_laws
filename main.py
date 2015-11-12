@@ -6,16 +6,19 @@ from __future__ import print_function
 import Leap, sys
 
 import LeapDriver
-#import GUI
 import NewGui as GUI
-import colors
+from constants import *
+import ball
+import game
 
-def main(argumentos):
+import threading
+
+def main(arguments):
     # Create sample listener and controller
     listener = LeapDriver.SampleListener()
     controller = Leap.Controller()
 
-    # Have the sample listener receive events from the controller
+    # Let the sample listener receive events from the controller
     controller.add_listener(listener)
 
     if not controller.is_connected:
@@ -24,13 +27,16 @@ def main(argumentos):
     while not controller.is_connected:
         pass
 
-    print("Thank you!")
+    print("Thank you, enjoy!")
 
-    # Initialize program
-    # GUI.initGUI(argumentos, listener)
+    scene = GUI.GUI([])
 
-    bola = Ball(colors.steel_red, 50, [0.0,100.0,-200.0])
-    GUIscene = GUI(listener, [bola])
+    GUIthread = threading.Thread(target=scene.initGUI, args=(), kwargs={})
+    GUIthread.start()
+
+    game.initGame(scene)
+
+    GUIthread.join()
 
 
 if __name__ == '__main__':

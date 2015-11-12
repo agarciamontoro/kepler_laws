@@ -3,7 +3,7 @@
 
 #origin : https://github.com/analca3/TriedroFrenet_Evoluta
 
-from __future__ import print_functioni
+from __future__ import print_function
 
 import OpenGL
 OpenGL.ERROR_ON_COPY = True
@@ -13,15 +13,14 @@ from OpenGL.GLUT import *
 import sys, time
 
 import math
-
-import pygame
+import threading
 
 from OpenGL.constants import GLfloat
 from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
 import LeapDriver
 
-import colors
+from constants import *
 
 class GUI:
     # Camera angle
@@ -37,24 +36,20 @@ class GUI:
     # Frustum attributes
     frustum_dis_del = 0.1
     frustum_dis_tra = 10.0
-    frustum_width = 0.5 * self.frustum_dis_del
+    frustum_width = 0.5 * frustum_dis_del
     frustum_scalar_factor = .005
-
-    leap_listener
 
     # Auxiliar variable to mouse management
     _origin = [-1,-1]
 
-    def __init__(leap_listener,objects):
-        self.leap_listener = leap_listener
-        self.objects = objects
-        initGUI(sys.argv)
+    objects = []
 
-    def addObject(item):
-        self.objects.append(item)
+    def __init__(self, objects):
+        self.objects = objects
+        #self.initGUI(sys.argv)
 
     # Fix the projection
-    def fixProjection():
+    def fixProjection(self):
         ratioYX = float(self.y_window_size) / float(self.x_window_size)
 
         glMatrixMode(GL_PROJECTION)
@@ -66,11 +61,11 @@ class GUI:
 
         glScalef( self.frustum_scalar_factor, self.frustum_scalar_factor, self.frustum_scalar_factor )
 
-    def fixViewportProjection():
+    def fixViewportProjection(self):
         glViewport( 0, 0, self.x_window_size, self.y_window_size )
-        fixProjection()
+        self.fixProjection()
 
-    def fixCamera():
+    def fixCamera(self):
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
@@ -78,7 +73,7 @@ class GUI:
         glRotatef(self.y_angle_camera,0,1,0)
 
     # Draw axes
-    def drawAxes():
+    def drawAxes(self):
         axisLong = 1000.0
 
         # Establish draw mode to line
@@ -105,7 +100,7 @@ class GUI:
         glEnd()
 
     # Draw grid
-    def drawGrid():
+    def drawGrid(self):
         # Grid long
         long_grid = 1000.0
         gap = 15.0
@@ -118,7 +113,7 @@ class GUI:
 
         # Draw lines
         glBegin(GL_LINES)
-        glColor3f(grid_gray[0], grid_gray[1], grid_gray[2])
+        glColor3f(*grid_gray)
 
         # Draw all the lines
         for i in xrange(num_lines):
@@ -132,19 +127,19 @@ class GUI:
         glEnd()
 
     # Distance
-    def distance(pos1,pos2):
+    def distance(self,pos1,pos2):
         return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
     # Draw function
-    def draw():
-        glClearColor(*colors.steel_blue, 1.0)
+    def draw(self):
+        glClearColor(steel_blue[0],steel_blue[1],steel_blue[2], 1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        fixViewportProjection()
-        fixCamera()
+        self.fixViewportProjection()
+        self.fixCamera()
 
         #drawAxes()
-        drawGrid()
+        self.drawGrid()
 
         # Draw all scene elements
         for element in self.objects:
@@ -153,9 +148,7 @@ class GUI:
         glutSwapBuffers()
 
     # Normal keys: for change scala and speed
-    def normalKey(k, x, y):
-        self.frustum_scalar_factor, currentVertex, speed, self.x_angle_camera, self.y_angle_camera
-
+    def normalKey(self,k, x, y):
         if k == '+':
             self.frustum_scalar_factor *= 1.05
         elif k == '-':
@@ -163,15 +156,13 @@ class GUI:
         elif k == b'r':
             self.x_angle_camera = self.y_angle_camera = 0.0
         elif k == b'q' or k == b'Q' or ord(k) == 27: # Escape
-            sys.exit(0)
+            glutLeaveMainLoop()
         else:
             return
         glutPostRedisplay()
 
     # Specials keys: for change the camera
-    def specialKey(k, x, y):
-        self.x_angle_camera, self.y_angle_camera
-
+    def specialKey(self,k, x, y):
         if k == GLUT_KEY_UP:
             self.x_angle_camera += 5.0
         elif k == GLUT_KEY_DOWN:
@@ -185,20 +176,17 @@ class GUI:
         glutPostRedisplay()
 
     # New size of window
-    def sizeChange(width, height):
-        self.x_window_size,self.y_window_size
-
+    def sizeChange(self,width, height):
         self.x_window_size = width
         self.y_window_size = height
 
-        fixViewportProjection()
+        self.fixViewportProjection()
         glutPostRedisplay()
 
     # Mouse click event handler
-    def mouseClick(button,state,x,y):
+    def mouseClick(self,button,state,x,y):
         da = 5.0
         redisp = False
-        self.frustum_scalar_factor,self._origin,self.x_angle_camera,self.y_angle_camera
 
         if button == GLUT_LEFT_BUTTON:
             if state == GLUT_UP:
@@ -222,9 +210,7 @@ class GUI:
             glutPostRedisplay();
 
     # Move mouse event handler
-    def moveMouse(x,y):
-        self.x_angle_camera,self.y_angle_camera, self._origin
-
+    def moveMouse(self,x,y):
         if self._origin[0] >= 0 and self._origin[1] >= 0:
             self.x_angle_camera += (y - self._origin[1])*0.25;
             self.y_angle_camera += (x - self._origin[0])*0.25;
@@ -235,8 +221,8 @@ class GUI:
             # Redisplay
             glutPostRedisplay();
 
-    def initGUI(arguments):
-        glutInit(arguments)
+    def initGUI(self):
+        glutInit(sys.argv)
         glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
 
         glutInitWindowPosition(0, 0)
@@ -249,11 +235,15 @@ class GUI:
         glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
         glColor3f(0.0,0.0,0.0)
 
-        glutDisplayFunc(draw)
-        glutIdleFunc(draw)
-        glutReshapeFunc(sizeChange)
-        glutKeyboardFunc(normalKey)
-        glutSpecialFunc(specialKey)
-        glutMouseFunc(mouseClick)
-        glutMotionFunc(moveMouse)
+        glutDisplayFunc(self.draw)
+        glutIdleFunc(self.draw)
+        glutReshapeFunc(self.sizeChange)
+        glutKeyboardFunc(self.normalKey)
+        glutSpecialFunc(self.specialKey)
+        glutMouseFunc(self.mouseClick)
+        glutMotionFunc(self.moveMouse)
+
+        # Let the loop finish when glutLeaveMainLoop() is called
+        glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS)
+
         glutMainLoop()
