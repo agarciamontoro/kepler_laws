@@ -1,4 +1,4 @@
-import ball
+import primitives
 from constants import *
 
 import Leap
@@ -19,9 +19,9 @@ def initGame(listener):
 def processFrame():
     new_frame, hands = leap.getHands()
 
-    ball_1 = ball.Ball(steel_yellow, 75, [0.0,125.0,-50.0])
-    ball_2 = ball.Ball(steel_red, 50, [0.0,125.0,-100.0])
-    ball_3 = ball.Ball(steel_white, 25, [0.0,125.0,-137.5])
+    ball_1 = primitives.Ball(steel_yellow, 75, [0.0,125.0,-50.0])
+    ball_2 = primitives.Ball(steel_red, 50, [0.0,125.0,-100.0])
+    ball_3 = primitives.Ball(steel_white, 25, [0.0,125.0,-137.5])
 
     objects = []
 
