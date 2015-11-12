@@ -6,7 +6,7 @@ import Leap
 import LeapDriver
 import hand
 
-draw_hand = hand.Hand()
+#draw_hand = hand.Hand()
 
 # Distance
 def distance(pos1,pos2):
@@ -30,9 +30,9 @@ def processFrame():
     objects.append(ball_3)
 
     if new_frame[0]:
-        draw_hand.setHand(hands[0])
+        draw_hand = hand.Hand(hands[0], steel_red)
         objects.append(draw_hand)
     if new_frame[1]:
-        draw_hand.setHand(hands[1])
+        draw_hand = hand.Hand(hands[1], steel_yellow)
         objects.append(draw_hand)
     return objects
