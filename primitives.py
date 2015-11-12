@@ -22,7 +22,7 @@ class Line:
         glEnd()
 
         # Phalanx shadow
-        shadows = self.points
+        shadows = [[self.points[i][j] for j in range(3)] for i in range(2)]
         shadows[0][1] = shadows[1][1] = 0
         glColor3f(*steel_gray)
         glBegin(GL_LINES)
@@ -58,6 +58,7 @@ class Ball:
         shadow_radius = self.radius*(1+self.coord[1]/380)
         glColor3f(*steel_gray)
 
+        # Draw a filled disk
         glBegin(GL_POLYGON)
         for i in range(self.Slices):
             angle = i*2*math.pi/self.Slices
