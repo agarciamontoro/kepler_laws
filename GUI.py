@@ -43,6 +43,31 @@ class GUI:
 
     def __init__(self, objects):
         self.objects = objects
+        
+        glutInit(sys.argv)
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
+
+        glutInitWindowPosition(0, 0)
+        glutInitWindowSize(self.x_window_size, self.y_window_size)
+        glutCreateWindow("Leap Motion project")
+
+        glEnable(GL_NORMALIZE)
+        glEnable(GL_MULTISAMPLE_ARB);
+        glEnable(GL_DEPTH_TEST);
+        glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
+        glColor3f(0.0,0.0,0.0)
+
+        glutDisplayFunc(self.draw)
+        glutIdleFunc(self.draw)
+        glutReshapeFunc(self.sizeChange)
+        glutKeyboardFunc(self.normalKey)
+        glutSpecialFunc(self.specialKey)
+        glutMouseFunc(self.mouseClick)
+        glutMotionFunc(self.moveMouse)
+
+        # Let the loop finish when glutLeaveMainLoop() is called
+        glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS)
+
 
     # Fix the projection
     def fixProjection(self):
@@ -220,28 +245,4 @@ class GUI:
             glutPostRedisplay();
 
     def initGUI(self):
-        glutInit(sys.argv)
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
-
-        glutInitWindowPosition(0, 0)
-        glutInitWindowSize(self.x_window_size, self.y_window_size)
-        glutCreateWindow("Leap Motion project")
-
-        glEnable(GL_NORMALIZE)
-        glEnable(GL_MULTISAMPLE_ARB);
-        glEnable(GL_DEPTH_TEST);
-        glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
-        glColor3f(0.0,0.0,0.0)
-
-        glutDisplayFunc(self.draw)
-        glutIdleFunc(self.draw)
-        glutReshapeFunc(self.sizeChange)
-        glutKeyboardFunc(self.normalKey)
-        glutSpecialFunc(self.specialKey)
-        glutMouseFunc(self.mouseClick)
-        glutMotionFunc(self.moveMouse)
-
-        # Let the loop finish when glutLeaveMainLoop() is called
-        glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS)
-
         glutMainLoop()
