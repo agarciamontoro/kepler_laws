@@ -7,7 +7,7 @@ import threading
 import Leap, sys
 
 import LeapDriver, game
-import NewGui as GUI
+import GUI
 from constants import *
 
 def main(arguments):
