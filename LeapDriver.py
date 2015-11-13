@@ -1,10 +1,11 @@
 # coding=UTF-8
 
-import numpy
 import Leap, sys
 
 from Leap import Finger
 import math
+
+import game
 
 tutorial_steps = 4
 current_step = 0
@@ -17,13 +18,6 @@ class SampleListener(Leap.Listener):
 
 	def on_connect(self, controller):
 		print "Connected"
-
-		# Activate gestures
-		controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP)
-		controller.config.set("Gesture.KeyTap.MinDownVelocity", 40.0)
-		controller.config.set("Gesture.KeyTap.HistorySeconds", .2)
-		controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
-		controller.config.save()
 
 	def on_disconnect(self, controller):
 		# Note: not shown when it starts in a debugger
@@ -42,6 +36,14 @@ class SampleListener(Leap.Listener):
 		return current_step
 
 	def on_frame(self, controller):
+		frame = controller.frame()
+
+		self.new_frame = [False, False]
+
+		if not frame.hands.is_empty:
+			self.hands = frame.hands
+			self.new_frame = [frame.hands[0].is_valid, frame.hands[1].is_valid]
+		'''
 		# Obtain the most recent frame and provides basic information
 		frame = controller.frame()
 		self.new_frame = [False, False]
@@ -62,6 +64,7 @@ class SampleListener(Leap.Listener):
 			self.hands = frame.hands
 			self.new_frame = [frame.hands[0].is_valid, frame.hands[1].is_valid]
 			fingerCount(frame.hands[0])
+		'''
 
 	def state_string(self, state):
 		if state == Leap.Gesture.STATE_START:
