@@ -5,11 +5,6 @@ import Leap, sys
 from Leap import Finger
 import math
 
-import game
-
-tutorial_steps = 4
-current_step = 0
-
 class SampleListener(Leap.Listener):
 	def on_init(self, controller):
 		self.new_frame = [False, False]
@@ -43,28 +38,6 @@ class SampleListener(Leap.Listener):
 		if not frame.hands.is_empty:
 			self.hands = frame.hands
 			self.new_frame = [frame.hands[0].is_valid, frame.hands[1].is_valid]
-		'''
-		# Obtain the most recent frame and provides basic information
-		frame = controller.frame()
-		self.new_frame = [False, False]
-
-		global current_step
-
-		# If the tutorial is not finished, try to detect key tap gesture
-		if current_step < tutorial_steps:
-			for gesture in frame.gestures():
-				if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
-					# Screen tap gesture detected!
-					tap = Leap.KeyTapGesture(gesture)
-					if tap.state is Leap.Gesture.STATE_STOP:
-						# Screen tap gesture finished!
-						current_step += 1
-
-		if not frame.hands.is_empty:
-			self.hands = frame.hands
-			self.new_frame = [frame.hands[0].is_valid, frame.hands[1].is_valid]
-			fingerCount(frame.hands[0])
-		'''
 
 	def state_string(self, state):
 		if state == Leap.Gesture.STATE_START:
