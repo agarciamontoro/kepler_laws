@@ -1,12 +1,14 @@
 import primitives
 from constants import *
 
-import Leap
+import Leap, time
 
 import LeapDriver
 import hand
 
-#draw_hand = hand.Hand()
+draw_hand = [hand.Hand(), hand.Hand()]
+last_data_time = [0,0]
+time_margin = 0.07
 
 # Distance
 def distance(pos1,pos2):
@@ -15,6 +17,7 @@ def distance(pos1,pos2):
 def initGame(listener):
     global leap
     leap = listener
+    last_data_time = [time.time(), time.time()]
 
 def processFrame():
     new_frame, hands = leap.getHands()
@@ -29,10 +32,15 @@ def processFrame():
     objects.append(ball_2)
     objects.append(ball_3)
 
-    if new_frame[0]:
-        draw_hand = hand.Hand(hands[0], steel_red)
-        objects.append(draw_hand)
-    if new_frame[1]:
-        draw_hand = hand.Hand(hands[1], steel_yellow)
-        objects.append(draw_hand)
+    for i in range(2):
+        if new_frame[i]:
+            draw_hand[i].setHand(hands[i])
+            objects.append(draw_hand[i])
+            last_data_time[i] = time.time()
+            print("New frame: ",i)
+        elif time.time() - last_data_time[i] < time_margin:
+            objects.append(draw_hand[i])
+            print("Not new frame: ",i)
+
+
     return objects
