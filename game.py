@@ -15,12 +15,14 @@ def distance(pos1,pos2):
     return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
 def initGame(listener):
-    global leap
+    global leap, last_data_time, tutorial
+
     leap = listener
     last_data_time = [time.time(), time.time()]
+    tutorial = primitives.Image("./Screenshots/01.png")
 
 def processFrame():
-    new_frame, hands = leap.getHands()
+    #new_frame, hands = leap.getHands()
 
     ball_1 = primitives.Ball(steel_yellow, 75, [0.0,125.0,-50.0])
     ball_2 = primitives.Ball(steel_red, 50, [0.0,125.0,-100.0])
@@ -32,6 +34,7 @@ def processFrame():
     objects.append(ball_2)
     objects.append(ball_3)
 
+    '''
     for i in range(2):
         if new_frame[i]:
             draw_hand[i].setHand(hands[i])
@@ -41,6 +44,10 @@ def processFrame():
         elif time.time() - last_data_time[i] < time_margin:
             objects.append(draw_hand[i])
             print("Not new frame: ",i)
+    '''
 
+    # Test the image object: shows the tutorial image for the first five seconds
+    if time.time() - last_data_time[0] < 5:
+        objects.append(tutorial)
 
     return objects
