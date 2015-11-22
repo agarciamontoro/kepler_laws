@@ -1,3 +1,7 @@
+COF = 0.99
+
+BALL_RADIUS = 50
+
 SLICES = 50
 STACKS = 50
 
