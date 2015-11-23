@@ -19,14 +19,14 @@ class BilliardBall(primitives.Ball):
         self.vel = [vel[0], 0.0, vel[1]]
         self.type = b_type
 
-        radius = BALL_RADIUS
+        self.radius = BALL_RADIUS
         if self.type == BBallType.whitey:
-            radius = BALL_RADIUS*0.85
+            self.radius = BALL_RADIUS*0.9
             color=steel_white
         if self.type == BBallType.black:
             color = black
 
-        primitives.Ball.__init__(self, color, radius, self.coord)
+        primitives.Ball.__init__(self, color, self.radius, self.coord)
 
     def updatePos(self):
         self.vel = [self.vel[i]*COF for i in range(3)]
@@ -43,7 +43,13 @@ class BilliardBall(primitives.Ball):
         return vel_module > 0
 
     def collide(self, other_ball):
-        return distance(self.coord, other_ball.coord) <= 2*BALL_RADIUS
+        speed_module = self.velToPolar()[0]
+        dist = distance(self.coord, other_ball.coord) - (self.radius+other_ball.radius)
+
+        if speed_module != 0 and 0 < dist / speed_module < 1:
+            return True
+            
+        return distance(self.coord, other_ball.coord) <= self.radius+other_ball.radius
 
     def collisionPoint(self, other_ball):
         return [(self.coord[i]+other_ball.coord[i])/2 for i in range(3)]
