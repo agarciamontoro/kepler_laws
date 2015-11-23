@@ -1,3 +1,5 @@
+from enum import Enum
+
 COF = 0.99
 
 BALL_RADIUS = 50
@@ -11,4 +13,11 @@ steel_yellow = [1.0, 0.75, 0.03]
 steel_orange = [1.0, 0.34, 0.14]
 steel_white  = [1.0, 1.0, 1.0]
 steel_gray   = [0.25, 0.25, 0.25]
+black        = [0.0, 0.0, 0.0]
 grid_gray    = [0.2, 0.2, 0.2]
+
+class BBallType(Enum):
+    whitey = 1
+    striped = 2
+    solid = 3
+    black = 4

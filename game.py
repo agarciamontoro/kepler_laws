@@ -24,11 +24,15 @@ def initGame(listener):
     last_data_time = [time.time(), time.time()]
     tutorial = primitives.Image("./Screenshots/01.png")
 
-    b_ball_1 = BilliardBall([100,0],[0.0,0.0], steel_red)
-    b_ball_2 = BilliardBall([-500,0],[10.0,0.0], steel_yellow)
-    b_ball_3 = BilliardBall([300,25],[0.0,0.0], steel_white)
+    striped_1 = BilliardBall([0,0],[0.0,0.0], BBallType.striped, steel_red)
 
-    b_balls = [b_ball_1, b_ball_2, b_ball_3]
+    solid_1   = BilliardBall([75,-75],[0.0,0.0], BBallType.solid, steel_yellow)
+
+    whitey    = BilliardBall([0,200],[2,-5], BBallType.whitey)
+
+    black     = BilliardBall([0,-150],[0.0,0.0], BBallType.black)
+
+    b_balls = [striped_1, solid_1, whitey, black]
 
 def processFrame():
     #new_frame, hands = leap.getHands()
@@ -61,15 +65,7 @@ def processFrame():
 
     for ball, other_ball in itertools.combinations(b_balls,2):
         if ball.collide(other_ball):
-            if not ball.isMoving():
-                print("BALL PARADA")
-                other_ball.ellasticCollisionUpdate_rest(ball)
-            elif not other_ball.isMoving():
-                print("OTHER_BALL PARADA")
-                ball.ellasticCollisionUpdate_rest(other_ball)
-            else:
-                print("NINGUNA BALL PARADA")
-                ball.ellasticCollisionUpdate(other_ball)
+            ball.ellasticCollisionUpdate(other_ball)
         ball.updatePos()
         other_ball.updatePos()
 

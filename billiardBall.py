@@ -14,10 +14,19 @@ def toPolar(pos):
     return [module,angle]
 
 class BilliardBall(primitives.Ball):
-    def __init__(self, coord=[0.0,0.0], vel=[0.0,0.0], color=steel_red):
+    def __init__(self, coord=[0.0,0.0], vel=[0.0,0.0], b_type=BBallType.whitey, color=steel_red):
         self.coord = [coord[0], BALL_RADIUS, coord[1]]
         self.vel = [vel[0], 0.0, vel[1]]
-        primitives.Ball.__init__(self, color, BALL_RADIUS, self.coord)
+        self.type = b_type
+
+        radius = BALL_RADIUS
+        if self.type == BBallType.whitey:
+            radius = BALL_RADIUS*0.85
+            color=steel_white
+        if self.type == BBallType.black:
+            color = black
+
+        primitives.Ball.__init__(self, color, radius, self.coord)
 
     def updatePos(self):
         self.vel = [self.vel[i]*COF for i in range(3)]
