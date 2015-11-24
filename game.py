@@ -1,5 +1,5 @@
 import primitives
-from billiardBall import BilliardBall
+from billiardBall import BilliardBall, BilliardTable
 from constants import *
 
 import Leap, time
@@ -18,11 +18,13 @@ def distance(pos1,pos2):
     return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
 def initGame(listener):
-    global leap, last_data_time, tutorial, b_balls, loader
+    global leap, last_data_time, tutorial, b_table, b_whitey, b_balls, loader
 
     leap = listener
     last_data_time = [time.time(), time.time()]
     tutorial = primitives.Image("./Screenshots/01.png")
+
+    b_table = BilliardTable()
 
     striped_1 = BilliardBall([0,0],[0.0,0.0], BBallType.striped, steel_red)
     striped_2 = BilliardBall([-150,-150],[0.0,0.0], BBallType.striped, steel_yellow)
@@ -47,7 +49,7 @@ def initGame(listener):
     # b_balls = [striped_1, striped_2, striped_3, striped_4, striped_5, striped_6, striped_7, solid_1, solid_2, solid_3, solid_4, solid_5, solid_6, solid_7, whitey, black]
     b_balls = [striped_1, striped_2, solid_1, solid_2, b_whitey, b_black]
 
-    loader = primitives.Loader()
+    loader = primitives.Loader([200.0,200.0])
     loader.activate()
 
 def isAnyCollision(b_list):
@@ -94,9 +96,10 @@ def processFrame():
        ball.updatePos()
 
     # Test highlight. This should be done only when the ball is touched
-    b_balls[4].highlight()
+    b_whitey.activateHighlight()
+    b_whitey.highlight()
 
-    objects = b_balls
+    objects = [b_table] + b_balls
 
     if loader.load():
         loader.deactivate()

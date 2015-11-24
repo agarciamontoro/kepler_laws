@@ -133,6 +133,24 @@ class Ball:
 
         glutPostRedisplay()
 
+class Quad:
+    def __init__(self, points, color=steel_red):
+        self.points = points
+        self.color = color
+
+    def draw(self):
+        # Initialize the MODELVIEW Matrix
+        glMatrixMode(GL_MODELVIEW)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
+        # Draw the quad
+        glColor3f(*self.color)
+
+        glBegin(GL_QUADS)
+        for point in self.points:
+            glVertex3f(*point)
+        glEnd()
+
 class Loader:
     loader_radius = 55
     loader_width = 15
@@ -152,7 +170,7 @@ class Loader:
 
     def load(self):
         if self.loading:
-            self.load_perc = self.load_perc + 1
+            self.load_perc = self.load_perc + 2
             return self.load_perc >= 100
         return True
 
@@ -173,8 +191,8 @@ class Loader:
 
             for tick in range(self.load_perc):
                 angle  = tick*2.0*math.pi/100.0
-                center_x = self.loader_radius * math.cos(angle) + self.center[0] + window_size[0]/2
-                center_y = self.loader_radius * math.sin(angle) + self.center[1] + window_size[1]/2
+                center_x = self.loader_radius * math.cos(angle) + self.center[0]
+                center_y = self.loader_radius * math.sin(angle) + self.center[1]
 
                 # Draw a filled disk
                 glBegin(GL_POLYGON)

@@ -1,4 +1,4 @@
-from primitives import Ball
+from primitives import Ball, Quad
 from constants import *
 
 import math
@@ -20,8 +20,9 @@ class BilliardBall(Ball):
         self.type = b_type
 
         self.frame_tick = 0
+        self.highlighted = False
 
-        self.radius = BALL_RADIUS
+        self.first_radius = self.radius = BALL_RADIUS
         if self.type == BBallType.whitey:
             self.radius = BALL_RADIUS*0.9
             color=steel_white
@@ -53,6 +54,12 @@ class BilliardBall(Ball):
 
         return distance(self.coord, other_ball.coord) <= self.radius+other_ball.radius
 
+    # def tableCollision(self, table):
+    #     if table.collision(self) == VERTICAL:
+    #         self.vel[0] = -self.vel[0]
+    #     else:
+    #         self.vel[2] = -self.vel[1]
+
     def collisionPoint(self, other_ball):
         return [(self.coord[i]+other_ball.coord[i])/2 for i in range(3)]
 
@@ -78,7 +85,35 @@ class BilliardBall(Ball):
         self.vel        = [COF*new_vel_1_x, 0.0, COF*new_vel_1_y]
         other_ball.vel  = [COF*new_vel_2_x, 0.0, COF*new_vel_2_y]
 
+    def activateHighlight(self):
+        self.highlighted = True
+
+    def deactivateHighlight(self):
+        self.radius = self.first_radius
+
     def highlight(self):
-        self.frame_tick = (self.frame_tick + 5)%360
-        radian_tick = self.frame_tick / 360.0  * 2 * math.pi
-        self.radius = self.radius + 0.3*math.sin(radian_tick)
+        if self.highlighted:
+            self.frame_tick = (self.frame_tick + 5)%360
+            radian_tick = self.frame_tick / 360.0  * 2 * math.pi
+            self.radius = self.radius + 0.3*math.sin(radian_tick)
+
+class BilliardTable:
+    def __init__(self, width=1000, length=1500, height=2*BALL_RADIUS, center = [0.0, 0.0, 0.0]):
+        self.width = width
+        self.length = length
+        self.height = height
+
+        half_width = self.width/2.
+        half_length = self.length/2.
+
+        top_left_corner     = [center[0] - half_width, -0.01, center[0] + half_length]
+        top_right_corner    = [center[0] + half_width, -0.01, center[0] + half_length]
+        bottom_right_corner = [center[0] + half_width, -0.01, center[0] - half_length]
+        bottom_left_corner  = [center[0] - half_width, -0.01, center[0] - half_length]
+
+        corners = [top_left_corner, bottom_left_corner, bottom_right_corner, top_right_corner]
+
+        self.table = Quad(corners, billiard_green)
+
+    def draw(self):
+        self.table.draw()

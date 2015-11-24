@@ -43,7 +43,7 @@ class GUI:
 
     def __init__(self, objects):
         self.objects = objects
-        
+
         glutInit(sys.argv)
         glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
 
@@ -160,7 +160,7 @@ class GUI:
         self.fixCamera()
 
         #drawAxes()
-        self.drawGrid()
+        #self.drawGrid()
 
         self.objects = game.processFrame()
 
