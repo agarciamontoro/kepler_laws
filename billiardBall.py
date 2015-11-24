@@ -19,6 +19,8 @@ class BilliardBall(primitives.Ball):
         self.vel = [vel[0], 0.0, vel[1]]
         self.type = b_type
 
+        self.frame_tick = 0
+
         self.radius = BALL_RADIUS
         if self.type == BBallType.whitey:
             self.radius = BALL_RADIUS*0.9
@@ -48,7 +50,7 @@ class BilliardBall(primitives.Ball):
 
         if speed_module != 0 and 0 < dist / speed_module < 1:
             return True
-            
+
         return distance(self.coord, other_ball.coord) <= self.radius+other_ball.radius
 
     def collisionPoint(self, other_ball):
@@ -90,3 +92,8 @@ class BilliardBall(primitives.Ball):
 
         self.vel        = [module_1*math.cos(angle_1), 0.0, module_1*math.sin(angle_1)]
         other_ball.vel  = [module_2*math.cos(angle_2), 0.0, module_2*math.sin(angle_2)]
+
+    def highlight(self):
+        self.frame_tick = (self.frame_tick + 5)%360
+        radian_tick = self.frame_tick / 360.0  * 2 * math.pi
+        self.radius = self.radius + 0.3*math.sin(radian_tick)

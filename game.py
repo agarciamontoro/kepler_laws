@@ -90,6 +90,8 @@ def processFrame():
     for ball in b_balls:
        ball.updatePos()
 
+    b_balls[4].highlight()
+
     objects = b_balls
 
     return objects
