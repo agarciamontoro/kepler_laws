@@ -90,6 +90,7 @@ def processFrame():
     for ball in b_balls:
        ball.updatePos()
 
+    # Test highlight. This should be done only when the ball is touched
     b_balls[4].highlight()
 
     objects = b_balls

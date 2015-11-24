@@ -1,4 +1,4 @@
-import primitives
+from primitives import Ball
 from constants import *
 
 import math
@@ -13,7 +13,7 @@ def toPolar(pos):
     angle = math.atan2(pos[1], pos[0])
     return [module,angle]
 
-class BilliardBall(primitives.Ball):
+class BilliardBall(Ball):
     def __init__(self, coord=[0.0,0.0], vel=[0.0,0.0], b_type=BBallType.whitey, color=steel_red):
         self.coord = [coord[0], BALL_RADIUS, coord[1]]
         self.vel = [vel[0], 0.0, vel[1]]
@@ -28,7 +28,7 @@ class BilliardBall(primitives.Ball):
         if self.type == BBallType.black:
             color = black
 
-        primitives.Ball.__init__(self, color, self.radius, self.coord)
+        Ball.__init__(self, color, self.radius, self.coord)
 
     def updatePos(self):
         self.vel = [self.vel[i]*COF for i in range(3)]
