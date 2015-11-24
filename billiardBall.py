@@ -75,23 +75,8 @@ class BilliardBall(Ball):
 
         new_vel_2_y = polar_vel_1[0] * math.cos(polar_vel_1[1]-collision_angle) * math.sin(collision_angle) + polar_vel_2[0] * math.sin(polar_vel_2[1]-collision_angle) * math.sin(collision_angle + math.pi/2)
 
-        self.vel        = [new_vel_1_x, 0.0, new_vel_1_y]
-        other_ball.vel  = [new_vel_2_x, 0.0, new_vel_2_y]
-
-    def ellasticCollisionUpdate_rest(self, other_ball):
-        vel_1 = self.velToPolar()
-        # other_ball is at rest
-
-        collision_angle = self.collisionAngle(other_ball)
-
-        angle_1 = math.atan(math.tan(collision_angle)/2)
-        angle_2 = (math.pi - collision_angle)/2
-
-        module_1 = vel_1[0] * math.sqrt(2+2*math.cos(collision_angle)) / 2
-        module_2 = vel_1[0] * math.sin(collision_angle/2)
-
-        self.vel        = [module_1*math.cos(angle_1), 0.0, module_1*math.sin(angle_1)]
-        other_ball.vel  = [module_2*math.cos(angle_2), 0.0, module_2*math.sin(angle_2)]
+        self.vel        = [COF*new_vel_1_x, 0.0, COF*new_vel_1_y]
+        other_ball.vel  = [COF*new_vel_2_x, 0.0, COF*new_vel_2_y]
 
     def highlight(self):
         self.frame_tick = (self.frame_tick + 5)%360

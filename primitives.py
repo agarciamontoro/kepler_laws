@@ -132,3 +132,63 @@ class Ball:
         glEnd()
 
         glutPostRedisplay()
+
+class Loader:
+    loader_radius = 55
+    loader_width = 15
+
+    def __init__(self, center=[0.0,0.0], color=steel_red):
+        self.center = center
+        self.color = color
+        self.loading = False
+        self.load_perc = 0
+
+    def activate(self):
+        self.loading = True
+
+    def deactivate(self):
+        self.loading = False
+        self.load_perc = 0
+
+    def load(self):
+        if self.loading:
+            self.load_perc = self.load_perc + 1
+            return self.load_perc >= 100
+        return True
+
+    def draw(self):
+        if self.loading:
+            window_size = (glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT))
+
+            glMatrixMode(GL_PROJECTION)
+            glPushMatrix()
+            glLoadIdentity()
+            glOrtho(0.0, window_size[0], 0.0, window_size[1], -1.0, 1.0)
+            glMatrixMode(GL_MODELVIEW)
+            glPushMatrix()
+
+            glLoadIdentity()
+
+            glColor3f(*self.color)
+
+            for tick in range(self.load_perc):
+                angle  = tick*2.0*math.pi/100.0
+                center_x = self.loader_radius * math.cos(angle) + self.center[0] + window_size[0]/2
+                center_y = self.loader_radius * math.sin(angle) + self.center[1] + window_size[1]/2
+
+                # Draw a filled disk
+                glBegin(GL_POLYGON)
+                for i in range(SLICES):
+                    inner_angle = i*2*math.pi/SLICES
+                    x = self.loader_width * math.cos(inner_angle) + center_x
+                    y = self.loader_width * math.sin(inner_angle) + center_y
+
+                    glVertex2f(x,y)
+                glEnd()
+
+            glPopMatrix()
+
+            glMatrixMode(GL_PROJECTION)
+            glPopMatrix()
+
+            glMatrixMode(GL_MODELVIEW)
