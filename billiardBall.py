@@ -98,7 +98,7 @@ class BilliardBall(Ball):
             self.radius = self.radius + 0.3*math.sin(radian_tick)
 
 class BilliardTable:
-    def __init__(self, width=1000, length=1500, height=2*BALL_RADIUS, center = [0.0, 0.0, 0.0]):
+    def __init__(self, width=1500, length=1000, height=2*BALL_RADIUS, center = [0.0, 0.0, 0.0]):
         self.width = width
         self.length = length
         self.height = height

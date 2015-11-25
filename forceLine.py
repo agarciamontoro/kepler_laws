@@ -10,24 +10,30 @@ def distance(pos1,pos2):
 class ForceLine(Line):
     def __init__(self, ball, pos = [0.0, 0.0, 0.0]):
         self.points = [ball.coord, pos]
-        self.setIntensity()
-        self.color = [self.intensity, 1.0, 1.0]
+        self.intensity = self.getIntensity()
+        self.color = [self.intensity, 1.0, 0.0]
 
-        Line.__init__(self.points, self.color)
+        Line.__init__(self, self.points, self.color)
 
-    def setIntensity(self):
-        dist = distance(*self.points)/50.0
-        self.intensity = 1.0 if dist > 1.0 else dist
+    def getIntensity(self):
+        dist = distance(*self.points)/200.0
+        intensity = 1.0 if dist > 1.0 else dist
+        return intensity
+
+    def setColor(self):
+        self.intensity = self.getIntensity()
         self.color[0] = self.intensity
 
     def setBall(self, ball):
         self.points[0] = ball.coord
-        self.setIntensity()
+        self.setColor()
 
     def setOrigin(self, pos):
         self.points[1] = pos
-        self.setIntensity()
+        self.setColor()
 
     def getForce(self):
         dir_vector = self.getDirVector()
-        return [self.intensity * dir_vector[i] for i in range(3)]
+        force = [FORCE_CONSTANT * self.intensity * dir_vector[i] for i in range(3)]
+        force[1] = 0.0
+        return force

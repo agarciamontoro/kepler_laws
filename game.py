@@ -20,7 +20,7 @@ def distance(pos1,pos2):
     return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
 def initGame(listener):
-    global leap, last_data_time, tutorial, b_table, b_whitey, b_balls, loader, force_line
+    global leap, last_data_time, tutorial, b_table, b_whitey, b_balls, loader, force_line, shoot_mode
 
     leap = listener
     last_data_time = [time.time(), time.time()]
@@ -44,8 +44,7 @@ def initGame(listener):
     # solid_6   = BilliardBall([0,0],[0.0,0.0], BBallType.solid, steel_yellow)
     # solid_7   = BilliardBall([0,0],[0.0,0.0], BBallType.solid, steel_yellow)
 
-    b_whitey    = BilliardBall([0,200],[0.0,-10.0], BBallType.whitey)
-    print (b_whitey.coord)
+    b_whitey    = BilliardBall([0,90],[0.0,0.0], BBallType.whitey)
     b_black     = BilliardBall([0,-150],[0.0,0.0], BBallType.black)
 
     # b_balls = [striped_1, striped_2, striped_3, striped_4, striped_5, striped_6, striped_7, solid_1, solid_2, solid_3, solid_4, solid_5, solid_6, solid_7, whitey, black]
@@ -54,6 +53,8 @@ def initGame(listener):
     loader = primitives.Loader([200.0,200.0])
     loader.activate()
     force_line = ForceLine(b_whitey)
+
+    shoot_mode = False
 
 def isAnyCollision(b_list):
     for ball, other_ball in itertools.combinations(b_list,2):
@@ -76,8 +77,8 @@ def processFrame():
        ball.updatePos()
 
     # Test highlight. This should be done only when the ball is touched
-    b_whitey.activateHighlight()
-    b_whitey.highlight()
+    #b_whitey.activateHighlight()
+    #b_whitey.highlight()
 
     objects = [b_table] + b_balls
     '''
@@ -86,12 +87,24 @@ def processFrame():
     else:
         objects = objects + [loader, tutorial] #The order is important: always puts loader first
     '''
+    global shoot_mode, force
 
     for i in range(2):
         if new_frame[i]:
             if gestures.isGestureOK(hands[i]):
-                force_line.setOrigin(hands[i].fingers.frontmost.tip_position)
+                shoot_mode = True
+                hand_pos = [hands[i].palm_position[j] for j in range(3)]
+
+                force_line.setBall(b_whitey)
+                force_line.setOrigin(hand_pos)
+
+                force = force_line.getForce()
+                print(shoot_mode)
                 objects.append(force_line)
+            elif shoot_mode:
+                shoot_mode = False
+                b_whitey.vel = force
+
             draw_hand[i].setHand(hands[i])
             objects.append(draw_hand[i])
             last_data_time[i] = time.time()
