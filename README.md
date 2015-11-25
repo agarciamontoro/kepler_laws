@@ -103,3 +103,4 @@ The gesture was easily implemented with the Gesture interface of the API.
 ## References
 * **GUI.py**: the basic OpenGL functions -init, camera, projection and view settings- in this file are adapted from this [@analca3](https://github.com/analca3)'s repository: [Triodo de Frenet](https://github.com/analca3/TriedroFrenet_Evoluta).
 * **LeapDriver.py**: the basic structure of this file is taken from the [Hello World tutorial](https://developer.leapmotion.com/documentation/python/devguide/Sample_Tutorial.html).
+* **Billiard cloth**: the texture used is taken from [](http://www.photos-public-domain.com/2012/08/14/kelly-green-microfiber-cloth-fabric-texture/)

@@ -93,6 +93,11 @@ class Line:
         glVertex3f(*shadows[1])
         glEnd()
 
+    def getDirVector(self):
+        vector = [points[1][i] - points[0][i] for i in range(3)]
+        vec_module = math.sqrt(sum([vector[i]**2 for i in range(3)]))
+        return [vector[i]/vec_module for i in range(3)]
+
 class Ball:
     Slices = SLICES
     Stacks = STACKS

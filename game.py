@@ -6,6 +6,8 @@ import Leap, time
 
 import LeapDriver
 import hand
+import gestures
+from forceLine import ForceLine
 
 import itertools
 
@@ -18,7 +20,7 @@ def distance(pos1,pos2):
     return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
 
 def initGame(listener):
-    global leap, last_data_time, tutorial, b_table, b_whitey, b_balls, loader
+    global leap, last_data_time, tutorial, b_table, b_whitey, b_balls, loader, force_line
 
     leap = listener
     last_data_time = [time.time(), time.time()]
@@ -43,7 +45,7 @@ def initGame(listener):
     # solid_7   = BilliardBall([0,0],[0.0,0.0], BBallType.solid, steel_yellow)
 
     b_whitey    = BilliardBall([0,200],[0.0,-10.0], BBallType.whitey)
-
+    print (b_whitey.coord)
     b_black     = BilliardBall([0,-150],[0.0,0.0], BBallType.black)
 
     # b_balls = [striped_1, striped_2, striped_3, striped_4, striped_5, striped_6, striped_7, solid_1, solid_2, solid_3, solid_4, solid_5, solid_6, solid_7, whitey, black]
@@ -51,6 +53,7 @@ def initGame(listener):
 
     loader = primitives.Loader([200.0,200.0])
     loader.activate()
+    force_line = ForceLine(b_whitey)
 
 def isAnyCollision(b_list):
     for ball, other_ball in itertools.combinations(b_list,2):
@@ -59,34 +62,11 @@ def isAnyCollision(b_list):
     return False
 
 def processFrame():
-    #new_frame, hands = leap.getHands()
-
-    # ball_1 = primitives.Ball(steel_yellow, 75, [0.0,125.0,-50.0])
-    # ball_2 = primitives.Ball(steel_red, 50, [0.0,125.0,-100.0])
-    # ball_3 = primitives.Ball(steel_white, 25, [0.0,125.0,-137.5])
-    #
-    #
-    #
-    # objects = []
-    #
-    # objects.append(ball_1)
-    # objects.append(ball_2)
-    # objects.append(ball_3)
-
-    # for i in range(2):
-    #     if new_frame[i]:
-    #         draw_hand[i].setHand(hands[i])
-    #         objects.append(draw_hand[i])
-    #         last_data_time[i] = time.time()
-    #         print("New frame: ",i)
-    #     elif time.time() - last_data_time[i] < time_margin:
-    #         objects.append(draw_hand[i])
-    #         print("Not new frame: ",i)
+    new_frame, hands = leap.getHands()
 
     # # Test the image object: shows the tutorial image for the first five seconds
     # if time.time() - last_data_time[0] < 5:
     #     objects.append(tutorial)
-
 
     for ball, other_ball in itertools.combinations(b_balls,2):
         if ball.collide(other_ball):
@@ -100,11 +80,22 @@ def processFrame():
     b_whitey.highlight()
 
     objects = [b_table] + b_balls
-
+    '''
     if loader.load():
         loader.deactivate()
     else:
         objects = objects + [loader, tutorial] #The order is important: always puts loader first
+    '''
 
+    for i in range(2):
+        if new_frame[i]:
+            if gestures.isGestureOK(hands[i]):
+                force_line.setOrigin(hands[i].fingers.frontmost.tip_position)
+                objects.append(force_line)
+            draw_hand[i].setHand(hands[i])
+            objects.append(draw_hand[i])
+            last_data_time[i] = time.time()
+        elif time.time() - last_data_time[i] < time_margin:
+            objects.append(draw_hand[i])
 
     return objects
