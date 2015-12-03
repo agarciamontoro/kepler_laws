@@ -8,28 +8,6 @@ import math
 
 from constants import *
 
-class Line:
-    def __init__(self, points, color):
-        self.points = [[points[i][j] for j in range(3)] for i in range(2)]
-        self.color = color
-
-    def draw(self):
-        # Phalanx
-        glColor3f(*self.color)
-        glBegin(GL_LINES)
-        glVertex3f(*self.points[0])
-        glVertex3f(*self.points[1])
-        glEnd()
-
-        # Phalanx shadow
-        shadows = [[self.points[i][j] for j in range(3)] for i in range(2)]
-        shadows[0][1] = shadows[1][1] = 0
-        glColor3f(*steel_gray)
-        glBegin(GL_LINES)
-        glVertex3f(*shadows[0])
-        glVertex3f(*shadows[1])
-        glEnd()
-
 class Ball:
     Slices = SLICES
     Stacks = STACKS

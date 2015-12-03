@@ -15,14 +15,14 @@ from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
 import sys, time, math, threading
 
-import LeapDriver, game
+import universe
 
 from constants import *
 
 class GUI:
     # Camera angle
-    x_angle_camera = 50.0
-    y_angle_camera = 0.0
+    x_angle_camera = 90.0
+    y_angle_camera = 90.0
 
     # Window attributes
     x_window_pos  = 50
@@ -32,7 +32,7 @@ class GUI:
 
     # Frustum attributes
     frustum_dis_del = 0.1
-    frustum_dis_tra = 10.0
+    frustum_dis_tra = 0.5
     frustum_width = 0.5 * frustum_dis_del
     frustum_scalar_factor = .005
 
@@ -43,6 +43,31 @@ class GUI:
 
     def __init__(self, objects):
         self.objects = objects
+
+        glutInit(sys.argv)
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
+
+        glutInitWindowPosition(0, 0)
+        glutInitWindowSize(self.x_window_size, self.y_window_size)
+        glutCreateWindow("Mecánica Celeste")
+
+        glEnable(GL_NORMALIZE)
+        glEnable(GL_MULTISAMPLE_ARB);
+        glEnable(GL_DEPTH_TEST);
+        glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
+        glColor3f(0.0,0.0,0.0)
+
+        glutDisplayFunc(self.draw)
+        glutIdleFunc(self.draw)
+        glutReshapeFunc(self.sizeChange)
+        glutKeyboardFunc(self.normalKey)
+        glutSpecialFunc(self.specialKey)
+        glutMouseFunc(self.mouseClick)
+        glutMotionFunc(self.moveMouse)
+
+        # Let the loop finish when glutLeaveMainLoop() is called
+        glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS)
+
 
     # Fix the projection
     def fixProjection(self):
@@ -135,9 +160,9 @@ class GUI:
         self.fixCamera()
 
         #drawAxes()
-        self.drawGrid()
+        #self.drawGrid()
 
-        self.objects = game.processFrame()
+        self.objects = universe.processFrame()
 
         # Draw all scene elements
         for element in self.objects:
@@ -220,28 +245,4 @@ class GUI:
             glutPostRedisplay();
 
     def initGUI(self):
-        glutInit(sys.argv)
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
-
-        glutInitWindowPosition(0, 0)
-        glutInitWindowSize(self.x_window_size, self.y_window_size)
-        glutCreateWindow("Leap Motion project")
-
-        glEnable(GL_NORMALIZE)
-        glEnable(GL_MULTISAMPLE_ARB);
-        glEnable(GL_DEPTH_TEST);
-        glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
-        glColor3f(0.0,0.0,0.0)
-
-        glutDisplayFunc(self.draw)
-        glutIdleFunc(self.draw)
-        glutReshapeFunc(self.sizeChange)
-        glutKeyboardFunc(self.normalKey)
-        glutSpecialFunc(self.specialKey)
-        glutMouseFunc(self.mouseClick)
-        glutMotionFunc(self.moveMouse)
-
-        # Let the loop finish when glutLeaveMainLoop() is called
-        glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS)
-
         glutMainLoop()
