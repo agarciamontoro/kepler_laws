@@ -15,14 +15,14 @@ from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 
 import sys, time, math, threading
 
-import LeapDriver, game
+import universe
 
 from constants import *
 
 class GUI:
     # Camera angle
-    x_angle_camera = 50.0
-    y_angle_camera = 0.0
+    x_angle_camera = 90.0
+    y_angle_camera = 90.0
 
     # Window attributes
     x_window_pos  = 50
@@ -32,7 +32,7 @@ class GUI:
 
     # Frustum attributes
     frustum_dis_del = 0.1
-    frustum_dis_tra = 10.0
+    frustum_dis_tra = 0.5
     frustum_width = 0.5 * frustum_dis_del
     frustum_scalar_factor = .005
 
@@ -49,7 +49,7 @@ class GUI:
 
         glutInitWindowPosition(0, 0)
         glutInitWindowSize(self.x_window_size, self.y_window_size)
-        glutCreateWindow("Leap Motion project")
+        glutCreateWindow("Mecánica Celeste")
 
         glEnable(GL_NORMALIZE)
         glEnable(GL_MULTISAMPLE_ARB);
@@ -162,7 +162,7 @@ class GUI:
         #drawAxes()
         #self.drawGrid()
 
-        self.objects = game.processFrame()
+        self.objects = universe.processFrame()
 
         # Draw all scene elements
         for element in self.objects:
