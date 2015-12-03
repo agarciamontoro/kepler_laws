@@ -40,8 +40,7 @@ class Planet(Ball):
         print(t,u,self.coord)
 
     def xi(self,t):
-        xi = (2*math.pi/self.period)*(t-self.t0)
-        return xi
+        return (2*math.pi/self.period)*(t-self.t0)
 
     def build_phi(self,epsilon,xi):
         def phi(u):
