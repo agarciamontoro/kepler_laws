@@ -2,36 +2,40 @@ import primitives
 from planet import Planet
 from constants import *
 
-import itertools, math
+import itertools
+import math
+import time
 
 def function_u(t):
     # TODO
     return t*0.001*math.pi
 
 def bigBang():
-    global planets, time
+    global planets, big_bang_time
 
-    p_planetMercury = Planet(0.387, 0.206, function_u, BALL_RADIUS, 87.97, "Mercury")
-    p_planetVenus = Planet(0.723, 0.007, function_u, BALL_RADIUS, 224.7, "Venus")
-    p_planetEarth = Planet(1., 0.017, function_u, BALL_RADIUS, 365.26, "Earth")
-    p_planetMars = Planet(1.524, 0.093, function_u, BALL_RADIUS, 686.98, "Mars")
-    p_planetJupiter = Planet(5.203, 0.048, function_u, BALL_RADIUS, 4332.6, "Jupiter")
-    p_planetSaturn = Planet(9.546, 0.056, function_u, BALL_RADIUS, 10759, "Saturn")
-    p_planetUranus = Planet(19.2, 0.047, function_u, BALL_RADIUS, 30687, "Uranus")
-    p_planetNeptune = Planet(30.09, 0.009, function_u, BALL_RADIUS, 60784, "Neptune")
+    #T_0 is measured in days from January 1st, 1900
+    #Planets attributes:        Semi-major axis Eccentricity    Radius          Period  T_0     Name
+    planetMercury   = Planet(   0.387,          0.206,          MERCURY_RAD,    87.97,  61,     "Mercury")
+    planetVenus     = Planet(   0.723,          0.007,          VENUS_RAD,      224.7,  90,     "Venus")
+    planetEarth     = Planet(   1.,             0.017,          EARTH_RAD,      365.26, 0,      "Earth")
+    planetMars      = Planet(   1.524,          0.093,          MARS_RAD,       686.98, 76,     "Mars")
+    planetJupiter   = Planet(   5.203,          0.048,          JUPITER_RAD,    4332.6, 1612,   "Jupiter")
+    planetSaturn    = Planet(   9.546,          0.056,          SATURN_RAD,     10759,  5528,   "Saturn")
+    planetUranus    = Planet(   19.2,           0.047,          URANUS_RAD,     30687,  24245,  "Uranus")
+    planetNeptune   = Planet(   30.09,          0.009,          NEPTUNE_RAD,    60784,  52122,  "Neptune")
 
     planets = [planetMercury, planetVenus, planetEarth, planetMars, planetJupiter, planetSaturn, planetUranus, planetNeptune]
 
-    time = 0
+    big_bang_time = time.time()
 
 def processFrame():
-    global time
-    time = time + 1
+    global big_bang_time
+    instant = time.time() - big_bang_time
 
     objects = []
 
     for planet in planets:
-        planet.setPos(time)
+        planet.setPos(instant)
         objects.append(planet)
 
     return objects

@@ -32,18 +32,4 @@ class Ball:
         # Revert the matrix stack to its previous state
         glPopMatrix()
 
-        # Draw the sphere shadow
-        shadow_radius = self.radius*(1+self.coord[1]/380)
-        glColor3f(*steel_gray)
-
-        # Draw a filled disk
-        glBegin(GL_POLYGON)
-        for i in range(self.Slices):
-            angle = i*2*math.pi/self.Slices
-            x = shadow_radius * math.cos(angle) + self.coord[0]
-            z = shadow_radius * math.sin(angle) + self.coord[2]
-
-            glVertex3f(x,0.0,z)
-        glEnd()
-
         glutPostRedisplay()

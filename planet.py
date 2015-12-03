@@ -1,32 +1,32 @@
+import OpenGL
+OpenGL.ERROR_ON_COPY = True
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+
 from primitives import Ball
 from constants import *
 
 import math
 from operator import add
 
-# Distance
-def distance(pos1,pos2):
-    return math.sqrt(sum([(pos2[i]-pos1[i])**2 for i in range(3)]))
-
-def toPolar(pos):
-    module = math.sqrt(sum([pos[i]**2 for i in range(2)]))
-    angle = math.atan2(pos[1], pos[0])
-    return [module,angle]
-
 class Planet(Ball):
-    def __init__(self, semi_major_axis, eccentricity, u, radius, period, name):
+    def __init__(self, semi_major_axis, eccentricity, radius, period, t_0, name):
         self.semi_major_axis = semi_major_axis
         self.eccentricity = eccentricity
-        self.u = u
         self.radius = radius
         self.name = name
-        self.t0 = 0.
+        self.t0 = t_0
         self.period = period
         self.setPos(self.t0)
 
         Ball.__init__(self, steel_red, self.radius, self.coord)
 
     def setPos(self, t):
+        self.coord = self.getCoords(t)
+        print(t,self.coord)
+
+    def getCoords(self,t):
         current_xi = self.xi(t)
         phi = self.build_phi(self.eccentricity, current_xi)
 
@@ -35,9 +35,8 @@ class Planet(Ball):
         x_coord = self.semi_major_axis*math.cos(u)-self.eccentricity
         y_coord = self.semi_major_axis*math.sqrt(1-self.eccentricity**2)*math.sin(u)
 
-        self.coord = [x_coord, 0.0, y_coord]
+        return [x_coord, 0.0, y_coord]
 
-        print(t,u,self.coord)
 
     def xi(self,t):
         return (2*math.pi/self.period)*(t-self.t0)
@@ -57,3 +56,18 @@ class Planet(Ball):
             curr = phi(prev)
 
         return curr
+
+    def draw(self):
+        # Draw the orbit
+        glColor3f(*steel_blue)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+        glBegin(GL_POLYGON)
+        time = 0
+        while time <= self.period:
+            coords = self.getCoords(time)
+            glVertex3f(*coords)
+            time += self.period / 50
+        glEnd()
+
+        # Draw the planet
+        Ball.draw(self)
