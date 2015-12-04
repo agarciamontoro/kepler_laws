@@ -10,24 +10,29 @@ from constants import *
 import math
 from operator import add
 
+from datetime import date
+
 class Planet(Ball):
     def __init__(self, semi_major_axis, eccentricity, radius, period, t_0, name):
         self.semi_major_axis = semi_major_axis
         self.eccentricity = eccentricity
         self.radius = radius
-        self.name = name
-        self.t0 = t_0
         self.period = period
+        self.t0 = t_0
+        self.name = name
+
         self.setPos(self.t0)
 
         Ball.__init__(self, steel_red, self.radius, self.coord)
 
     def setPos(self, t):
-        self.coord = self.getCoords(t)
+        delta = t - self.t0
+        self.coord = self.getCoords(delta.days)
         print(t,self.coord)
 
-    def getCoords(self,t):
-        current_xi = self.xi(t)
+    # Delta : number of days (can be float) from the 1st perihelion after December 31st, 1899
+    def getCoords(self,delta):
+        current_xi = self.xi(delta)
         phi = self.build_phi(self.eccentricity, current_xi)
 
         u = self.NR(phi)
@@ -38,8 +43,9 @@ class Planet(Ball):
         return [x_coord, 0.0, y_coord]
 
 
-    def xi(self,t):
-        return (2*math.pi/self.period)*(t-self.t0)
+    # Delta : number of days (can be float) from the 1st perihelion after December 31st, 1899
+    def xi(self,delta):
+        return (2*math.pi/self.period)*(delta)
 
     def build_phi(self,epsilon,xi):
         def phi(u):
@@ -62,11 +68,13 @@ class Planet(Ball):
         glColor3f(*steel_blue)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
         glBegin(GL_POLYGON)
+
         time = 0
         while time <= self.period:
             coords = self.getCoords(time)
             glVertex3f(*coords)
             time += self.period / 50
+
         glEnd()
 
         # Draw the planet
