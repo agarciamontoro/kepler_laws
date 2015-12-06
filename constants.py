@@ -11,9 +11,6 @@ SATURN_RAD  = EARTH_RAD * 9.41
 URANUS_RAD  = EARTH_RAD * 3.98
 NEPTUNE_RAD = EARTH_RAD * 3.8
 
-#Standard Gravitational Parameter: mu = Gravitational constant * Sun mass (measured in m^3/day^2)
-MU = 1.32712440018 * 10**20 * (24*60*60)**2
-
 #GUI constants
 SLICES = 50
 STACKS = 50
