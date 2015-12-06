@@ -48,7 +48,7 @@ class Planet(Ball):
         current_xi = self.xi(delta)
         phi = self.build_phi(self.eccentricity, current_xi)
 
-        u = self.NR(phi)
+        u = math.fmod(self.NR(phi),2*math.pi)
 
         sin_u = math.sin(u)
         cos_u = math.cos(u)
@@ -122,8 +122,11 @@ class Planet(Ball):
         a = self.semi_major_axis
         e = self.eccentricity
         u = self.ecc_anomaly
+        p = self.period
 
-        du = math.sqrt(MU) / (math.sqrt(a)**3 * (1-e*math.cos(u)))
+        sqrt_mu = 2*math.pi * math.sqrt(a)**3 / p
+
+        du = sqrt_mu / (math.sqrt(a)**3 * (1-e*math.cos(u)))
         dx = [-a*du*math.sin(u), a*du*math.sqrt(1-e**2)*math.cos(u)]
 
         return dx
@@ -132,13 +135,18 @@ class Planet(Ball):
         x = self.GUIcoord
         dx = self.getVel()
 
-        return squaredModule(dx)/2 - MU/module(x)
+        a = self.semi_major_axis
+        p = self.period
+
+        mu = (2*math.pi * math.sqrt(a)**3 / p)**2
+
+        return squaredModule(dx)/2 - mu/module(x)
 
     def getMomentum(self):
         x = self.pos
         dx = self.getVel()
 
-        x.append(0.0)
-        dx.append(0.0)
+        x.append(0)
+        dx.append(0)
 
         return vectProduct(x,dx)
