@@ -15,7 +15,7 @@ class Ball:
     def __init__(self, color, radius, coord):
         self.color = color
         self.radius = radius
-        self.coord = [coord[i] for i in range(3)]
+        self.GUIcoord = [coord[i] for i in range(3)]
 
     def draw(self):
         # Initialize the MODELVIEW Matrix
@@ -25,7 +25,7 @@ class Ball:
 
         # Draw the sphere
         glColor3f(*self.color)
-        glTranslatef(*self.coord)
+        glTranslatef(*self.GUIcoord)
 
         glutSolidSphere(self.radius,self.Slices,self.Stacks)
 

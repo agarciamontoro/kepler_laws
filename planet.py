@@ -12,10 +12,22 @@ from operator import add
 
 from datetime import date
 
+def squaredModule(vec):
+    return sum([v**2 for v in vec])
+
+def module(vec):
+    return math.sqrt(squaredModule(vec))
+
+def vectProduct(u,v):
+    w1 = u[1]*v[2] - u[2]*v[1]
+    w2 = u[2]*v[0] - u[0]*v[2]
+    w3 = u[0]*v[1] - u[1]*v[0]
+    return [w1,w2,w3]
+
 class Planet(Ball):
-    def __init__(self, semi_major_axis, eccentricity, radius, period, t_0, name):
+    def __init__(self, semi_major_axis, ecc, radius, period, t_0, name):
         self.semi_major_axis = semi_major_axis
-        self.eccentricity = eccentricity
+        self.eccentricity = ecc
         self.radius = radius
         self.period = period
         self.t0 = t_0
@@ -23,33 +35,46 @@ class Planet(Ball):
 
         self.setPos(self.t0)
 
-        Ball.__init__(self, steel_red, self.radius, self.coord)
+        Ball.__init__(self, steel_red, self.radius, self.GUIcoord)
 
     def setPos(self, t):
         delta = t - self.t0
-        self.coord = self.getCoords(delta.days)
-        print(t,self.coord)
+        self.pos, self.ecc_anomaly = self.getPos(delta.days)
+        self.GUIcoord = self.getGUICoords(self.pos)
 
-    # Delta : number of days (can be float) from the 1st perihelion after December 31st, 1899
-    def getCoords(self,delta):
+    # Delta : number of days (can be float) from the 1st perihelion
+    # after December 31st, 1899
+    def getPos(self,delta):
         current_xi = self.xi(delta)
         phi = self.build_phi(self.eccentricity, current_xi)
 
         u = self.NR(phi)
 
-        x_coord = self.semi_major_axis*math.cos(u)-self.eccentricity
-        y_coord = self.semi_major_axis*math.sqrt(1-self.eccentricity**2)*math.sin(u)
+        sin_u = math.sin(u)
+        cos_u = math.cos(u)
 
-        return [x_coord, 0.0, y_coord]
+        x_coord = self.semi_major_axis*cos_u-self.eccentricity
+        y_coord = self.semi_major_axis*math.sqrt(1-self.eccentricity**2)*sin_u
 
+        return [x_coord, y_coord], u
 
-    # Delta : number of days (can be float) from the 1st perihelion after December 31st, 1899
+    # Translates XY coordinates to XZ plane in XYZ (with Z decreasing from the
+    # monitor to you) coordinates
+    def getGUICoords(self,pos):
+        #Invert Z coordinate to preserve anticlockwise rotation
+        return [pos[0], 0.0, -pos[1]]
+
+    # Delta : number of days (can be float) from the 1st perihelion
+    # after December 31st, 1899
     def xi(self,delta):
-        return (2*math.pi/self.period)*(delta)
+        xi = (2*math.pi/self.period)*(delta)
+        return math.fmod(xi,2*math.pi)
 
     def build_phi(self,epsilon,xi):
         def phi(u):
-            return (epsilon*(math.sin(u)-u*math.cos(u))+xi)/(1-epsilon*math.cos(u))
+            sin_u = math.sin(u)
+            cos_u = math.cos(u)
+            return (epsilon * (sin_u-u*cos_u) + xi) / (1 - epsilon*cos_u)
 
         return phi
 
@@ -71,7 +96,8 @@ class Planet(Ball):
 
         time = 0
         while time <= self.period:
-            coords = self.getCoords(time)
+            pos, _ = self.getPos(time)
+            coords = self.getGUICoords(pos)
             glVertex3f(*coords)
             time += self.period / 50
 
@@ -79,3 +105,40 @@ class Planet(Ball):
 
         # Draw the planet
         Ball.draw(self)
+
+    def printInfo(self):
+        string  = '{name}\t - Position\t: {pos}\n'.format(
+                  name=self.name, pos=self.pos)
+        string += '\t - Energy\t\t: {energy}\n'.format(
+                  energy=self.getEnergy())
+        string += '\t - Momentum\t: {momentum}\n'.format(
+                  momentum=self.getMomentum())
+        string += '\t - Ecc. anomaly\t: {ecc}\n'.format(
+                  ecc=self.ecc_anomaly)
+
+        print(string.expandtabs(10))
+
+    def getVel(self):
+        a = self.semi_major_axis
+        e = self.eccentricity
+        u = self.ecc_anomaly
+
+        du = math.sqrt(MU) / (math.sqrt(a)**3 * (1-e*math.cos(u)))
+        dx = [-a*du*math.sin(u), a*du*math.sqrt(1-e**2)*math.cos(u)]
+
+        return dx
+
+    def getEnergy(self):
+        x = self.GUIcoord
+        dx = self.getVel()
+
+        return squaredModule(dx)/2 - MU/module(x)
+
+    def getMomentum(self):
+        x = self.pos
+        dx = self.getVel()
+
+        x.append(0.0)
+        dx.append(0.0)
+
+        return vectProduct(x,dx)

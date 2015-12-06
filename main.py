@@ -13,12 +13,11 @@ def main(arguments):
     # Construct and initialise GUI object
     scene = GUI.GUI([])
 
-    # Initialise the game
+    # Initialise the program
     universe.bigBang()
 
     # Start GUI and Universe :)
     scene.initGUI()
-
 
 if __name__ == '__main__':
     main(sys.argv)

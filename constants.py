@@ -1,5 +1,7 @@
-#Radius relatives to Earth
+#Earth radius
 EARTH_RAD   = 0.1
+
+#Radius relatives to Earth
 SUN_RAD     = EARTH_RAD * 109
 MERCURY_RAD = EARTH_RAD * 0.382
 VENUS_RAD   = EARTH_RAD * 0.94
@@ -8,6 +10,9 @@ JUPITER_RAD = EARTH_RAD * 11.2
 SATURN_RAD  = EARTH_RAD * 9.41
 URANUS_RAD  = EARTH_RAD * 3.98
 NEPTUNE_RAD = EARTH_RAD * 3.8
+
+#Standard Gravitational Parameter: mu = Gravitational constant * Sun mass (measured in m^3/day^2)
+MU = 1.32712440018 * 10**20 * (24*60*60)**2
 
 #GUI constants
 SLICES = 50
