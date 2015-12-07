@@ -10,9 +10,10 @@ python2 main.py
 Se puede mover la escena usando el ratón (haciendo click y moviendo). Además, se puede hacer zoom con la rueda.
 
 Por terminal se imprime una línea por cada instante de tiempo (por cada frame, en realidad) y por cada planeta, indicando:
-* instante actual,
-* valor de la función `u(t)` y
-* posición del planeta en cuestión.
+* Posición
+* Valor de la energía
+* Momento angular
+* Anomalía excéntrica
 
 ## Notas:
 
