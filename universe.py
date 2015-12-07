@@ -6,8 +6,10 @@ import itertools
 import math
 from datetime import *
 
+import time
+
 def bigBang():
-    global planets, big_bang_time, tick
+    global planets, big_bang_time, today
 
     #T_0 is the 1st perihelion after December 31st, 1899
     #Planets attributes: Axis    Eccentricity     Radius
@@ -39,20 +41,23 @@ def bigBang():
 
     planets = [p_Mercury, p_Venus,  p_Earth,  p_Mars,
                p_Jupiter, p_Saturn, p_Uranus, p_Neptune]
-    tick = 0
 
-def processFrame():
-    global tick
-    tick += 1
-    objects = []
+    big_bang_time = time.time()
 
     today = datetime.today().date()
-    now = today + timedelta(days=tick)
+
+def processFrame():
+    objects = []
+
+    time_from_big_bang = time.time() - big_bang_time
+    vel = 50
+
+    now = today + timedelta(days=vel*time_from_big_bang)
 
     for planet in planets:
         planet.setPos(now)
-        #if planet.name == "Venus":
-        planet.printInfo()
+        #if planet.name == "Mercury":
+        print(planet.getInfo())
         objects.append(planet)
 
     return objects

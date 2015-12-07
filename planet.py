@@ -39,8 +39,10 @@ class Planet(Ball):
 
     def setPos(self, t):
         self.date = t
-        delta = t - self.t0
-        self.pos, self.ecc_anomaly = self.getPos(delta.days)
+        delta = (t - self.t0).days
+
+        self.pos, self.ecc_anomaly = self.getPos(delta)
+
         self.GUIcoord = self.getGUICoords(self.pos)
 
     # Delta : number of days (can be float) from the 1st perihelion
@@ -49,12 +51,12 @@ class Planet(Ball):
         current_xi = self.xi(delta)
         phi = self.build_phi(self.eccentricity, current_xi)
 
-        u = math.fmod(self.NR(phi),2*math.pi)
+        u = self.NR(phi)#math.fmod(self.NR(phi),2*math.pi)
 
         sin_u = math.sin(u)
         cos_u = math.cos(u)
 
-        x_coord = self.semi_major_axis*cos_u-self.eccentricity
+        x_coord = self.semi_major_axis*(cos_u-self.eccentricity)
         y_coord = self.semi_major_axis*math.sqrt(1-self.eccentricity**2)*sin_u
 
         return [x_coord, y_coord], u
@@ -68,8 +70,8 @@ class Planet(Ball):
     # Delta : number of days (can be float) from the 1st perihelion
     # after December 31st, 1899
     def xi(self,delta):
-        xi = (2*math.pi/self.period)*(delta)
-        return math.fmod(xi,2*math.pi)
+        xi = delta*2*math.pi/self.period
+        return xi#math.fmod(xi,2*math.pi)
 
     def build_phi(self,epsilon,xi):
         def phi(u):
@@ -107,7 +109,7 @@ class Planet(Ball):
         # Draw the planet
         Ball.draw(self)
 
-    def printInfo(self):
+    def getInfo(self):
         string  = '{name}\t - Position\t: {pos}\n'.format(
                   name=self.name, pos=self.pos)
         string += '\t - Energy\t\t: {energy}\n'.format(
@@ -119,7 +121,7 @@ class Planet(Ball):
         string += '\t - Date\t\t: {date}\n'.format(
                   date=self.date.strftime("%A, %d %B, %Y"))
 
-        print(string.expandtabs(10))
+        return string.expandtabs(10)
 
     def getVel(self):
         a = self.semi_major_axis
@@ -135,7 +137,7 @@ class Planet(Ball):
         return dx
 
     def getEnergy(self):
-        x = self.GUIcoord
+        x = self.pos
         dx = self.getVel()
 
         a = self.semi_major_axis
