@@ -38,6 +38,7 @@ class Planet(Ball):
         Ball.__init__(self, steel_red, self.radius, self.GUIcoord)
 
     def setPos(self, t):
+        self.date = t
         delta = t - self.t0
         self.pos, self.ecc_anomaly = self.getPos(delta.days)
         self.GUIcoord = self.getGUICoords(self.pos)
@@ -59,7 +60,7 @@ class Planet(Ball):
         return [x_coord, y_coord], u
 
     # Translates XY coordinates to XZ plane in XYZ (with Z decreasing from the
-    # monitor to you) coordinates
+    # monitor towards you) coordinates
     def getGUICoords(self,pos):
         #Invert Z coordinate to preserve anticlockwise rotation
         return [pos[0], 0.0, -pos[1]]
@@ -115,6 +116,8 @@ class Planet(Ball):
                   momentum=self.getMomentum())
         string += '\t - Ecc. anomaly\t: {ecc}\n'.format(
                   ecc=self.ecc_anomaly)
+        string += '\t - Date\t\t: {date}\n'.format(
+                  date=self.date.strftime("%A, %d %B, %Y"))
 
         print(string.expandtabs(10))
 
