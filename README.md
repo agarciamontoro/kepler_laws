@@ -3,13 +3,13 @@
 ## Uso
 Asegúrate de tener instalado `Python` y la librería de `OpenGL`. La mayoría de las distribuciones de Linux tienen estos paquetes en sus repositorios oficiales.
 
-En Arch Linux, por ejemplo, la siguiente órden es suficiente para instalar todo lo necesario:
+En Arch Linux, por ejemplo, la siguiente orden es suficiente para instalar todo lo necesario:
 
 ```
 pacaur -S python python-opengl
 ```
 
-Para comenzar el programa, ejecuta la siguiente órden:
+Para comenzar el programa, ejecuta la siguiente orden:
 
 ```
 python main.py
@@ -22,6 +22,7 @@ Por terminal se imprime una línea por cada instante de tiempo (por cada frame, 
 * Valor de la energía
 * Momento angular
 * Anomalía excéntrica
+* Fecha
 
 ## Notas:
 
