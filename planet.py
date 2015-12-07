@@ -25,7 +25,27 @@ def vectProduct(u,v):
     return [w1,w2,w3]
 
 class Planet(Ball):
+    """
+    Particle whose motion follows the Kepler laws.
+    """
+
     def __init__(self, semi_major_axis, ecc, radius, period, t_0, name):
+        """Constructor
+
+        The constructor receives the planet attributes and set its position
+        at the perihelium (whose date is given by t_0 and should be the first
+        perihelium after 31st December, 1899).
+
+        Args:
+            semi_major_axis: Longitude of the semi-major axis of the planet
+                orbit.
+            ecc: Eccentricity of the elliptical planet orbit; a float in ]0,1[
+            radius: Radius of the planet, for visual purposes only.
+            period: Period of the planet, measured in days.
+            t_0: Date in which the first perihelium after 31st December, 1899
+                was reached.
+            name: Name of the planet, for visual purposes only.
+        """
         self.semi_major_axis = semi_major_axis
         self.eccentricity = ecc
         self.radius = radius
@@ -35,9 +55,18 @@ class Planet(Ball):
 
         self.setPos(self.t0)
 
+        # Ball constructor, for visual purposes only
         Ball.__init__(self, steel_red, self.radius, self.GUIcoord)
 
     def setPos(self, t):
+        """Updates the date and position of the planet.
+
+        Sets the planet position given a date. Its eccentric anomaly -and its
+        date- are also stored.
+
+        Args:
+            t: Date in which the planet shall be set
+        """
         self.date = t
         delta = (t - self.t0).days
 
@@ -45,13 +74,25 @@ class Planet(Ball):
 
         self.GUIcoord = self.getGUICoords(self.pos)
 
-    # Delta : number of days (can be float) from the 1st perihelion
-    # after December 31st, 1899
     def getPos(self,delta):
+        """Retrieves the position and eccentric anomaly values.
+
+        Retrieves the planet position at the day `delta` after the self.t_0
+        date. Along with the plane coordinates -returned as a list- the
+        eccentric anomaly is returned.
+
+        Args:
+            delta: Number of days after self.t_0 date; i.e., the number of days
+                after the first perihelium of the planet after 31st December,
+                1899. Integer or float.
+        Returns:
+            A two-positions list [x,y] giving the XY plane coordinates and the
+            eccentric anomaly measured in radians in the interval [0,2*pi[
+        """
         current_xi = self.xi(delta)
         phi = self.build_phi(self.eccentricity, current_xi)
 
-        u = self.NR(phi)#math.fmod(self.NR(phi),2*math.pi)
+        u = self.NR(phi)
 
         sin_u = math.sin(u)
         cos_u = math.cos(u)
@@ -61,19 +102,54 @@ class Planet(Ball):
 
         return [x_coord, y_coord], u
 
-    # Translates XY coordinates to XZ plane in XYZ (with Z decreasing from the
-    # monitor towards you) coordinates
     def getGUICoords(self,pos):
-        #Invert Z coordinate to preserve anticlockwise rotation
+        """Coordinates translation. For visual purposes only.
+
+        Translates 2D coordinates in a XY plane to 3D coordinates in a
+        XYZ OpenGL space -i.e., X horizontal axis; Y vertical axis; Z 'depth'
+        axis, with Z decreasing from the monitor towards you-.
+
+        Args:
+            pos: 2D coordinates in a [x,y] form
+
+        Returns:
+            The pos coordinates translated to the OpenGL world; i.e., [x,0,-y]
+        """
+
         return [pos[0], 0.0, -pos[1]]
 
-    # Delta : number of days (can be float) from the 1st perihelion
-    # after December 31st, 1899
     def xi(self,delta):
+        """Calculates mean anomaly in Kepler's equation
+
+        Given a time delta from the self.t_0 date, obtains the rhs of the
+        Kepler's equation
+                u - e*sin(u) = xi
+        i.e., the mean anomaly. See https://en.wikipedia.org/wiki/Mean_anomaly
+
+        Args:
+            delta: Number of days after the first perihelium of the planet after 31st December, 1899. Integer or float.
+
+        Returns:
+            The mean anomaly of the planet at the given day.
+        """
+
         xi = delta*2*math.pi/self.period
-        return xi#math.fmod(xi,2*math.pi)
+        return xi
 
     def build_phi(self,epsilon,xi):
+        """Returns the phi function given its attributes.
+
+        Builds a phi function depending only on u, given its attributes epsilon
+        and xi. The fixed point of this function is the eccentric anomaly we
+        need to obtain the planet position.
+
+        Args:
+            epsilon: Planet orbit eccentricity
+            xi: Planet mean anomaly
+
+        Returns:
+            A real function of real variable whose fixed point is interesting.
+        """
         def phi(u):
             sin_u = math.sin(u)
             cos_u = math.cos(u)
@@ -82,6 +158,21 @@ class Planet(Ball):
         return phi
 
     def NR(self,phi,u_0=math.pi,tol=0.00001):
+        """Finds the fixed point of phi.
+
+        Algorithm to find the fixed point of the phi function, provided it has
+        at least one. Please, be sure that the algorithm converges with the
+        given function and first iteration, as this algorithm does not care
+        about convergence and can enter an endless loop.
+
+        Args:
+            phi: Function whose fixed point we want to obtain.
+            u_0: First iteration; defaults to pi, as the convergence
+            tol: Accepted error in the approximation; defaults to 0.00001
+
+        Returns:
+            Fixed point of phi with a tolerance of tol.
+        """
         prev = u_0
         curr = phi(prev)
 
@@ -92,7 +183,12 @@ class Planet(Ball):
         return curr
 
     def draw(self):
-        # Draw the orbit
+        """Draws the planet and its orbit
+
+        OpenGL-only function. Override the Ball draw function, as the orbit
+        shall also be drawn.
+        """
+        # Draws orbit
         glColor3f(*steel_blue)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
         glBegin(GL_POLYGON)
@@ -106,10 +202,19 @@ class Planet(Ball):
 
         glEnd()
 
-        # Draw the planet
+        # Draws the planet
         Ball.draw(self)
 
     def getInfo(self):
+        """Retrieves important information of the planet
+
+        Returns a string containing important information of the planet, for
+        visual purposes only.
+
+        Returns:
+            A pretty-formatted string containing the planet's name, position,
+            energy, momentum, eccentric anomaly and date.
+        """
         string  = '{name}\t - Position\t: {pos}\n'.format(
                   name=self.name, pos=self.pos)
         string += '\t - Energy\t\t: {energy}\n'.format(
@@ -124,6 +229,13 @@ class Planet(Ball):
         return string.expandtabs(10)
 
     def getVel(self):
+        """Retrieves the velocity of the planet.
+
+        Retrieves the current velocity of the planet, using its stored eccentric anomaly.
+
+        Returns:
+            A two-positions list [x,y] showing the x- and y- components of the planet velocity.
+        """
         a = self.semi_major_axis
         e = self.eccentricity
         u = self.ecc_anomaly
@@ -137,6 +249,14 @@ class Planet(Ball):
         return dx
 
     def getEnergy(self):
+        """Retrieves the energy of the planet.
+
+        Retrieves the current energy of the planet, using its current position
+        and velocity.
+
+        Returns:
+            The energy value.
+        """
         x = self.pos
         dx = self.getVel()
 
@@ -148,6 +268,14 @@ class Planet(Ball):
         return squaredModule(dx)/2 - mu/module(x)
 
     def getMomentum(self):
+        """Retrieves the angular momentum of the planet.
+
+        Retrieves the angular momentum of the planet, using its current
+        position and velocity.
+
+        Returns:
+            The energy value.
+        """
         x = self.pos
         dx = self.getVel()
 
