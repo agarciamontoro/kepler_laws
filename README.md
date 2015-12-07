@@ -1,10 +1,18 @@
 # Mecánica Celeste
 
-## Uso:
-Ejecutar el comando
+## Uso
+Asegúrate de tener instalado `Python` y la librería de `OpenGL`. La mayoría de las distribuciones de Linux tienen estos paquetes en sus repositorios oficiales.
+
+En Arch Linux, por ejemplo, la siguiente órden es suficiente para instalar todo lo necesario:
 
 ```
-python2 main.py
+pacaur -S python python-opengl
+```
+
+Para comenzar el programa, ejecuta la siguiente órden:
+
+```
+python main.py
 ```
 
 Se puede mover la escena usando el ratón (haciendo click y moviendo). Además, se puede hacer zoom con la rueda.
