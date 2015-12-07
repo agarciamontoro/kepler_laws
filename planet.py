@@ -138,7 +138,7 @@ class Planet(Ball):
         a = self.semi_major_axis
         p = self.period
 
-        mu = (2*math.pi * math.sqrt(a)**3 / p)**2
+        mu = 4*math.pi**2 * a**3 / p**2
 
         return squaredModule(dx)/2 - mu/module(x)
 

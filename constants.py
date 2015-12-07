@@ -1,5 +1,5 @@
 #Earth radius
-EARTH_RAD   = 0.1
+EARTH_RAD   = 0.1 #6378.1/149598023.
 
 #Radius relatives to Earth
 SUN_RAD     = EARTH_RAD * 109
@@ -18,11 +18,3 @@ STACKS = 50
 #Colors constants
 steel_blue   = [0.27,0.5,0.7]
 steel_red    = [1.0,0.32,0.32]
-steel_yellow = [1.0, 0.75, 0.03]
-steel_orange = [1.0, 0.34, 0.14]
-steel_white  = [1.0, 1.0, 1.0]
-steel_gray   = [0.25, 0.25, 0.25]
-steel_green  = [0.0, 0.47, 0.41]
-black        = [0.0, 0.0, 0.0]
-grid_gray    = [0.2, 0.2, 0.2]
-billiard_green=[0.04,0.42,0.01]
