@@ -50,7 +50,7 @@ class GUI:
 
         glutInitWindowPosition(0, 0)
         glutInitWindowSize(self.x_window_size, self.y_window_size)
-        glutCreateWindow("Mecánica Celeste")
+        glutCreateWindow('Solar System simulation')
 
         glEnable(GL_NORMALIZE)
         glEnable(GL_MULTISAMPLE_ARB);

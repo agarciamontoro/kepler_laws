@@ -107,7 +107,6 @@ class Planet(Ball):
         """
         self.date = t
         delta = self._getFloatDays(t-self.t0)
-        #print(delta)
 
         self.pos, self.ecc_anomaly = self.getPos(delta)
 

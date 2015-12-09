@@ -54,7 +54,7 @@ def bigBang():
                p_Jupiter, p_Saturn, p_Uranus, p_Neptune]
 
     # Global timestamp and date
-    before = big_bang_time = time.time()
+    before = time.time()
     today = datetime.today()
 
     # Global strings
@@ -79,7 +79,7 @@ def processFrame(vel):
 
     # Timestamps to control the animation velocity and simulation date
     now = time.time()
-    duration = now-before
+    duration = now - before
     before = now
 
     today = today + timedelta(days=vel*duration)
