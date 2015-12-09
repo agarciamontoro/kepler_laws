@@ -1,5 +1,5 @@
 #Earth radius
-EARTH_RAD   = 0.1 #6378.1/149598023.
+EARTH_RAD   = 0.1 #Real radius: 6378.1/149598023.
 
 #Radius relatives to Earth
 SUN_RAD     = EARTH_RAD * 109

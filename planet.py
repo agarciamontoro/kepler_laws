@@ -13,12 +13,34 @@ from operator import add
 from datetime import date
 
 def squaredModule(vec):
+    """Squared module
+
+    Args:
+        vec: An iterable object whose elements can be exponentiated
+    Returns:
+        The squared module of vec.
+    """
     return sum([v**2 for v in vec])
 
 def module(vec):
+    """Module
+
+    Args:
+        vec: An iterable object whose elements can be exponentiated
+    Returns:
+        The module of vec.
+    """
     return math.sqrt(squaredModule(vec))
 
 def vectProduct(u,v):
+    """Vectorial product
+
+    Args:
+        u: A 3D vector; i.e., a list with three numbers
+        v: A 3D vector; i.e., a list with three numbers
+    Returns:
+        The vector u^v; i.e., the vectorial product of u and v
+    """
     w1 = u[1]*v[2] - u[2]*v[1]
     w2 = u[2]*v[0] - u[0]*v[2]
     w3 = u[0]*v[1] - u[1]*v[0]
@@ -58,6 +80,21 @@ class Planet(Ball):
         # Ball constructor, for visual purposes only
         Ball.__init__(self, steel_red, self.radius, self.GUIcoord)
 
+    def _getFloatDays(self,delta):
+        """Translates a timedelta object to exact days
+
+        Args:
+            delta: A timedelta object
+        Returns:
+            The exact number of days, including hours, minutes and
+            seconds as decimals.
+        """
+        days, seconds = delta.days, delta.seconds
+        hours = seconds // 3600
+        minutes = (seconds % 3600) // 60
+        seconds = seconds % 60
+        return days + hours/24. + minutes/(60.*24.) + seconds/(60.*60.*24.)
+
     def setPos(self, t):
         """Updates the date and position of the planet.
 
@@ -65,10 +102,12 @@ class Planet(Ball):
         date- are also stored.
 
         Args:
-            t: Date in which the planet shall be set
+            t: Date in which the planet shall be set. It has to be a datetime
+                object
         """
         self.date = t
-        delta = (t - self.t0).days
+        delta = self._getFloatDays(t-self.t0)
+        #print(delta)
 
         self.pos, self.ecc_anomaly = self.getPos(delta)
 
@@ -100,7 +139,7 @@ class Planet(Ball):
         x_coord = self.semi_major_axis*(cos_u-self.eccentricity)
         y_coord = self.semi_major_axis*math.sqrt(1-self.eccentricity**2)*sin_u
 
-        return [x_coord, y_coord], u
+        return [x_coord, y_coord], math.fmod(u,2*math.pi)
 
     def getGUICoords(self,pos):
         """Coordinates translation. For visual purposes only.
@@ -186,7 +225,7 @@ class Planet(Ball):
         """Draws the planet and its orbit
 
         OpenGL-only function. Override the Ball draw function, as the orbit
-        shall also be drawn.
+        also has to be drawn.
         """
         # Draws orbit
         glColor3f(*steel_blue)
@@ -224,7 +263,7 @@ class Planet(Ball):
         string += '\t - Ecc. anomaly\t: {ecc}\n'.format(
                   ecc=self.ecc_anomaly)
         string += '\t - Date\t\t: {date}\n'.format(
-                  date=self.date.strftime("%A, %d %B, %Y"))
+                  date=self.date.strftime("%d %B, %Y - %A"))
 
         return string.expandtabs(10)
 
@@ -255,7 +294,7 @@ class Planet(Ball):
         and velocity.
 
         Returns:
-            The energy value.
+            The energy value, that should be constant
         """
         x = self.pos
         dx = self.getVel()
@@ -274,7 +313,7 @@ class Planet(Ball):
         position and velocity.
 
         Returns:
-            The energy value.
+            The angular momentum, that should be constant.
         """
         x = self.pos
         dx = self.getVel()

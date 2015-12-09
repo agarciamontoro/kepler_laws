@@ -43,6 +43,7 @@ class GUI:
 
     def __init__(self, objects):
         self.objects = objects
+        self.vel = 1
 
         glutInit(sys.argv)
         glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
@@ -159,10 +160,10 @@ class GUI:
         self.fixViewportProjection()
         self.fixCamera()
 
-        #drawAxes()
+        #self.drawAxes()
         #self.drawGrid()
 
-        self.objects = universe.processFrame()
+        self.objects = universe.processFrame(self.vel)
 
         # Draw all scene elements
         for element in self.objects:
@@ -178,6 +179,10 @@ class GUI:
             self.frustum_scalar_factor /= 1.05
         elif k == b'r':
             self.x_angle_camera = self.y_angle_camera = 0.0
+        elif k == b'x':
+            self.vel += 1
+        elif k == b'z':
+            self.vel -= 1
         elif k == b'q' or k == b'Q' or ord(k) == 27: # Escape
             glutLeaveMainLoop()
         else:
