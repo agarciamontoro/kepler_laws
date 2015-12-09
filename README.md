@@ -1,5 +1,7 @@
 ![Captura de pantalla del programa en ejecución](./screenshot.png)
------------------------------------------------------------------
+----------------------------------------------------------------
+
+*Documentación extraída del repositorio de Github [agarciamontoro/kepler_laws](https://github.com/agarciamontoro/kepler_laws).*
 
 ## Uso
 Asegúrate de tener instalado `Python` y la librería de `OpenGL` junto con `freeGLUT`. La mayoría de las distribuciones de Linux tienen estos paquetes en sus repositorios oficiales.
