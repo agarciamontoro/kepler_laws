@@ -12,8 +12,8 @@ URANUS_RAD  = EARTH_RAD * 3.98
 NEPTUNE_RAD = EARTH_RAD * 3.8
 
 #GUI constants
-SLICES = 50
-STACKS = 50
+SLICES = 20
+STACKS = 20
 
 #Colors constants
 steel_blue   = [0.27,0.5,0.7]
