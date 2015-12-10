@@ -49,8 +49,17 @@ def vectProduct(u,v):
     return [w1,w2,w3]
 
 class Planet(Ball):
-    """
-    Particle whose motion follows the Kepler laws.
+    """Particle whose motion follows the Kepler laws.
+
+    Class defining a drawable planet -as a simple OpenGL sphere and an ellipse
+    as its orbit- whose motion follows a simplification of the Solar System;
+    i.e., it is attracted by the Sun, but it does not attract any other
+    particle.
+
+    Its orbit is defined by the semi-major axis, the eccentricity, the
+    period and an initial date, that represents the first perihelium after 31st
+    December, 1899. Additionally, a name and a radius are stored, only for
+    graphical purposes.
     """
 
     def __init__(self, semi_major_axis, ecc, radius, period, t_0, name):
