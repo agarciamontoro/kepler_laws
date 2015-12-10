@@ -4,18 +4,18 @@
 *Documentación extraída del repositorio de Github [agarciamontoro/kepler_laws](https://github.com/agarciamontoro/kepler_laws).*
 
 ## Uso
-Asegúrate de tener instalado `Python` y la librería de `OpenGL` junto con `freeGLUT`. La mayoría de las distribuciones de Linux tienen estos paquetes en sus repositorios oficiales.
+Asegúrate de tener instalado `Python` y la librería de `OpenGL` junto con `freeGLUT`, así como `SciPy`. La mayoría de las distribuciones de Linux tienen estos paquetes en sus repositorios oficiales.
 
 En **Arch Linux**, por ejemplo, la siguiente orden es suficiente para instalar todo lo necesario:
 
 ```
-pacaur -S python python-opengl freeglut
+pacaur -S python python-opengl freeglut python-scipy
 ```
 
 En **Ubuntu** es muy parecido:
 
 ```
-sudo apt-get install python python-opengl freeglut3-dev
+sudo apt-get install python python-opengl freeglut3-dev python-scipy
 ```
 
 Para comenzar el programa, basta con ejecutar la siguiente orden:
