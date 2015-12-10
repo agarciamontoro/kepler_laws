@@ -65,7 +65,7 @@ class Planet(Ball):
     def __init__(self, semi_major_axis, ecc, radius, period, t_0, name):
         """Constructor
 
-        The constructor receives the planet attributes and set its position
+        The constructor receives the planet attributes and sets its position
         at the perihelium (whose date is given by t_0 and should be the first
         perihelium after 31st December, 1899).
 
@@ -176,7 +176,8 @@ class Planet(Ball):
         i.e., the mean anomaly. See https://en.wikipedia.org/wiki/Mean_anomaly
 
         Args:
-            delta: Number of days after the first perihelium of the planet after 31st December, 1899. Integer or float.
+            delta: Number of days after the first perihelium of the planet
+                    after 31st December, 1899. Integer or float.
 
         Returns:
             The mean anomaly of the planet at the given day.
