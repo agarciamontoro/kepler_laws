@@ -76,7 +76,6 @@ def processFrame(vel):
     """
     global before, today
 
-
     # Timestamps to control the animation velocity and simulation date
     now = time.time()
     duration = now - before

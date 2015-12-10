@@ -7,10 +7,12 @@ from OpenGL.GLUT import *
 from primitives import Ball
 from constants import *
 
+from scipy import special
+
 import math
 from operator import add
 
-from datetime import date
+from datetime import *
 
 def squaredModule(vec):
     """Squared module
@@ -195,7 +197,7 @@ class Planet(Ball):
 
         return phi
 
-    def NR(self,phi,u_0=math.pi,tol=0.00001):
+    def NR(self,phi,u_0=math.pi,tol=1e-10):
         """Finds the fixed point of phi.
 
         Algorithm to find the fixed point of the phi function, provided it has
@@ -206,7 +208,7 @@ class Planet(Ball):
         Args:
             phi: Function whose fixed point we want to obtain.
             u_0: First iteration; defaults to pi, as the convergence
-            tol: Accepted error in the approximation; defaults to 0.00001
+            tol: Accepted error in the approximation; defaults to 1e-10
 
         Returns:
             Fixed point of phi with a tolerance of tol.
@@ -219,6 +221,52 @@ class Planet(Ball):
             curr = phi(prev)
 
         return curr
+
+    def bessel(self,xi,tol=1e-10):
+        """Approximates the eccentric anomaly using Bessel functions
+
+        Iterates through the expression of 'u' as an infinite series until
+        the error is below an accepted tolerance.
+
+        Args:
+            xi: First iteration
+            tol: Accepted error in the approximation; defaults to 1e-10
+
+        Returns:
+            Approximation of eccentric anomaly whose error is lower than the
+            given tolerance.
+        """
+        e = self.eccentricity
+
+        prev = xi
+        curr = prev + 2 * special.j1(e) * math.sin(xi)
+
+        n = 2
+        while abs(prev - curr) > tol:
+            prev = curr
+            curr = prev + 2./n * special.jn(n, n*e) * math.sin(n * xi)
+            n += 1
+
+        return curr
+
+    def getDate(self,u):
+        """Retrieves the date from the eccentric anomaly
+
+        Obtains the date in which the eccentric anomaly of the planet is the given one.
+
+        Args:
+            u: Eccentric anomaly, in radians.
+
+        Returns:
+            The (first after self.t0) date -codified as a datetime object- in
+            which the planet had the given u.
+        """
+        p = self.period
+        e = self.eccentricity
+
+        delta = p * (u - e*math.sin(u)) / (2*math.pi)
+
+        return self.t0 + timedelta(days=delta)
 
     def draw(self):
         """Draws the planet and its orbit
