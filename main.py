@@ -9,6 +9,7 @@ import universe
 import GUI
 from constants import *
 
+
 def main(arguments):
     # Construct and initialise GUI object
     scene = GUI.GUI([])
@@ -30,7 +31,8 @@ if __name__ == '__main__':
 
     In the upper left corner there's a text showing the date in which the
     planets positions are being calculated. By default, for each second of your
-    clock, the animation will run a whole day. You can change the animation speed using the following keys :
+    clock, the animation will run a whole day. You can change the animation
+    speed using the following keys :
         Z: Decelerate the simulation time
         X: Accelerate the simulation time
 
