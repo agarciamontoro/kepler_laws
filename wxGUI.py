@@ -11,7 +11,7 @@ draw_planets = {"Mercury" : True,
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, id, title):
-        wx.Frame.__init__(self, parent, id, title, wx.Point(1050,300), wx.Size(200, 150))
+        wx.Frame.__init__(self, parent, id, title, wx.Point(1050,300), wx.Size(150, 200))
         panel = wx.Panel(self, -1)
         self.rb1 = wx.CheckBox(panel, -1, 'Mercury',(10, 10))
         self.rb2 = wx.CheckBox(panel, -1, 'Venus',  (10, 30))
