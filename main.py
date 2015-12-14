@@ -14,7 +14,7 @@ from constants import *
 from wxGUI import MyApp
 
 def main(arguments):
-    # Construct and initialise GUI object
+    # Construct and initialise GUI objects
     scene = GUI.GUI([])
 
     # Initialise the program
@@ -25,7 +25,6 @@ def main(arguments):
 
     app = MyApp(0)
     GUI_thread = threading.Thread(target=app.MainLoop, args=(), kwargs={})
-
     GUI_thread.start()
 
     animation_thread.join()

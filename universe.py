@@ -92,7 +92,6 @@ def processFrame(vel):
     for planet in planets:
         if draw_planets[planet.name]:
             planet.setPos(today)
-            print(planet.getInfo())
             objects.append(planet)
 
     return objects

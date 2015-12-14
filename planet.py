@@ -356,7 +356,7 @@ class Planet(Ball):
         string += '\t - Date\t\t: {date}\n'.format(
                   date=self.date.strftime("%d %B, %Y - %A"))
 
-        return string.expandtabs(10)
+        return [str(self.name), str()]#string.expandtabs(10)
 
     def getVel(self):
         """Retrieves the velocity of the planet.
