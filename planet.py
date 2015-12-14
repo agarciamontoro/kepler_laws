@@ -51,6 +51,8 @@ def vectProduct(u, v):
     w3 = u[0]*v[1] - u[1]*v[0]
     return [w1, w2, w3]
 
+def scalarProduct(u,v):
+    return sum([elem_u*elem_v for elem_u,elem_v in zip(u,v)])
 
 class Planet(Ball):
     """Particle whose motion follows the Kepler laws.
@@ -66,7 +68,10 @@ class Planet(Ball):
     graphical purposes.
     """
 
-    def __init__(self, semi_major_axis, ecc, radius, period, t_0, name):
+    # tilt_angle = i
+    # node_angle = big omega
+    # ecc_angle = small omega con barra
+    def __init__(self, semi_major_axis, ecc, radius, period, t_0, name, tilt_angle, node_angle, ecc_angle):
         """Constructor
 
         The constructor receives the planet attributes and sets its position
@@ -89,6 +94,10 @@ class Planet(Ball):
         self.period = period
         self.t0 = t_0
         self.name = name
+
+        self.tilt_angle = math.pi*tilt_angle/180
+        self.node_angle = math.pi*node_angle/180
+        self.ecc_angle = math.pi*(ecc_angle-node_angle)/180
 
         self.setPos(self.t0)
 
@@ -169,7 +178,27 @@ class Planet(Ball):
             The pos coordinates translated to the OpenGL world; i.e., [x,0,-y]
         """
 
-        return [pos[0], 0.0, -pos[1]]
+        i = self.tilt_angle
+        big_o = self.node_angle
+        small_o = self.ecc_angle
+
+        cos = math.cos
+        sin = math.sin
+
+        matrix = [
+            [-cos(big_o)*cos(small_o)*cos(i)+sin(big_o)*sin(small_o), -cos(i)*sin(small_o)*cos(big_o)-sin(big_o)*cos(small_o), cos(big_o)*sin(i)],
+            [-cos(i)*cos(small_o)*sin(big_o)-cos(big_o)*sin(small_o), -sin(big_o)*cos(i)*sin(small_o)+cos(big_o)*cos(small_o), sin(big_o)*sin(i)],
+            [sin(i)*cos(small_o), sin(i)*sin(small_o), cos(i)]
+        ]
+
+        GUI_coords = []
+
+        pos.append(0.0)
+
+        for row,coord in zip(matrix,pos):
+            GUI_coords.append(scalarProduct(row,pos))
+
+        return [GUI_coords[0], GUI_coords[2], -GUI_coords[1]]
 
     def xi(self, delta):
         """Calculates mean anomaly in Kepler's equation

@@ -26,28 +26,28 @@ def bigBang():
     #                    Period  T_0                    Name
 
     p_Mercury = Planet(  0.387,  0.206,                 MERCURY_RAD,
-                         87.97,  datetime(1900, 3, 3),  "Mercury" )
+                         87.97,  datetime(1900, 3, 3),  "Mercury", 7, 47.14, 75.9 )
 
     p_Venus   = Planet(  0.723,  0.007,                 VENUS_RAD,
-                         224.7,  datetime(1900, 4, 1),  "Venus"   )
+                         224.7,  datetime(1900, 4, 1),  "Venus", 3.59, 75.78, 130.15  )
 
     p_Earth   = Planet(  1.,     0.017,                 EARTH_RAD,
-                         365.26, datetime(1900, 1, 1),  "Earth"   )
+                         365.26, datetime(1900, 1, 1),  "Earth", 0., 0., 101.22   )
 
     p_Mars    = Planet(  1.524,  0.093,                 MARS_RAD,
-                         686.98, datetime(1900, 3, 18), "Mars"    )
+                         686.98, datetime(1900, 3, 18), "Mars", 1.85, 48.78, 334.22    )
 
     p_Jupiter = Planet(  5.203,  0.048,                 JUPITER_RAD,
-                         4332.6, datetime(1904, 6, 1),  "Jupiter" )
+                         4332.6, datetime(1904, 6, 1),  "Jupiter", 1.31, 99.44, 12.72 )
 
     p_Saturn  = Planet(  9.546,  0.056,                 SATURN_RAD,
-                         10759,  datetime(1915, 2, 20), "Saturn"  )
+                         10759,  datetime(1915, 2, 20), "Saturn", 2.5, 112.79, 91.09  )
 
     p_Uranus  = Planet(  19.2,   0.047,                 URANUS_RAD,
-                         30687,  datetime(1966, 5, 20), "Uranus"  )
+                         30687,  datetime(1966, 5, 20), "Uranus", 0.77, 73.48, 169.05  )
 
     p_Neptune = Planet(  30.09,  0.009,                 NEPTUNE_RAD,
-                         60784,  datetime(2042, 9, 15), "Neptune" )
+                         60784,  datetime(2042, 9, 15), "Neptune", 1.78, 130.68, 43.83 )
 
     # Global list of planets
     planets = [p_Mercury, p_Venus,  p_Earth,  p_Mars,
