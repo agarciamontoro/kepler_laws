@@ -56,5 +56,4 @@ class MyApp(wx.App):
     def OnInit(self):
         frame = MyFrame(None, -1, 'Choose the planets you want to see.')
         frame.Show(True)
-        #frame.Left()
         return True
