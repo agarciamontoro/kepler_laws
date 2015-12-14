@@ -8,6 +8,8 @@ from datetime import *
 
 import time
 
+from wxGUI import draw_planets
+
 def bigBang():
     """Initialises the planet
 
@@ -89,8 +91,9 @@ def processFrame(vel):
     objects =  [help_string, date_string]
 
     for planet in planets:
-        planet.setPos(today)
-        print(planet.getInfo())
-        objects.append(planet)
+        if draw_planets[planet.name]:
+            planet.setPos(today)
+            print(planet.getInfo())
+            objects.append(planet)
 
     return objects

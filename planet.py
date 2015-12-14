@@ -7,7 +7,7 @@ from OpenGL.GLUT import *
 from primitives import Ball
 from constants import *
 
-from scipy import special
+#from scipy import special
 
 import math
 from operator import add
