@@ -1,5 +1,4 @@
 import OpenGL
-OpenGL.ERROR_ON_COPY = True
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -10,9 +9,11 @@ from constants import *
 #from scipy import special
 
 import math
-from operator import add
 
 from datetime import *
+
+OpenGL.ERROR_ON_COPY = True
+
 
 def squaredModule(vec):
     """Squared module
@@ -24,6 +25,7 @@ def squaredModule(vec):
     """
     return sum([v**2 for v in vec])
 
+
 def module(vec):
     """Module
 
@@ -34,7 +36,8 @@ def module(vec):
     """
     return math.sqrt(squaredModule(vec))
 
-def vectProduct(u,v):
+
+def vectProduct(u, v):
     """Vectorial product
 
     Args:
@@ -46,7 +49,8 @@ def vectProduct(u,v):
     w1 = u[1]*v[2] - u[2]*v[1]
     w2 = u[2]*v[0] - u[0]*v[2]
     w3 = u[0]*v[1] - u[1]*v[0]
-    return [w1,w2,w3]
+    return [w1, w2, w3]
+
 
 class Planet(Ball):
     """Particle whose motion follows the Kepler laws.
@@ -91,7 +95,7 @@ class Planet(Ball):
         # Ball constructor, for visual purposes only
         Ball.__init__(self, steel_red, self.radius, self.GUIcoord)
 
-    def _getFloatDays(self,delta):
+    def _getFloatDays(self, delta):
         """Translates a timedelta object to exact days
 
         Args:
@@ -123,7 +127,7 @@ class Planet(Ball):
 
         self.GUIcoord = self.getGUICoords(self.pos)
 
-    def getPos(self,delta):
+    def getPos(self, delta):
         """Retrieves the position and eccentric anomaly values.
 
         Retrieves the planet position at the day `delta` after the self.t_0
@@ -149,9 +153,9 @@ class Planet(Ball):
         x_coord = self.semi_major_axis*(cos_u-self.eccentricity)
         y_coord = self.semi_major_axis*math.sqrt(1-self.eccentricity**2)*sin_u
 
-        return [x_coord, y_coord], math.fmod(u,2*math.pi)
+        return [x_coord, y_coord], math.fmod(u, 2*math.pi)
 
-    def getGUICoords(self,pos):
+    def getGUICoords(self, pos):
         """Coordinates translation. For visual purposes only.
 
         Translates 2D coordinates in a XY plane to 3D coordinates in a
@@ -167,7 +171,7 @@ class Planet(Ball):
 
         return [pos[0], 0.0, -pos[1]]
 
-    def xi(self,delta):
+    def xi(self, delta):
         """Calculates mean anomaly in Kepler's equation
 
         Given a time delta from the self.t_0 date, obtains the rhs of the
@@ -186,7 +190,7 @@ class Planet(Ball):
         xi = delta*2*math.pi/self.period
         return xi
 
-    def build_phi(self,epsilon,xi):
+    def build_phi(self, epsilon, xi):
         """Returns the phi function given its attributes.
 
         Builds a phi function depending only on u, given its attributes epsilon
@@ -207,7 +211,7 @@ class Planet(Ball):
 
         return phi
 
-    def NR(self,phi,u_0=math.pi,tol=1e-10):
+    def NR(self, phi, u_0=math.pi, tol=1e-10):
         """Finds the fixed point of phi.
 
         Algorithm to find the fixed point of the phi function, provided it has
@@ -232,7 +236,7 @@ class Planet(Ball):
 
         return curr
 
-    def bessel(self,xi,tol=1e-10):
+    def bessel(self, xi, tol=1e-10):
         """Approximates the eccentric anomaly using Bessel functions
 
         Iterates through the expression of 'u' as an infinite series until
@@ -259,10 +263,11 @@ class Planet(Ball):
 
         return curr
 
-    def getDate(self,u):
+    def getDate(self, u):
         """Retrieves the date from the eccentric anomaly
 
-        Obtains the date in which the eccentric anomaly of the planet is the given one.
+        Obtains the date in which the eccentric anomaly of the planet is the
+        given one.
 
         Args:
             u: Eccentric anomaly, in radians.
@@ -311,7 +316,7 @@ class Planet(Ball):
             A pretty-formatted string containing the planet's name, position,
             energy, momentum, eccentric anomaly and date.
         """
-        string  = '{name}\t - Position\t: {pos}\n'.format(
+        string = '{name}\t - Position\t: {pos}\n'.format(
                   name=self.name, pos=self.pos)
         string += '\t - Energy\t\t: {energy}\n'.format(
                   energy=self.getEnergy())
@@ -327,10 +332,12 @@ class Planet(Ball):
     def getVel(self):
         """Retrieves the velocity of the planet.
 
-        Retrieves the current velocity of the planet, using its stored eccentric anomaly.
+        Retrieves the current velocity of the planet, using its stored
+        eccentric anomaly.
 
         Returns:
-            A two-positions list [x,y] showing the x- and y- components of the planet velocity.
+            A two-positions list [x,y] showing the x- and y- components of the
+            planet velocity.
         """
         a = self.semi_major_axis
         e = self.eccentricity
@@ -378,4 +385,4 @@ class Planet(Ball):
         x.append(0)
         dx.append(0)
 
-        return vectProduct(x,dx)
+        return vectProduct(x, dx)

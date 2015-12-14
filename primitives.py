@@ -1,12 +1,12 @@
 import OpenGL
-OpenGL.ERROR_ON_COPY = True
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-import math
-
 from constants import *
+
+OpenGL.ERROR_ON_COPY = True
+
 
 class Ball:
     Slices = SLICES
@@ -27,15 +27,16 @@ class Ball:
         glColor3f(*self.color)
         glTranslatef(*self.GUIcoord)
 
-        glutSolidSphere(self.radius,self.Slices,self.Stacks)
+        glutSolidSphere(self.radius, self.Slices, self.Stacks)
 
         # Revert the matrix stack to its previous state
         glPopMatrix()
 
         glutPostRedisplay()
 
+
 class Text:
-    def __init__(self,text,vertical_pos=25):
+    def __init__(self, text, vertical_pos=25):
         self.text = text
         self.height = vertical_pos
 
@@ -56,14 +57,14 @@ class Text:
         for s in self.text:
             glWindowPos2i(10, window_height - (self.height + 15*num_lines))
             for c in s:
-                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, ord(c));
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, ord(c))
             num_lines += 1
 
-        #glWindowPos2i(15, window_height - self.height)
+        # glWindowPos2i(15, window_height - self.height)
         # glRasterPos2f(15, window_height - self.height)
         # for c in self.text:
         #     glutBitmapCharacter( GLUT_BITMAP_HELVETICA_12 , ord(c))
-        #glutBitmapString( GLUT_BITMAP_9_BY_15 , self.text)
+        # glutBitmapString( GLUT_BITMAP_9_BY_15 , self.text)
 
         glMatrixMode(GL_MODELVIEW)
         glPopMatrix()
