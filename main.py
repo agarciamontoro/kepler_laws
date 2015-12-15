@@ -28,7 +28,6 @@ def main(arguments):
     GUI_thread.start()
 
     animation_thread.join()
-    print("holi")
     app.ExitMainLoop()
 
     # Start GUI and Universe :)
