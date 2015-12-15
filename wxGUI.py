@@ -1,6 +1,6 @@
 import wx
 
-import datetime
+from datetime import *
 
 draw_planets = {"Mercury" : True,
                 "Venus" : True,
@@ -10,6 +10,8 @@ draw_planets = {"Mercury" : True,
                 "Saturn" : True,
                 "Uranus" : True,
                 "Neptune" : True}
+
+current_date = datetime.today()
 
 class MyDialog(wx.Dialog):
     def __init__(self, parent, id, title):
@@ -121,19 +123,18 @@ class MyDialog(wx.Dialog):
     def OnCalculate(self, event):
         global current_date
 
-        string_date = self.tc1.GetValue()
+        str_day = self.tc_date_dd.GetValue()
+        str_month = self.tc_date_mm.GetValue()
+        str_year = self.tc_date_yy.GetValue()
 
-        if not string_date:
+        if not (str_day and str_month and str_year):
             return
 
-        current_date = time.strptime(string_date, "%d/%m/%Y")
+        day = int(str_day)
+        month = int(str_month)
+        year = int(str_year)
 
-        print(current_date)
-
-        num_items = self.lc.GetItemCount()
-        self.lc.InsertStringItem(num_items, self.tc1.GetValue())
-        self.lc.SetStringItem(num_items, 1, self.tc2.GetValue())
-        #self.tc1.Clear()
+        current_date =  datetime(year, month, day)
 
     def OnRemove(self, event):
         index = self.lc.GetFocusedItem()

@@ -6,7 +6,7 @@ from datetime import *
 
 import time
 
-from wxGUI import draw_planets
+import wxGUI
 
 def bigBang():
     """Initialises the planet
@@ -19,7 +19,7 @@ def bigBang():
     and another one with some help strings. These two objects are also made
     global.
     """
-    global planets, before, today, date_string, help_string
+    global planets, before, date_string, help_string
 
     # T_0 is the 1st perihelion after December 31st, 1899
     # Planets attributes:Axis   Eccentricity           Radius
@@ -55,13 +55,12 @@ def bigBang():
 
     # Global timestamp and date
     before = time.time()
-    today = datetime.today()
 
     # Global strings
     help_string = primitives.Text(["Z: Decelerate the animation",
                                    "X: Accelerate the animation",
                                    "Q: Quit the program"], 50)
-    date_string = primitives.Text([today.strftime("%A, %d %B, %Y")])
+    date_string = primitives.Text([wxGUI.current_date.strftime("%A, %d %B, %Y")])
 
 
 def processFrame(vel):
@@ -75,23 +74,23 @@ def processFrame(vel):
     By default, vel is 1; i.e., a second in the real life is one day in the
     animation. The user can change this velocity using Z and X keys.
     """
-    global before, today
+    global before
 
     # Timestamps to control the animation velocity and simulation date
     now = time.time()
     duration = now - before
     before = now
 
-    today = today + timedelta(days=vel*duration)
+    wxGUI.current_date = wxGUI.current_date + timedelta(days=vel*duration)
 
     # String update with the current simulation date
-    date_string.text = [today.strftime("%d %B, %Y - %A")]
+    date_string.text = [wxGUI.current_date.strftime("%d %B, %Y - %A")]
 
     objects = [help_string, date_string]
 
     for planet in planets:
-        if draw_planets[planet.name]:
-            planet.setPos(today)
+        if wxGUI.draw_planets[planet.name]:
+            planet.setPos(wxGUI.current_date)
             objects.append(planet)
 
     return objects
