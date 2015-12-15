@@ -50,19 +50,25 @@ class MyDialog(wx.Dialog):
 
 
         #Panel del medio
-        self.tc_ecc = wx.TextCtrl(pnl2, -1)
+        planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus','Neptune']
 
-        grid2 = wx.GridSizer(2,2,0,0)
-        grid2.AddMany([ (wx.StaticText(pnl2, -1, 'Eccentricity'),0, wx.ALIGN_CENTER),
+        self.tc_ecc = wx.TextCtrl(pnl2, -1)
+        self.combo = wx.ComboBox(pnl2, -1, choices=planets, style=wx.CB_READONLY)
+
+        grid2 = wx.GridSizer(2,4,0,0)
+        grid2.AddMany([ (wx.StaticText(pnl2, -1, 'Ecc. anomaly'),0, wx.ALIGN_CENTER),
                         (self.tc_ecc, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),
+                        (wx.StaticText(pnl2, -1, 'for'),0, wx.ALIGN_CENTER),
+                        (self.combo, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),
                         (wx.Button(pnl2, 10, 'Calculate'),   0, wx.ALIGN_CENTER| wx.BOTTOM)])
 
         pnl2.SetSizer(grid2)
 
 
+        #Rigth Panel
 
-        checkbox = wx.BoxSizer(wx.VERTICAL)
         #CheckBoxes
+        checkbox = wx.BoxSizer(wx.VERTICAL)
         self.rb1 = wx.CheckBox(pnl3, -1, 'Mercury')
         self.rb2 = wx.CheckBox(pnl3, -1, 'Venus')
         self.rb3 = wx.CheckBox(pnl3, -1, 'Earth')
