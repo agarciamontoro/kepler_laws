@@ -37,15 +37,17 @@ class MyDialog(wx.Dialog):
         self.tc_date_mm = wx.SpinCtrl(pnl1, -1, '12', (55,90), (60,-1), min=1, max=12)
         self.tc_date_yy = wx.SpinCtrl(pnl1, -1, '2015', (55,90), (60,-1), min=1, max=9999)
 
+        self.main_calc_but = wx.Button(pnl1, 10, 'Calculate')
+
         grid1 = wx.GridSizer(2,4,0,0)
         grid1.AddMany([ (wx.StaticText(pnl1, -1, 'Date'),0, wx.ALIGN_CENTER),
                         (self.tc_date_dd, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),
                         (self.tc_date_mm, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),
                         (self.tc_date_yy, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),(0,0),
-                        (wx.Button(pnl1, 10, 'Calculate'),   0, wx.ALIGN_CENTER| wx.BOTTOM)])
+                        (self.main_calc_but,   0, wx.ALIGN_CENTER| wx.BOTTOM)])
 
         pnl1.SetSizer(grid1)
-        self.Bind(wx.EVT_BUTTON, self.OnCalculate, id=1)
+        self.Bind(wx.EVT_BUTTON, self.OnCalculate, id=self.main_calc_but.GetId())
 
 
 
