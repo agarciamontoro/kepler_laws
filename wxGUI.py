@@ -15,56 +15,60 @@ class MyDialog(wx.Dialog):
     def __init__(self, parent, id, title):
         wx.Dialog.__init__(self, parent, id, title, size=(900,500), style=wx.DEFAULT_DIALOG_STYLE)
 
+        #Complete Panel
         hbox  = wx.BoxSizer(wx.HORIZONTAL)
+
+        #Left Panel
         vbox1 = wx.BoxSizer(wx.VERTICAL)
-        vbox2 = wx.BoxSizer(wx.VERTICAL)
-        vbox3 = wx.GridSizer(2,4,0,0)
-        vbox4 = wx.BoxSizer(wx.VERTICAL)
-        vbox5 = wx.BoxSizer(wx.VERTICAL)
+
 
         pnl1 = wx.Panel(self, -1, style=wx.SIMPLE_BORDER)
-        pnl3 = wx.Panel(self, -1, style=wx.SIMPLE_BORDER)
         pnl2 = wx.Panel(self, -1, style=wx.SIMPLE_BORDER)
-
-        self.lc = wx.ListCtrl(self, -1, style=wx.LC_REPORT)
-        self.lc.InsertColumn(0, 'Planet')
-        self.lc.InsertColumn(1, 'Date for u')
-        self.lc.InsertColumn(2, 'Anomaly for t')
-        self.lc.InsertColumn(3, 'Energy')
-        self.lc.InsertColumn(4, 'Momentum')
-        self.lc.SetColumnWidth(0, 140)
-        self.lc.SetColumnWidth(1, 153)
-
+        pnl3 = wx.Panel(self, -1, style=wx.SIMPLE_BORDER)
         vbox1.Add(pnl1, 1, wx.EXPAND | wx.ALL, 3)
         vbox1.Add(pnl2, 1, wx.EXPAND | wx.ALL, 3)
-        vbox2.Add(self.lc, 1, wx.EXPAND | wx.ALL, 3)
+        vbox1.Add(pnl3, 1, wx.EXPAND | wx.ALL, 3)
 
+
+        #Date Panel
         self.tc_date_dd = wx.SpinCtrl(pnl1, -1, '15', (55,90), (60,-1), min=1, max=31)
         self.tc_date_mm = wx.SpinCtrl(pnl1, -1, '12', (55,90), (60,-1), min=1, max=12)
         self.tc_date_yy = wx.SpinCtrl(pnl1, -1, '2015', (55,90), (60,-1), min=1, max=9999)
 
-        self.tc2 = wx.TextCtrl(pnl3, -1)
-
-        vbox3.AddMany([ (wx.StaticText(pnl1, -1, 'Date'),0, wx.ALIGN_CENTER),
+        grid1 = wx.GridSizer(2,4,0,0)
+        grid1.AddMany([ (wx.StaticText(pnl1, -1, 'Date'),0, wx.ALIGN_CENTER),
                         (self.tc_date_dd, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),
                         (self.tc_date_mm, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),
-                        (self.tc_date_yy, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL)])
+                        (self.tc_date_yy, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),(0,0),
+                        (wx.Button(pnl1, 10, 'Calculate'),   0, wx.ALIGN_CENTER| wx.BOTTOM)])
 
-        vbox3.Add(wx.Button(pnl1, 10, 'Calculate'),   0, wx.ALIGN_CENTER| wx.BOTTOM)
-
-        pnl1.SetSizer(vbox3)
-
-        vbox5.Add(pnl3, 1, wx.EXPAND | wx.ALL, 3)
+        pnl1.SetSizer(grid1)
+        self.Bind(wx.EVT_BUTTON, self.OnCalculate, id=1)
 
 
-        self.rb1 = wx.CheckBox(pnl2, -1, 'Mercury')
-        self.rb2 = wx.CheckBox(pnl2, -1, 'Venus')
-        self.rb3 = wx.CheckBox(pnl2, -1, 'Earth')
-        self.rb4 = wx.CheckBox(pnl2, -1, 'Mars')
-        self.rb5 = wx.CheckBox(pnl2, -1, 'Jupiter')
-        self.rb6 = wx.CheckBox(pnl2, -1, 'Saturn')
-        self.rb7 = wx.CheckBox(pnl2, -1, 'Uranus')
-        self.rb8 = wx.CheckBox(pnl2, -1, 'Neptune')
+
+        #Panel del medio
+        self.tc_ecc = wx.TextCtrl(pnl2, -1)
+
+        grid2 = wx.GridSizer(2,2,0,0)
+        grid2.AddMany([ (wx.StaticText(pnl2, -1, 'Eccentricity'),0, wx.ALIGN_CENTER),
+                        (self.tc_ecc, 0, wx.ALIGN_LEFT|wx.ALIGN_CENTER_VERTICAL),
+                        (wx.Button(pnl2, 10, 'Calculate'),   0, wx.ALIGN_CENTER| wx.BOTTOM)])
+
+        pnl2.SetSizer(grid2)
+
+
+
+        checkbox = wx.BoxSizer(wx.VERTICAL)
+        #CheckBoxes
+        self.rb1 = wx.CheckBox(pnl3, -1, 'Mercury')
+        self.rb2 = wx.CheckBox(pnl3, -1, 'Venus')
+        self.rb3 = wx.CheckBox(pnl3, -1, 'Earth')
+        self.rb4 = wx.CheckBox(pnl3, -1, 'Mars')
+        self.rb5 = wx.CheckBox(pnl3, -1, 'Jupiter')
+        self.rb6 = wx.CheckBox(pnl3, -1, 'Saturn')
+        self.rb7 = wx.CheckBox(pnl3, -1, 'Uranus')
+        self.rb8 = wx.CheckBox(pnl3, -1, 'Neptune')
         self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb1.GetId())
         self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb2.GetId())
         self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb3.GetId())
@@ -82,17 +86,34 @@ class MyDialog(wx.Dialog):
         self.rb7.SetValue(True)
         self.rb8.SetValue(True)
 
-        vbox4.Add(self.rb1, 0, wx.ALIGN_LEFT| wx.TOP, 6)
-        vbox4.Add(self.rb2, 0, wx.ALIGN_LEFT|wx.TOP, 6)
-        vbox4.Add(self.rb3, 0, wx.ALIGN_LEFT| wx.TOP, 6)
-        vbox4.Add(self.rb4, 0, wx.ALIGN_LEFT| wx.TOP, 6)
-        vbox4.Add(self.rb5, 0, wx.ALIGN_LEFT| wx.TOP, 6)
-        vbox4.Add(self.rb6, 0, wx.ALIGN_LEFT| wx.TOP, 6)
-        vbox4.Add(self.rb7, 0, wx.ALIGN_LEFT| wx.TOP, 6)
-        vbox4.Add(self.rb8, 0, wx.ALIGN_LEFT| wx.TOP, 6)
-        pnl2.SetSizer(vbox4)
-        self.Bind (wx.EVT_BUTTON, self.OnCalculate, id=10)
-        self.Bind (wx.EVT_BUTTON, self.OnRemove, id=11)
+        checkbox.Add(self.rb1, 0, wx.ALIGN_LEFT| wx.TOP, 6)
+        checkbox.Add(self.rb2, 0, wx.ALIGN_LEFT| wx.TOP, 6)
+        checkbox.Add(self.rb3, 0, wx.ALIGN_LEFT| wx.TOP, 6)
+        checkbox.Add(self.rb4, 0, wx.ALIGN_LEFT| wx.TOP, 6)
+        checkbox.Add(self.rb5, 0, wx.ALIGN_LEFT| wx.TOP, 6)
+        checkbox.Add(self.rb6, 0, wx.ALIGN_LEFT| wx.TOP, 6)
+        checkbox.Add(self.rb7, 0, wx.ALIGN_LEFT| wx.TOP, 6)
+        checkbox.Add(self.rb8, 0, wx.ALIGN_LEFT| wx.TOP, 6)
+
+        pnl3.SetSizer(checkbox)
+
+
+
+        vbox2 = wx.BoxSizer(wx.VERTICAL)
+
+        #List control
+        self.lc = wx.ListCtrl(self, -1, style=wx.LC_REPORT)
+        self.lc.InsertColumn(0, 'Planet')
+        self.lc.InsertColumn(1, 'Date for u')
+        self.lc.InsertColumn(2, 'Anomaly for t')
+        self.lc.InsertColumn(3, 'Energy')
+        self.lc.InsertColumn(4, 'Momentum')
+        #self.lc.SetColumnWidth(0, 140)
+
+        vbox2.Add(self.lc, 1, wx.EXPAND | wx.ALL, 3)
+
+
+
         hbox.Add(vbox1, 1, wx.EXPAND)
         hbox.Add(vbox2, 1, wx.EXPAND)
         self.SetSizer(hbox)
