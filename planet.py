@@ -6,7 +6,7 @@ from OpenGL.GLUT import *
 from primitives import Ball
 from constants import *
 
-#from scipy import special
+from scipy import special
 
 import math
 
@@ -51,8 +51,10 @@ def vectProduct(u, v):
     w3 = u[0]*v[1] - u[1]*v[0]
     return [w1, w2, w3]
 
-def scalarProduct(u,v):
-    return sum([elem_u*elem_v for elem_u,elem_v in zip(u,v)])
+
+def scalarProduct(u, v):
+    return sum([elem_u*elem_v for elem_u, elem_v in zip(u, v)])
+
 
 class Planet(Ball):
     """Particle whose motion follows the Kepler laws.
@@ -71,7 +73,8 @@ class Planet(Ball):
     # tilt_angle = i
     # node_angle = big omega
     # ecc_angle = small omega con barra
-    def __init__(self, semi_major_axis, ecc, radius, period, t_0, name, tilt_angle, node_angle, ecc_angle):
+    def __init__(self, semi_major_axis, ecc, radius, period, t_0, name,
+                 tilt_angle, node_angle, ecc_angle):
         """Constructor
 
         The constructor receives the planet attributes and sets its position
@@ -175,7 +178,9 @@ class Planet(Ball):
             pos: 2D coordinates in a [x,y] form
 
         Returns:
-            The pos coordinates translated to the OpenGL world; i.e., [x,0,-y]
+            The pos coordinates translated to the 3D OpenGL world, after have
+            applied the rotation of the orbit planes with respect to the
+            ecliptic plane.
         """
 
         i = self.tilt_angle
@@ -185,19 +190,34 @@ class Planet(Ball):
         cos = math.cos
         sin = math.sin
 
+        # Rotation matrix
+        m_11 = -cos(big_o)*cos(small_o)*cos(i) + sin(big_o)*sin(small_o)
+        m_12 = -cos(i)*sin(small_o)*cos(big_o) - sin(big_o)*cos(small_o)
+        m_13 = cos(big_o)*sin(i)
+
+        m_21 = -cos(i)*cos(small_o)*sin(big_o) - cos(big_o)*sin(small_o)
+        m_22 = -sin(big_o)*cos(i)*sin(small_o) + cos(big_o)*cos(small_o)
+        m_23 = sin(big_o)*sin(i)
+
+        m_31 = sin(i)*cos(small_o)
+        m_32 = sin(i)*sin(small_o)
+        m_33 = cos(i)
+
         matrix = [
-            [-cos(big_o)*cos(small_o)*cos(i)+sin(big_o)*sin(small_o), -cos(i)*sin(small_o)*cos(big_o)-sin(big_o)*cos(small_o), cos(big_o)*sin(i)],
-            [-cos(i)*cos(small_o)*sin(big_o)-cos(big_o)*sin(small_o), -sin(big_o)*cos(i)*sin(small_o)+cos(big_o)*cos(small_o), sin(big_o)*sin(i)],
-            [sin(i)*cos(small_o), sin(i)*sin(small_o), cos(i)]
+            [m_11, m_12, m_13],
+            [m_21, m_22, m_23],
+            [m_31, m_32, m_33]
         ]
 
         GUI_coords = []
 
         pos.append(0.0)
 
-        for row,coord in zip(matrix,pos):
-            GUI_coords.append(scalarProduct(row,pos))
+        # Matrix product (apply rotation)
+        for row, coord in zip(matrix, pos):
+            GUI_coords.append(scalarProduct(row, pos))
 
+        # XYZ coordinates are translated into OpenGL as XZ-Y coordinates
         return [GUI_coords[0], GUI_coords[2], -GUI_coords[1]]
 
     def xi(self, delta):
