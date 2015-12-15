@@ -185,7 +185,7 @@ class MyDialog(wx.Dialog):
             if planet.name == str_planet:
                 date = planet.getDate(anomaly)
 
-        self.result.SetLabel(str(date))
+        self.result.SetLabel(date.strftime("%d %B, %Y - %A"))
 
     def OnRemove(self, event):
         index = self.lc.GetFocusedItem()
