@@ -144,6 +144,20 @@ class MyDialog(wx.Dialog):
 
         current_date =  datetime(year, month, day)
 
+        from universe import planets
+
+        num_row = 0
+        for planet in planets:
+            self.lc.InsertStringItem(num_row, planet.name)
+            info_list = planet.getInfo()
+
+            num_col = 1
+            for info in info_list:
+                self.lc.SetStringItem(num_row, num_col, info)
+                num_col += 1
+                
+            num_row += 1
+
     def OnRemove(self, event):
         index = self.lc.GetFocusedItem()
         self.lc.DeleteItem(index)

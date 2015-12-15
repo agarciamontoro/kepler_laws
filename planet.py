@@ -338,25 +338,19 @@ class Planet(Ball):
     def getInfo(self):
         """Retrieves important information of the planet
 
-        Returns a string containing important information of the planet, for
-        visual purposes only.
+        Returns a string array containing important information of the
+        planet, for visual purposes only.
 
         Returns:
-            A pretty-formatted string containing the planet's name, position,
-            energy, momentum, eccentric anomaly and date.
+            An array of strings containing the planet's name, anomaly,
+            energy and momentum.
         """
-        string = '{name}\t - Position\t: {pos}\n'.format(
-                  name=self.name, pos=self.pos)
-        string += '\t - Energy\t\t: {energy}\n'.format(
-                  energy=self.getEnergy())
-        string += '\t - Momentum\t: {momentum}\n'.format(
-                  momentum=self.getMomentum())
-        string += '\t - Ecc. anomaly\t: {ecc}\n'.format(
-                  ecc=self.ecc_anomaly)
-        string += '\t - Date\t\t: {date}\n'.format(
-                  date=self.date.strftime("%d %B, %Y - %A"))
+        str_name = self.name
+        str_anomaly = str(self.ecc_anomaly)
+        str_energy = str(self.getEnergy())
+        str_momentum = str(self.getMomentum())
 
-        return [str(self.name), str()]#string.expandtabs(10)
+        return [str_name, str_anomaly, str_energy, str_momentum]
 
     def getVel(self):
         """Retrieves the velocity of the planet.
