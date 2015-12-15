@@ -8,6 +8,8 @@ import time
 
 import wxGUI
 
+prev_vel = 0
+
 def bigBang():
     """Initialises the planet
 
@@ -63,7 +65,7 @@ def bigBang():
     date_string = primitives.Text([wxGUI.current_date.strftime("%A, %d %B, %Y")])
 
 
-def processFrame(vel):
+def processFrame(vel = prev_vel):
     """Updates the planets positions.
 
     Method called from the endless GUI loop. The time is moved to the future
@@ -75,6 +77,7 @@ def processFrame(vel):
     animation. The user can change this velocity using Z and X keys.
     """
     global before
+    prev_vel = vel
 
     # Timestamps to control the animation velocity and simulation date
     now = time.time()

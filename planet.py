@@ -348,7 +348,7 @@ class Planet(Ball):
         str_name = self.name
         str_anomaly = str(self.ecc_anomaly)
         str_energy = str(self.getEnergy())
-        str_momentum = str(self.getMomentum())
+        str_momentum = str(self.getMomentum()[2])
 
         return [str_name, str_anomaly, str_energy, str_momentum]
 
