@@ -1,7 +1,5 @@
 ![Captura de pantalla del programa en ejecución](./screenshot_ANI.png)
 
-*Documentación extraída del repositorio de Github [agarciamontoro/kepler_laws](https://github.com/agarciamontoro/kepler_laws).*
-
 # Descarga e instalación
 ## Dependencias
 Para la correcta ejecución del programa, el sistema sobre el que se instale necesita tener las siguientes dependencias:
