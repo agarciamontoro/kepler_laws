@@ -2,6 +2,10 @@ import wx
 
 from datetime import *
 
+
+planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn',
+           'Uranus', 'Neptune']
+
 draw_planets = {"Mercury": True,
                 "Venus": True,
                 "Earth": True,
@@ -29,39 +33,14 @@ class MyDialog(wx.Dialog):
 
         # CheckBoxes
         checkbox = wx.BoxSizer(wx.VERTICAL)
-        self.rb1 = wx.CheckBox(pnl3, -1, 'Mercury')
-        self.rb2 = wx.CheckBox(pnl3, -1, 'Venus')
-        self.rb3 = wx.CheckBox(pnl3, -1, 'Earth')
-        self.rb4 = wx.CheckBox(pnl3, -1, 'Mars')
-        self.rb5 = wx.CheckBox(pnl3, -1, 'Jupiter')
-        self.rb6 = wx.CheckBox(pnl3, -1, 'Saturn')
-        self.rb7 = wx.CheckBox(pnl3, -1, 'Uranus')
-        self.rb8 = wx.CheckBox(pnl3, -1, 'Neptune')
-        self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb1.GetId())
-        self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb2.GetId())
-        self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb3.GetId())
-        self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb4.GetId())
-        self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb5.GetId())
-        self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb6.GetId())
-        self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb7.GetId())
-        self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.rb8.GetId())
-        self.rb1.SetValue(True)
-        self.rb2.SetValue(True)
-        self.rb3.SetValue(True)
-        self.rb4.SetValue(True)
-        self.rb5.SetValue(True)
-        self.rb6.SetValue(True)
-        self.rb7.SetValue(True)
-        self.rb8.SetValue(True)
 
-        checkbox.Add(self.rb1, 0, wx.ALIGN_LEFT | wx.TOP, 6)
-        checkbox.Add(self.rb2, 0, wx.ALIGN_LEFT | wx.TOP, 6)
-        checkbox.Add(self.rb3, 0, wx.ALIGN_LEFT | wx.TOP, 6)
-        checkbox.Add(self.rb4, 0, wx.ALIGN_LEFT | wx.TOP, 6)
-        checkbox.Add(self.rb5, 0, wx.ALIGN_LEFT | wx.TOP, 6)
-        checkbox.Add(self.rb6, 0, wx.ALIGN_LEFT | wx.TOP, 6)
-        checkbox.Add(self.rb7, 0, wx.ALIGN_LEFT | wx.TOP, 6)
-        checkbox.Add(self.rb8, 0, wx.ALIGN_LEFT | wx.TOP, 6)
+        self.cb = {}
+
+        for planet in planets:
+            self.cb[planet] = wx.CheckBox(pnl3, -1, planet)
+            self.Bind(wx.EVT_CHECKBOX, self.SetVal, id=self.cb[planet].GetId())
+            self.cb[planet].SetValue(True)
+            checkbox.Add(self.cb[planet], 0, wx.ALIGN_LEFT | wx.TOP, 6)
 
         pnl3.SetSizer(checkbox)
 
@@ -98,9 +77,6 @@ class MyDialog(wx.Dialog):
                   id=self.main_calc_but.GetId())
 
         # Ecc panel
-        planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn',
-                   'Uranus', 'Neptune']
-
         self.tc_ecc = wx.TextCtrl(pnl2, -1)
         self.combo = wx.ComboBox(pnl2, -1, choices=planets,
                                  style=wx.CB_READONLY)
@@ -160,7 +136,7 @@ class MyDialog(wx.Dialog):
         month = int(str_month)
         year = int(str_year)
 
-        current_date = datetime(year, month, day)
+        current_date = datetime(year, month, day, hour=0, minute=0, second=0)
 
         import universe
 
@@ -194,8 +170,12 @@ class MyDialog(wx.Dialog):
         for planet in universe.planets:
             if planet.name == str_planet:
                 date = planet.getDate(anomaly)
+                break
 
-        self.result.SetLabel(date.strftime("%d %B, %Y - %A"))
+        if date.year < 1900:
+            self.result.SetLabel(date.isoformat())
+        else:
+            self.result.SetLabel(date.strftime("%d %B, %Y - %A"))
 
     def OnRemove(self, event):
         index = self.lc.GetFocusedItem()
@@ -208,14 +188,8 @@ class MyDialog(wx.Dialog):
         self.lc.DeleteAllItems()
 
     def SetVal(self, event):
-        draw_planets["Mercury"] = self.rb1.GetValue()
-        draw_planets["Venus"] = self.rb2.GetValue()
-        draw_planets["Earth"] = self.rb3.GetValue()
-        draw_planets["Mars"] = self.rb4.GetValue()
-        draw_planets["Jupiter"] = self.rb5.GetValue()
-        draw_planets["Saturn"] = self.rb6.GetValue()
-        draw_planets["Uranus"] = self.rb7.GetValue()
-        draw_planets["Neptune"] = self.rb8.GetValue()
+        for planet in planets:
+            draw_planets[planet] = self.cb[planet].GetValue()
 
 
 class MyApp(wx.App):
