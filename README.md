@@ -48,7 +48,7 @@ Para controlar la velocidad de la animación -que por defecto se comporta de man
 * **X**: Acelera un paso la animación; es decir, añade un día de la simulación por cada segundo de la vida real.
 * **Z**: Decelera un paso la animación. Se puede usar repetidamente esta tecla para revertir el tiempo.
 
-Para terminar el programa, pulsar la tecla Q o cerrar la ventana de la simulación.
+Para terminar el programa, pulsar la tecla **Q** o cerrar la ventana de la simulación.
 
 La interfaz gráfica que se muestra junto a la ventana de la animación permite:
 
