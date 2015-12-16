@@ -1,5 +1,4 @@
 ![Captura de pantalla del programa en ejecución](./screenshot_ANI.png)
-----------------------------------------------------------------
 
 *Documentación extraída del repositorio de Github [agarciamontoro/kepler_laws](https://github.com/agarciamontoro/kepler_laws).*
 
@@ -30,7 +29,7 @@ Usa el siguiente enlace para descargar todos los ficheros del programa (incluida
 
 [kepler_laws-master.zip](https://github.com/agarciamontoro/kepler_laws/archive/master.zip)
 
-Una vez descargado, descomprimirlo y abrir una terminal en la carpeta donde se encuentren todos los archivos.
+Una vez descargado, descomprímelo y abre una terminal en la carpeta donde se encuentren todos los archivos.
 
 # Uso
 
@@ -46,8 +45,10 @@ Se puede rotar la escena haciendo click con el ratón en cualquier lugar de la i
 
 Para controlar la velocidad de la animación -que por defecto se comporta de manera que por cada segundo de la vida real transcurra un día en la simulación- se usan las siguientes teclas:
 
-* X: Acelera un paso la animación; es decir, añade un día de la simulación por cada segundo de la vida real.
-* Z: Decelera un paso la animación. Se puede usar repetidamente esta tecla para revertir el tiempo.
+* **X**: Acelera un paso la animación; es decir, añade un día de la simulación por cada segundo de la vida real.
+* **Z**: Decelera un paso la animación. Se puede usar repetidamente esta tecla para revertir el tiempo.
+
+Para terminar el programa, pulsar la tecla Q o cerrar la ventana de la simulación.
 
 La interfaz gráfica que se muestra junto a la ventana de la animación permite:
 
@@ -55,7 +56,6 @@ La interfaz gráfica que se muestra junto a la ventana de la animación permite:
 * Trasladar la fecha de la animación a un día concreto y mostrar la información relevante de cada planeta marcado.
 * Introducir un ángulo en radianes, seleccionar un planeta, y calcular la fecha en la que su anomalía excéntrica coincide con el ángulo introducido.
 
-Para terminar el programa, pulsar la tecla Q o cerrar la ventana de la simulación.
 -----------------------------------------------------------------
 
 # Descripción del trabajo
@@ -65,7 +65,7 @@ A continuación se detalla el trabajo realizado, dejando abajo las descripciones
 Se han añadido dos mejoras importantes:
 
 * La rotación de los planos de las órbitas con respecto al plano de la eclíptica, que se ha calculado obteniendo la matriz de giro a partir del ángulo de inclinación, del ángulo con respecto a la línea de nodos y del ángulo con respecto al eje de excentricidad.
-* El cálculo de la fecha en la que un planeta tiene una anomalía excéntrica dada. En la implementación, entendemos la anomalía excéntrica introducida como el valor del ángulo barrido, sin tener en cuenta si este es mayor que 2*pi, en cuyo caso se devuelve una fecha del periodo planetario siguiente. Es decir, si el periodo del planeta es T días, la fecha en la que tiene una anomalía de pi radianes es D e intentamos calcular la fecha en la que tiene una anomalía de 3*pi, el programa devolverá que esa fecha es D+T.
+* El cálculo de la fecha en la que un planeta tiene una anomalía excéntrica dada. En la implementación, entendemos la anomalía excéntrica introducida como el valor del ángulo barrido, sin tener en cuenta si este es mayor que 2pi, en cuyo caso se devuelve una fecha del periodo planetario siguiente. Es decir, si el periodo del planeta es T días, la fecha en la que tiene una anomalía de pi radianes es D e intentamos calcular la fecha en la que tiene una anomalía de 3pi, el programa devolverá que esa fecha es D+T.
 
 La implementación de estos dos códigos está en las funciones siguientes:
 
