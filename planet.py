@@ -168,11 +168,13 @@ class Planet(Ball):
         return [x_coord, y_coord], math.fmod(u, 2*math.pi)
 
     def getGUICoords(self, pos):
-        """Coordinates translation. For visual purposes only.
+        """Coordinates translation and plane rotation.
 
         Translates 2D coordinates in a XY plane to 3D coordinates in a
         XYZ OpenGL space -i.e., X horizontal axis; Y vertical axis; Z 'depth'
-        axis, with Z decreasing from the monitor towards you-.
+        axis, with Z decreasing from the monitor towards the user-.
+        Furthermore, it rotates the orbit plane using the matrix rotation
+        of the tilt angle, the node line angle and the eccentricity angle.
 
         Args:
             pos: 2D coordinates in a [x,y] form

@@ -20,18 +20,18 @@ def main(arguments):
     # Initialise the program
     universe.bigBang()
 
+    # Create the animation thread and start it
     animation_thread = threading.Thread(target=scene.initGUI, args=(), kwargs={})
     animation_thread.start()
 
+    # Create the wx app, its thread and start it
     app = MyApp(0)
     GUI_thread = threading.Thread(target=app.MainLoop, args=(), kwargs={})
     GUI_thread.start()
 
+    # When the animation thread finishes, terminate wx main loop and quit.
     animation_thread.join()
     app.ExitMainLoop()
-
-    # Start GUI and Universe :)
-    #scene.initGUI()
 
 if __name__ == '__main__':
     """An incredibly simplified simulation of the Solar System
