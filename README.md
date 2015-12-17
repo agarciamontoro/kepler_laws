@@ -5,7 +5,6 @@
 Para la correcta ejecución del programa, el sistema sobre el que se instale necesita tener las siguientes dependencias:
 
 * OpenGL (con freeGLUT)
-* SciPy
 * wxPython
 
 La mayoría de las distribuciones de Linux tienen estos paquetes en sus repositorios oficiales.
@@ -13,13 +12,13 @@ La mayoría de las distribuciones de Linux tienen estos paquetes en sus reposito
 En **Ubuntu**, por ejemplo, la siguiente orden es suficiente para instalar todo lo necesario:
 
 ```
-sudo apt-get install python-opengl freeglut3 python-scipy python-wxgtk2.8
+sudo apt-get install python-opengl freeglut3 python-wxgtk2.8
 ```
 
 En **Arch Linux** es muy parecido:
 
 ```
-pacaur -S python-opengl freeglut python-scipy wxpython
+pacaur -S python-opengl freeglut wxpython
 ```
 
 ## Descarga del programa

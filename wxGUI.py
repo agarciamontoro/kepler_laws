@@ -20,7 +20,7 @@ current_date = datetime.today()
 
 class MyDialog(wx.Dialog):
     def __init__(self, parent, id, title):
-        wx.Dialog.__init__(self, parent, id, title, size=(1000, 250),
+        wx.Dialog.__init__(self, parent, id, title, size=(1600, 250),
                            style=wx.DEFAULT_DIALOG_STYLE)
 
         # Complete Panel
