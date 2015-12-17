@@ -285,7 +285,7 @@ class Planet(Ball):
 
         return curr
 
-    
+
     def getDate(self, u):
         """Retrieves the date from the eccentric anomaly
 
@@ -301,6 +301,8 @@ class Planet(Ball):
         """
         p = self.period
         e = self.eccentricity
+
+        u = math.fmod(u,2*math.pi)
 
         delta = p * (u - e*math.sin(u)) / (2*math.pi)
 
@@ -343,8 +345,12 @@ class Planet(Ball):
         str_anomaly = str(self.ecc_anomaly)
         str_energy = str(self.getEnergy())
         str_momentum = str(self.getMomentum()[2])
+        str_semi_major = str(self.a)
+        str_semi_minor = str(math.sqrt(1-self.eccentricity^2)*self.a)
+        str_period = str(self.period)
+        str_t0 = self.t0.strftime("%d %B, %Y - %A")
 
-        return [str_name, str_anomaly, str_energy, str_momentum]
+        return [str_name, str_anomaly, str_energy, str_momentum, str_semi_major, str_semi_minor, str_period, str_t0]
 
     def getVel(self):
         """Retrieves the velocity of the planet.
