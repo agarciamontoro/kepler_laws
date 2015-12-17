@@ -6,8 +6,6 @@ from OpenGL.GLUT import *
 from primitives import Ball
 from constants import *
 
-from scipy import special
-
 import math
 
 from datetime import *
@@ -287,33 +285,7 @@ class Planet(Ball):
 
         return curr
 
-    def bessel(self, xi, tol=1e-10):
-        """Approximates the eccentric anomaly using Bessel functions
-
-        Iterates through the expression of 'u' as an infinite series until
-        the error is below an accepted tolerance.
-
-        Args:
-            xi: First iteration
-            tol: Accepted error in the approximation; defaults to 1e-10
-
-        Returns:
-            Approximation of eccentric anomaly whose error is lower than the
-            given tolerance.
-        """
-        e = self.eccentricity
-
-        prev = xi
-        curr = prev + 2 * special.j1(e) * math.sin(xi)
-
-        n = 2
-        while abs(prev - curr) > tol:
-            prev = curr
-            curr = prev + 2./n * special.jn(n, n*e) * math.sin(n * xi)
-            n += 1
-
-        return curr
-
+    
     def getDate(self, u):
         """Retrieves the date from the eccentric anomaly
 
