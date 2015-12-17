@@ -285,12 +285,12 @@ class Planet(Ball):
 
         return curr
 
-    
+
     def getDate(self, u):
         """Retrieves the date from the eccentric anomaly
 
         Obtains the date in which the eccentric anomaly of the planet is the
-        given one.
+        given one.''
 
         Args:
             u: Eccentric anomaly, in radians.

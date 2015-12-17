@@ -110,9 +110,17 @@ class MyDialog(wx.Dialog):
         self.lc.InsertColumn(1, 'Anomaly for t')
         self.lc.InsertColumn(2, 'Energy')
         self.lc.InsertColumn(3, 'Momentum')
+        self.lc.InsertColumn(4, 'Semi_major_axis')
+        self.lc.InsertColumn(5, 'Semi-minor-axis')
+        self.lc.InsertColumn(6, 'Period')
+        self.lc.InsertColumn(7, 'T_0')
         self.lc.SetColumnWidth(1, 120)
         self.lc.SetColumnWidth(2, 150)
         self.lc.SetColumnWidth(3, 150)
+        self.lc.SetColumnWidth(4, 120)
+        self.lc.SetColumnWidth(5, 150)
+        self.lc.SetColumnWidth(6, 150)
+        self.lc.SetColumnWidth(7, 150)
 
         vbox2.Add(self.lc, 1, wx.EXPAND | wx.ALL, 3)
 
