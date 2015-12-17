@@ -63,7 +63,7 @@
 
 \title{Mecánica Celeste \\ Simulación del Sistema Solar}
 \author{Alejandro García Montoro\\
-        Ana Isabel MC\\
+        Ana Isabel Ruiz Arroyo\\
         Manuel Ruiz Cárdenas\\
         Antonio Solís Izquierdo}
 \date{\today}
@@ -163,7 +163,92 @@
 
   \subsubsection{Rotación de los planos orbitales}
 
-  La implementación del código de rotación de los planos de las órbitas es el siguiente:
+  Para la composición y determinación analítica del movimiento rígido que determinará
+  los planos de las órbitas de los planetas se compondrán 4 endomorfismos de $\mathbb{R}^3$.
+  Dichos endomorfismos dependen obviamente de los datos de cada planeta.
+  El primero es meramente orientativo: llevará los puntos de $\mathbb{R}^3$ del plano XY
+  a los del plano YZ.
+  \begin{align*}
+      f:\mathbb{R}^3\longmapsto\mathbb{R}^3 \\
+      f(x)=Afx\;\;\forall x \in \mathbb{R}^3
+  \end{align*}
+  donde \[Af=\left(
+  \begin{array}{lcr}
+  0& 0 & -1 \\
+  0 & 1 & 0 \\
+  1 & 0 & 0 \\
+  \end{array}
+  \right)
+  \]
+  El segundo endomorfismo gira el plano resultante de la imagen del plano XY por f de $\omega$ grados
+  respecto del eje X. Donde $\omega$ es el ángulo del eje $x_{1}$ al eje de excentricidad.
+  \begin{align*}
+      G_{\omega}:\mathbb{R}^3\longmapsto\mathbb{R}^3\\
+      G_{\omega}(x)=AG_{\omega}x\;\;\forall x \in \mathbb{R}^3
+  \end{align*}
+
+  donde \[AG_{\omega}=\left(
+  \begin{array}{lcr}
+  1& 0 & 0 \\
+  0 & \cos(\omega) & -\sin(\omega) \\
+  0 & \sin(\omega) & \cos(\omega) \\
+  \end{array}
+  \right)
+  \]
+  Ahora se procederá a girar el plano $G_{\omega}(f(XY))$ en torno al eje Y de tal forma que el vector normal positivo a XY y el resultante de la imagen de $G_{\omega}(f(XY))$ por la siguiente aplicación
+  formen un ángulo $i$.
+  \begin{align*}
+      G_{i}:\mathbb{R}^3\longmapsto\mathbb{R}^3\\
+      G_{i}(x)=AG_{i}x\;\;\forall x \in \mathbb{R}^3
+  \end{align*}
+  donde \[AG_{i}=\left(
+  \begin{array}{lcr}
+  \sin(i)& 0 & -\cos(i) \\
+  0 & 1 & 0 \\
+  \cos(i) & 0 & \sin(i) \\
+  \end{array}
+  \right)
+  \]
+  Ahora sólo queda girar el plano  $G_{i}(G_{\omega}(f(XY)))$ un ángulo $\Omega$ respecto del eje Z
+  para que la nueva línea de nodos forme un ángulo $\Omega$ con el eje Y.
+  \begin{align*}
+      G_{\Omega}:\mathbb{R}^3\longmapsto\mathbb{R}^3\\
+      G_{\Omega}(x)=AG_{\Omega}x\;\;\forall x \in \mathbb{R}^3
+  \end{align*}
+  donde \[AG_{\Omega}=\left(
+  \begin{array}{lcr}
+  \cos(\Omega)& -\sin(\Omega) & 0 \\
+  \sin(\Omega) & \cos(\Omega) & 0 \\
+  0 & 0 & 1 \\
+  \end{array}
+  \right)
+  \]
+  La aplicación $M=G_{\Omega}\circ G_{i}\circ G_{\omega}\circ f$ es el movimiento rígido buscado, y
+  su matriz de representación como endomorfismo es el producto siguiente:
+  \\
+   $AM=AG_{\Omega}AG_{i}AG_{\omega}Af$.
+  Haciendo las operaciones nos queda que AM es la siguiente matriz:
+  \\
+  \[\left(
+  \begin{array}{lcr}
+  \-cos(\Omega)\cos(i)\cos(\omega)+\sin(\Omega)\sin(\omega)& -\cos(i)\sin(\omega)\cos(\Omega)-\sin(\Omega)\cos(\omega) & \cos(\Omega)\sin(i) \\
+  -\cos(i)\cos(\omega)\sin(\Omega)-\cos(\Omega)\sin(\omega) & \sin(\Omega)\cos(i)\sin(\omega)+\cos(\Omega)\cos(\omega) & \sin(\Omega)\sin(i) \\
+  \sin(i)\cos(\omega) & \sin(i)\sin(\omega) & \cos(i) \\
+  \end{array}
+  \right)
+  \]
+
+  Para implementar este movimiento rígido, basta aplicar la matriz obtenida a las coordenadas que hasta ahora teníamos.
+
+  En la figura \ref{fig_ani} se puede observar el resultado de la implementación: se ve claramente cómo las órbitas no son ya coplanarias como lo eran antes, ni tienen el eje de excentricidad apoyado en el eje de coordenadas $X$.
+
+  \begin{figure}[ht!]
+      \centering
+      \includegraphics[width=140mm]{./screenshot_ANI.png}
+      \caption{Rotación de los planos orbitales con respecto al plano de la eclíptica.\label{fig_ani}}
+  \end{figure}
+
+   El código que implementa el movimiento rígido calculado es el siguiente:
 
   \begin{lstlisting}
   def getGUICoords(self, pos):
@@ -222,17 +307,23 @@
       return [GUI_coords[0], GUI_coords[2], -GUI_coords[1]]
   \end{lstlisting}
 
-  En la figura \ref{fig_ani} se puede observar cómo las órbitas no son ya coplanarias como lo eran antes, ni tienen el eje de excentricidad apoyado en el eje de coordenadas $X$.
-
-  \begin{figure}[ht!]
-      \centering
-      \includegraphics[width=140mm]{./screenshot_ANI.png}
-      \caption{Rotación de los planos orbitales con respecto al plano de la eclíptica.\label{fig_ani}}
-  \end{figure}
-
   \subsubsection{Cálculo de la fecha dada la anomalía excéntrica}
 
-  El código que implementa el cálculo de la fecha dada una anomalía excéntrica es el siguiente:
+  Para calcular el día en el que un planeta dado tiene una anomalía excéntrica $u$, basta usar la siguiente función, deducida en clase:
+  \begin{equation}
+      t(u) = t_0 + \frac{a^{3/2}}{\sqrt{\mu}}(u - \varepsilon sen(u))\label{ecc_anomaly}
+  \end{equation}
+
+  Usado la igualdad
+  \[
+  \sqrt{\mu} = 2\pi \frac{a^{3/2}}{p}
+  \]
+  con $a$ el semi-eje mayor y $p$, el periodo del planeta, podemos convertir la ecuación \ref{ecc_anomaly} en la siguiente, que ya no contiene la constante $\mu$:
+  \[
+  t(u) = t_0 + \frac{p}{2\pi}(u - \varepsilon sen(u))
+  \]
+
+  El código que implementa esta función es el siguiente:
 
   \begin{lstlisting}
   def getDate(self, u):
