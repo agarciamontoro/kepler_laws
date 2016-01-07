@@ -60,22 +60,26 @@ class MyDialog(wx.Dialog):
                                       min=1, max=12)
         self.tc_date_yy = wx.SpinCtrl(pnl1, -1, '2015', (55, 90), (60, -1),
                                       min=1, max=9999)
-        self.main_calc_but = wx.Button(pnl1, -1, 'Calculate all')
+        self.main_calc_but = wx.Button(pnl1, -1, 'Calculate by date')
 
-        grid1 = wx.GridSizer(2, 4, 0, 0)
+        self.tc_days = wx.TextCtrl(pnl1, -1)
+        self.days_calc_but = wx.Button(pnl1, -1, 'Calculate by days')
+
+        grid1 = wx.GridSizer(3, 4, 0, 0)
         grid1.AddMany([(wx.StaticText(pnl1, -1, 'Date'), 0, wx.ALIGN_CENTER),
-                       (self.tc_date_dd, 0,
-                        wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL),
-                       (self.tc_date_mm, 0,
-                        wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL),
-                       (self.tc_date_yy, 0,
-                        wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL), (0, 0),
-                       (self.main_calc_but, 0,
-                        wx.ALIGN_CENTER | wx.BOTTOM)])
+                        (self.tc_date_dd, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL),
+                        (self.tc_date_mm, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL),
+                        (self.tc_date_yy, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL),
+                        (wx.StaticText(pnl1, -1, 'Days'), 0, wx.ALIGN_CENTER),
+                        (self.tc_days, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL),(0, 0),(0, 0),(0, 0),
+                        (self.main_calc_but, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER),
+                        (self.days_calc_but, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)])
 
         pnl1.SetSizer(grid1)
         self.Bind(wx.EVT_BUTTON, self.OnCalculate,
                   id=self.main_calc_but.GetId())
+        # self.Bind(wx.EVT_BUTTON, self.OnCalculateDays,
+        #           id=self.days_calc_but.GetId())
 
         # Ecc panel
         self.tc_ecc = wx.TextCtrl(pnl2, -1)
