@@ -307,7 +307,7 @@ class Planet(Ball):
 
         delta = p * (u - e*math.sin(u)) / (2*math.pi)
 
-        return delta #self.t0 + timedelta(days=delta)
+        return self.t0 + timedelta(days=delta), delta
 
     def draw(self):
         """Draws the planet and its orbit
@@ -352,6 +352,15 @@ class Planet(Ball):
         str_t0 = self.t0.strftime("%d %B, %Y - %A")
 
         return [str_name, str_anomaly, str_energy, str_momentum, str_semi_major, str_semi_minor, str_period, str_t0]
+
+    def getInfoDays(self, days):
+        prev_date = self.date
+        self.setPos(self.t0 + timedelta(days=days))
+
+        info = self.getInfo()
+
+        self.setPos(prev_date)
+        return info
 
     def getVel(self):
         """Retrieves the velocity of the planet.

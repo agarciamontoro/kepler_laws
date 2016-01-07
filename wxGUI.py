@@ -164,6 +164,33 @@ class MyDialog(wx.Dialog):
 
                 num_row += 1
 
+    def OnCalculateDays(self, event):
+        global current_date
+
+        str_days = self.tc_days.GetValue()
+
+        if not (str_days):
+            return
+
+        self.lc.DeleteAllItems()
+
+        days = int(str_days)
+
+        import universe
+
+        num_row = 0
+        for planet in universe.planets:
+            if draw_planets[planet.name]:
+                self.lc.InsertStringItem(num_row, planet.name)
+                info_list = planet.getInfoDays(days)
+
+                num_col = 0
+                for info in info_list:
+                    self.lc.SetStringItem(num_row, num_col, info)
+                    num_col += 1
+
+                num_row += 1
+
     def OnCalculateDate(self, event):
         import universe
 
@@ -178,15 +205,15 @@ class MyDialog(wx.Dialog):
 
         for planet in universe.planets:
             if planet.name == str_planet:
-                date = planet.getDate(anomaly)
+                date, delta = planet.getDate(anomaly)
                 break
 
 
-        self.result.SetLabel(str(date))
-        # if date.year < 1900:
-        #     self.result.SetLabel(date.isoformat())
-        # else:
-        #     self.result.SetLabel(date.strftime("%d %B, %Y - %A"))
+        # self.result.SetLabel(str(date))
+        if date.year < 1900:
+            self.result.SetLabel(date.isoformat()+" ("+str(delta)+")")
+        else:
+            self.result.SetLabel(date.strftime("%d %B, %Y")+" ("+str(delta)+")")
 
     def OnRemove(self, event):
         index = self.lc.GetFocusedItem()
