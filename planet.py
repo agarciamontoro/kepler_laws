@@ -305,7 +305,7 @@ class Planet(Ball):
 
         delta = p * (u - e*math.sin(u)) / (2*math.pi)
 
-        return self.t0 + timedelta(days=delta)
+        return delta #self.t0 + timedelta(days=delta)
 
     def draw(self):
         """Draws the planet and its orbit
