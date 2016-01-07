@@ -78,8 +78,8 @@ class MyDialog(wx.Dialog):
         pnl1.SetSizer(grid1)
         self.Bind(wx.EVT_BUTTON, self.OnCalculate,
                   id=self.main_calc_but.GetId())
-        # self.Bind(wx.EVT_BUTTON, self.OnCalculateDays,
-        #           id=self.days_calc_but.GetId())
+        self.Bind(wx.EVT_BUTTON, self.OnCalculateDays,
+                  id=self.days_calc_but.GetId())
 
         # Ecc panel
         self.tc_ecc = wx.TextCtrl(pnl2, -1)
