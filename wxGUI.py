@@ -119,7 +119,7 @@ class MyDialog(wx.Dialog):
         self.lc.SetColumnWidth(3, 150)
         self.lc.SetColumnWidth(4, 120)
         self.lc.SetColumnWidth(5, 150)
-        self.lc.SetColumnWidth(6, 150)
+        self.lc.SetColumnWidth(6, 120)
         self.lc.SetColumnWidth(7, 150)
 
         vbox2.Add(self.lc, 1, wx.EXPAND | wx.ALL, 3)
@@ -181,10 +181,12 @@ class MyDialog(wx.Dialog):
                 date = planet.getDate(anomaly)
                 break
 
-        if date.year < 1900:
-            self.result.SetLabel(date.isoformat())
-        else:
-            self.result.SetLabel(date.strftime("%d %B, %Y - %A"))
+
+        self.result.SetLabel(str(date))
+        # if date.year < 1900:
+        #     self.result.SetLabel(date.isoformat())
+        # else:
+        #     self.result.SetLabel(date.strftime("%d %B, %Y - %A"))
 
     def OnRemove(self, event):
         index = self.lc.GetFocusedItem()
