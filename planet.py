@@ -290,7 +290,7 @@ class Planet(Ball):
         """Retrieves the date from the eccentric anomaly
 
         Obtains the date in which the eccentric anomaly of the planet is the
-        given one.
+        given one.''
 
         Args:
             u: Eccentric anomaly, in radians.
@@ -301,6 +301,7 @@ class Planet(Ball):
         """
         p = self.period
         e = self.eccentricity
+        u = math.fmod(u,2*math.pi)
 
         u = math.fmod(u,2*math.pi)
 
@@ -345,8 +346,8 @@ class Planet(Ball):
         str_anomaly = str(self.ecc_anomaly)
         str_energy = str(self.getEnergy())
         str_momentum = str(self.getMomentum()[2])
-        str_semi_major = str(self.a)
-        str_semi_minor = str(math.sqrt(1-self.eccentricity^2)*self.a)
+        str_semi_major = str(self.semi_major_axis)
+        str_semi_minor = str(math.sqrt(1-self.eccentricity**2)*self.semi_major_axis)
         str_period = str(self.period)
         str_t0 = self.t0.strftime("%d %B, %Y - %A")
 
